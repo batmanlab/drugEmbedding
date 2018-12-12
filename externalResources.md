@@ -6,3 +6,6 @@
 
 # Building Hierachy
 * The main paper on learning Hierarchy: https://papers.nips.cc/paper/7213-poincare-embeddings-for-learning-hierarchical-representations.pdf
+
+# Embedding Molecules:
+* https://github.com/HIPS/molecule-autoencoder
