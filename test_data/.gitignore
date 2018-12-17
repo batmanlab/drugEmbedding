@@ -1,2 +1,3 @@
-dm_spl_release_human_rx_part4.zip
-prescription/
+*.zip
+dm_spl_daily_update_12142018/
+*.json
