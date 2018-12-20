@@ -9,3 +9,7 @@
 
 # Embedding Molecules:
 * https://github.com/HIPS/molecule-autoencoder
+
+# Drug Knowledge Gaps:
+* Knowledge Management of Drug Indications—Complexities and Challenges (poster) - https://www.fdbhealth.com/~/media/downloads/form%20required/us/poster%20-%20knowledge%20management%20of%20drug%20indications%20complexities%20and%20challenges.ashx
+* Chapter 10. Acquiring and Applying the Knowledge and Clinical Skills Required to Manage Drug Therapy - https://accesspharmacy.mhmedical.com/content.aspx?bookid=491&sectionid=39674910
