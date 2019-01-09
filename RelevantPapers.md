@@ -4,6 +4,7 @@
 
 # On Hierarchical embedding
 * Original paper: https://arxiv.org/pdf/1705.08039.pdf
+* Hyperbolic embedding: https://arxiv.org/pdf/1805.09112.pdf
 * [seems like a working paper] VAE + hierachical: https://arxiv.org/pdf/1901.01427.pdf
 * Embedding Text in Hyperbolic Spaces: http://aclweb.org/anthology/W18-1708
 
