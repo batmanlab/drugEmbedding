@@ -12,4 +12,4 @@
 * Hyperbolic Embedding and VAE: https://arxiv.org/pdf/1901.06033.pdf
 
 # On Embedding the drug
-* Automatic Chemical Design Using a Data-Driven Continuous Representation of Molecules: https://arxiv.org/pdf/1610.02415.pdf
+* Automatic Chemical Design Using a Data-Driven Continuous Representation of Molecules: https://pubs.acs.org/doi/pdf/10.1021/acscentsci.7b00572
