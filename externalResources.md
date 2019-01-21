@@ -14,3 +14,6 @@
 * Knowledge Management of Drug Indications—Complexities and Challenges (poster) - https://www.fdbhealth.com/~/media/downloads/form%20required/us/poster%20-%20knowledge%20management%20of%20drug%20indications%20complexities%20and%20challenges.ashx
 * Chapter 10. Acquiring and Applying the Knowledge and Clinical Skills Required to Manage Drug Therapy - https://accesspharmacy.mhmedical.com/content.aspx?bookid=491&sectionid=39674910
 * Medication-indication knowledge bases: a systematic review and critical appraisal - https://academic.oup.com/jamia/article/22/6/1261/2357974
+
+# Drug Hierarchies:
+RxClass browser: https://mor.nlm.nih.gov/RxClass/
