@@ -9,6 +9,7 @@
 * Hyperbolic embedding: https://arxiv.org/pdf/1805.09112.pdf
 * [seems like a working paper] VAE + hierachical: https://arxiv.org/pdf/1901.01427.pdf
 * Embedding Text in Hyperbolic Spaces: http://aclweb.org/anthology/W18-1708
+* Hyperbolic Embedding and VAE: https://arxiv.org/pdf/1901.06033.pdf
 
 # On Embedding the drug
 * Automatic Chemical Design Using a Data-Driven Continuous Representation of Molecules: https://arxiv.org/pdf/1610.02415.pdf
