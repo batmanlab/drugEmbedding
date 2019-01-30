@@ -9,6 +9,7 @@
 
 # Embedding Molecules:
 * https://github.com/HIPS/molecule-autoencoder
+* SchNetPack - Deep Neural Networks for Atomistic Systems: https://github.com/atomistic-machine-learning/schnetpack
 
 # Drug Knowledge Gaps:
 * Knowledge Management of Drug Indications—Complexities and Challenges (poster) - https://www.fdbhealth.com/~/media/downloads/form%20required/us/poster%20-%20knowledge%20management%20of%20drug%20indications%20complexities%20and%20challenges.ashx
