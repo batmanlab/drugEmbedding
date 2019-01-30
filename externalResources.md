@@ -8,7 +8,7 @@
 * The main paper on learning Hierarchy: https://papers.nips.cc/paper/7213-poincare-embeddings-for-learning-hierarchical-representations.pdf
 
 # Embedding Molecules:
-* https://github.com/HIPS/molecule-autoencoder
+* Molecular Autoencoder: https://github.com/HIPS/molecule-autoencoder
 * SchNetPack - Deep Neural Networks for Atomistic Systems: https://github.com/atomistic-machine-learning/schnetpack
 
 # Drug Knowledge Gaps:
