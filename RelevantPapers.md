@@ -14,6 +14,6 @@
 # On Embedding the drug
 * Automatic Chemical Design Using a Data-Driven Continuous Representation of Molecules: https://pubs.acs.org/doi/pdf/10.1021/acscentsci.7b00572
 
-* Quantum-chemical insights from deep tensor neural networks
+* Quantum-chemical insights from deep tensor neural networks:
 https://www.nature.com/articles/ncomms13890
 
