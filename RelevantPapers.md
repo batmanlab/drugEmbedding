@@ -15,4 +15,7 @@
 * Automatic Chemical Design Using a Data-Driven Continuous Representation of Molecules: https://pubs.acs.org/doi/pdf/10.1021/acscentsci.7b00572
 * Quantum-chemical insights from deep tensor neural networks:
 https://www.nature.com/articles/ncomms13890
-
+* Grammar Variational Autoencoder
+https://arxiv.org/pdf/1703.01925.pdf
+* Synatax-Directed Variational Autoencoder for Sturctured Data
+https://arxiv.org/pdf/1802.08786.pdf
