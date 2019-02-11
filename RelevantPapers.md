@@ -19,3 +19,7 @@ https://www.nature.com/articles/ncomms13890
 https://arxiv.org/pdf/1703.01925.pdf
 * Synatax-Directed Variational Autoencoder for Sturctured Data
 https://arxiv.org/pdf/1802.08786.pdf
+* Constrained Generation of Semantically Valid Graphs via Regularizing Variational Autoencoders
+http://papers.nips.cc/paper/7942-constrained-generation-of-semantically-valid-graphs-via-regularizing-variational-autoencoders.pdf
+* Constrained Graph Variational Autoencoders for Molecule Design
+http://papers.nips.cc/paper/8005-constrained-graph-variational-autoencoders-for-molecule-design.pdf
