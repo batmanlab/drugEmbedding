@@ -24,6 +24,8 @@ https://arxiv.org/pdf/1802.08786.pdf
 http://papers.nips.cc/paper/7942-constrained-generation-of-semantically-valid-graphs-via-regularizing-variational-autoencoders.pdf
 * Constrained Graph Variational Autoencoders for Molecule Design
 http://papers.nips.cc/paper/8005-constrained-graph-variational-autoencoders-for-molecule-design.pdf
+* Are Learned Molecular Representations Ready For Prime Time?
+https://arxiv.org/pdf/1904.01561.pdf
 
 # Applications of drug embedding
 * for drug repositioning i.e., predict new diseases that a drug may be useful beyond its current use or indication: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5039412/pdf/srep32530.pdf
