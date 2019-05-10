@@ -28,4 +28,4 @@ http://stitch.embl.de/
 # Adverse events for drugs using RxNorm
 queryfdaCode - search adverse events for drugs using RxNorm; see
 https://github.com/amida-tech/rxnorm-js
-https://open.fda.gov/apis/
+and https://open.fda.gov/apis/
