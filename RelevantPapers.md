@@ -26,6 +26,8 @@ http://papers.nips.cc/paper/7942-constrained-generation-of-semantically-valid-gr
 http://papers.nips.cc/paper/8005-constrained-graph-variational-autoencoders-for-molecule-design.pdf
 * Are Learned Molecular Representations Ready For Prime Time?
 https://arxiv.org/pdf/1904.01561.pdf
+* All SMILES VAE: https://arxiv.org/pdf/1905.13343.pdf
+* MolecularRNN: Generating realistic molecular graphs with optimized properties: https://arxiv.org/pdf/1905.13372.pdf
 
 # Applications of drug embedding
 * for drug repositioning i.e., predict new diseases that a drug may be useful beyond its current use or indication: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5039412/pdf/srep32530.pdf
