@@ -3,11 +3,12 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
+from tqdm import tqdm_notebook
 
 
 def make_freq_df(path=Path('/pghbio/dbmi/batmanlab/bpollack/drugEmbedding/sider')):
     # grab the frequency set
-    df_freq = pd.read_csv(Path(path, 'meddra_freq.tsv'), sep='\t', header=None,
+    df_freq = pd.read_csv(Path(path, 'meddra_freq.tsv.gz'), sep='\t', header=None,
                           names=['STICH_flat', 'STICH_stereo', 'UMLS_label',
                                  'from_placebo', 'freq_desc', 'freq_lower',
                                  'freq_upper', 'MedDRA_concept_type',
@@ -91,3 +92,16 @@ def make_sider_vectors(df_freq):
 
     return pd.DataFrame([s_As, s_Bs, s_Cs, s_Ds, s_Gs, s_Hs, s_Js, s_Ls, s_Ms,
                          s_Ns, s_Ps, s_Rs, s_Ss, s_Vs])
+
+
+def add_drugs_to_vec(df_freq, df_vec):
+    # very slow first iteration
+    # drug_vecs = []
+    df_freq = df_freq.dropna(axis=0, subset=['atc', 'name']).sort_values('atc')
+    for name in tqdm_notebook(df_freq.name.unique()):
+        drug_vec = df_freq.query(f'name=="{name}"')
+        atc = drug_vec.atc.iloc[0][0]
+        drug_vec = drug_vec[['side_effect', 'freq_ave']]
+        drug_vec = drug_vec.set_index('side_effect').rename(columns={'freq_ave': f'{atc}_{name}'}).T
+        df_vec = df_vec.append(drug_vec)
+    return df_vec
