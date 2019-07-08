@@ -4,6 +4,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from tqdm import tqdm_notebook
+from sklearn import manifold
+from sklearn.metrics.pairwise import cosine_similarity
+import holoviews as hv
 
 
 def make_freq_df(path=Path('/pghbio/dbmi/batmanlab/bpollack/drugEmbedding/sider')):
@@ -105,3 +108,86 @@ def add_drugs_to_vec(df_freq, df_vec):
         drug_vec = drug_vec.set_index('side_effect').rename(columns={'freq_ave': f'{atc}_{name}'}).T
         df_vec = df_vec.append(drug_vec)
     return df_vec
+
+
+def tsne_plot(df_vec, group_list=(0, 1, 2), n_effects=100, perplexity=50):
+    group_list = list(group_list)
+    df_groups = df_vec.iloc[group_list]
+    df_drugs = df_vec.iloc[14:]
+    A = df_drugs.index.str.startswith('A_')
+    B = df_drugs.index.str.startswith('B_')
+    C = df_drugs.index.str.startswith('C_')
+    D = df_drugs.index.str.startswith('D_')
+    G = df_drugs.index.str.startswith('G_')
+    H = df_drugs.index.str.startswith('H_')
+    J = df_drugs.index.str.startswith('J_')
+    L = df_drugs.index.str.startswith('L_')
+    M = df_drugs.index.str.startswith('M_')
+    N = df_drugs.index.str.startswith('N_')
+    P = df_drugs.index.str.startswith('P_')
+    R = df_drugs.index.str.startswith('R_')
+    S = df_drugs.index.str.startswith('S_')
+    V = df_drugs.index.str.startswith('V_')
+    cat_index_list = np.asarray([A, B, C, D, G, H, J, L, M, N, P, R, S, V])
+    cat_index_subset = cat_index_list[group_list].sum(axis=0)
+    cat_index_subset = cat_index_subset.astype(bool)
+
+    df_drugs_skim = df_drugs[cat_index_subset]
+    top_index = df_groups.sum().sort_values(ascending=False)[:n_effects].index
+
+    cs = cosine_similarity(df_drugs_skim[top_index], df_groups[top_index])
+    tsne = manifold.TSNE(n_components=2, init='random',
+                         random_state=0, perplexity=perplexity)
+    # Y = tsne.fit_transform(df_drugs_skim[top_index])
+    Y = tsne.fit_transform(cs)
+
+    df_labels = pd.DataFrame({'X': Y[:, 0], 'Y': Y[:, 1], 'Cat': 0}, index=df_drugs_skim.index)
+    A = df_labels.index.str.startswith('A_')
+    B = df_labels.index.str.startswith('B_')
+    C = df_labels.index.str.startswith('C_')
+    D = df_labels.index.str.startswith('D_')
+    G = df_labels.index.str.startswith('G_')
+    H = df_labels.index.str.startswith('H_')
+    J = df_labels.index.str.startswith('J_')
+    L = df_labels.index.str.startswith('L_')
+    M = df_labels.index.str.startswith('M_')
+    N = df_labels.index.str.startswith('N_')
+    P = df_labels.index.str.startswith('P_')
+    R = df_labels.index.str.startswith('R_')
+    S = df_labels.index.str.startswith('S_')
+    V = df_labels.index.str.startswith('V_')
+    if 0 in group_list:
+        df_labels.loc[A, 'Cat'] = 'Alimentary'
+    if 1 in group_list:
+        df_labels.loc[B, 'Cat'] = 'Blood'
+    if 2 in group_list:
+        df_labels.loc[C, 'Cat'] = 'Cardiovascular'
+    if 3 in group_list:
+        df_labels.loc[D, 'Cat'] = 'Dermatologicals'
+    if 4 in group_list:
+        df_labels.loc[G, 'Cat'] = 'Genitourinary'
+    if 5 in group_list:
+        df_labels.loc[H, 'Cat'] = 'Hormonal'
+    if 6 in group_list:
+        df_labels.loc[J, 'Cat'] = 'J_Antiinfectives'
+    if 7 in group_list:
+        df_labels.loc[L, 'Cat'] = 'L_Antineoplastic'
+    if 8 in group_list:
+        df_labels.loc[M, 'Cat'] = 'Musculoskeletal'
+    if 9 in group_list:
+        df_labels.loc[N, 'Cat'] = 'Nervous'
+    if 10 in group_list:
+        df_labels.loc[P, 'Cat'] = 'P_Antiparasitic'
+    if 11 in group_list:
+        df_labels.loc[R, 'Cat'] = 'Respiratory'
+    if 12 in group_list:
+        df_labels.loc[S, 'Cat'] = 'Sensory'
+    if 13 in group_list:
+        df_labels.loc[V, 'Cat'] = 'Various'
+
+    df_labels_skim = df_labels.query('Cat!=0')
+    df_labels_skim = df_labels_skim.reset_index().rename(columns={'index': 'name'})
+    embed = hv.Points(df_labels_skim, kdims=['X', 'Y'], vdims=['Cat', 'name'],
+                      label='Sider Embedding')
+    return embed.opts(width=1000, height=800, color_index='Cat', cmap='colorblind', size=10,
+                      tools=['hover'], legend_position='top_left', show_legend=True)
