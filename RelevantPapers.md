@@ -36,3 +36,5 @@ https://arxiv.org/pdf/1904.01561.pdf
 * for polypharmacy side effects i.e., predict side effects when multiple drugs are given to a patient: https://academic.oup.com/bioinformatics/article/34/13/i457/5045770
 * for predicting drug resposne i.e., predict how a patient will respond to a drug based on molecular data of the person (this is mainly useful in cancer in selecting chemotherapeutic drugs): https://www.nature.com/articles/srep40321.pdf
 * for drug-drug interaction Exploring convolutional neural networks for drug–drug interaction extraction: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5467573/
+* EXTENDED RNA BASE PAIRING NETWORKS IMPRINT SMALL
+MOLECULE BINDING PREFERENCES: https://www.biorxiv.org/content/biorxiv/early/2019/07/14/701326.full.pdf
