@@ -13,7 +13,7 @@ class MolVAE(nn.Module):
                  rnn_type, bidirectional, num_layers,
                  word_dropout_rate, embedding_dropout_rate, one_hot_rep,
                  max_sequence_length,
-                 sos_idx, eos_idx, pad_idx, unk_idx):
+                 sos_idx, eos_idx, pad_idx, unk_idx, prior_var):
 
         super().__init__()
         self.tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
@@ -30,6 +30,9 @@ class MolVAE(nn.Module):
         self.latent_size = latent_size
 
         self.manifold_type = manifold_type
+
+        self.prior_var = to_cuda_var(torch.tensor(prior_var))
+        self.prior_std = self.prior_var.pow(0.5)
 
         self.rnn_type = rnn_type
         self.bidirectional = bidirectional
@@ -107,8 +110,8 @@ class MolVAE(nn.Module):
         std = torch.exp(0.5 * logv)
 
         if self.manifold_type == 'Euclidean':
-            z = to_cuda_var(torch.randn([batch_size, self.latent_size]))
-            z = z * std + mean
+            eps = to_cuda_var(torch.randn([batch_size, self.latent_size]))
+            z = mean + eps * std
             vt = None
             u = None
         elif self.manifold_type == 'Lorentz':
@@ -166,96 +169,27 @@ class MolVAE(nn.Module):
         return to_cuda_var(torch.from_numpy(embeddings))
 
 
-    def inference(self, n, z=None, sampling_mode = 'greedy'):
-
-        # sampling from prior distribution
-        if z is None:
-            if self.manifold_type == 'Euclidean':
-                batch_size = n
-                z = to_cuda_var(torch.randn(batch_size, self.latent_size))
-            elif self.manifold_type == 'Lorentz':
-                batch_size = n
-                mu0 = to_cuda_var(torch.zeros(batch_size, self.latent_size))
-                mu0_h = lorentz_mapping_origin(mu0)
-                logvar = to_cuda_var(torch.zeros(self.latent_size).repeat(batch_size, 1))
-                _, _, z = lorentz_sampling(mu0_h, logvar)
-        else:
-            batch_size = z.size(0)
-
-        hidden = self.latent2hidden(z)
-
-        if self.bidirectional or self.num_layers > 1:
-            #unflatten hidden state
-            hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
-        else:
-            hidden = hidden.unsqueeze(0)
-
-        #required for dynamic stopping of sentence generation
-        sequence_idx = torch.arange(0, batch_size, out=self.tensor()).long() #all idx of batch
-        sequence_running = torch.arange(0, batch_size, out=self.tensor()).long() #all idx of batch which are still generating
-        sequence_mask = torch.ones(batch_size, out=self.tensor()).byte()
-
-        running_seqs = torch.arange(0, batch_size, out=self.tensor()).long() #idx of still generating sequence with respect to current long
-
-        generations = self.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
-
-        t=0
-        while(t<self.max_sequence_length and len(running_seqs)>0):
-
-            if t==0:
-                input_sequence = torch.Tensor(batch_size).fill_(self.sos_idx).long() #starting with '<sos>'
-
-            input_sequence = input_sequence.unsqueeze(1)
-
-            if self.one_hot_rep:
-                input_embedding = self.one_hot_embedding(input_sequence)
-            else:
-                input_embedding = self.input_embedding(input_sequence) #TODO GPU bug
-
-            output, hidden = self.decoder_rnn(input_embedding, hidden)
-
-            logits = self.outputs2vocab(output)
-
-            input_sequence = self._sample(logits, sampling_mode)
-
-            if input_sequence.dim() == 0:
-                input_sequence = torch.tensor([input_sequence])
-
-            # save next input
-            generations = self._save_sample(generations, input_sequence, sequence_running, t)
-
-            #update global running sequences
-            sequence_mask[sequence_running] = (input_sequence != self.eos_idx).data
-            sequence_running = sequence_idx.masked_select(sequence_mask)
-
-            #update local running sequences
-            running_mask = (input_sequence != self.eos_idx).data
-            running_seqs = running_seqs.masked_select(to_cuda_var(running_mask))
-
-            #prune input and hidden state according to local update
-            if len(running_seqs) > 0:
-                input_sequence = input_sequence[running_seqs]
-                hidden = hidden[:, running_seqs]
-
-                running_seqs = torch.arange(0, len(running_seqs), out=self.tensor()).long()
-
-            t += 1
-
-        return generations, z
-
     def inference(self, n, sampling_mode, z=None):
 
         # sampling from prior distribution
         if z is None:
             if self.manifold_type == 'Euclidean':
                 batch_size = n
-                z = to_cuda_var(torch.randn(batch_size, self.latent_size))
+                #z = to_cuda_var(torch.randn(batch_size, self.latent_size))
+
+                prior_mean = to_cuda_var(torch.zeros(self.latent_size))
+                prior_cov = to_cuda_var(torch.eye(self.latent_size) * self.prior_var)
+                mnd = dis.MultivariateNormal(prior_mean, prior_cov)
+                z = mnd.sample([batch_size])
+
             elif self.manifold_type == 'Lorentz':
                 batch_size = n
                 mu0 = to_cuda_var(torch.zeros(batch_size, self.latent_size))
                 mu0_h = lorentz_mapping_origin(mu0)
-                logvar = to_cuda_var(torch.zeros(self.latent_size).repeat(batch_size, 1))
+                #logvar = to_cuda_var(torch.zeros(self.latent_size).repeat(batch_size, 1))
+                logvar = to_cuda_var(torch.ones(self.latent_size).repeat(batch_size, 1) * self.prior_var).log()
                 _, _, z = lorentz_sampling(mu0_h, logvar)
+        # use the input z
         else:
             batch_size = z.size(0)
 
@@ -414,9 +348,13 @@ class MolVAE(nn.Module):
 
 
     def _sample(self, dist, sampling_mode='greedy'):
-        # TODO add beam search
         if sampling_mode == 'greedy':
             _, sample = torch.topk(dist, 1, dim=-1)
+
+            #debug
+            if sample.max().item()>38:
+                print(sample.max().item())
+                print(dist.shape)
 
         elif sampling_mode =='random':
             p = F.softmax(dist, dim=-1)

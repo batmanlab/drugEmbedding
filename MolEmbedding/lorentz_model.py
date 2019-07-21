@@ -28,9 +28,11 @@ def lorentz_product(z1, z2):
            so will be a Nan vector
     """
     assert(z1.shape == z2.shape),'Tensors have different dimensionality.'
-    [batch_size, dim_z] = z1.shape
-    lor_prod = -(z1[:,0]*z2[:,0]) + torch.bmm(z1[:,1:].view(batch_size, 1, dim_z-1), z2[:,1:].view(batch_size, dim_z-1, 1)).squeeze()
-    return lor_prod.view(-1,1)
+    m = z1 * z2
+    lor_prod = m[:, 1:].sum(dim=-1) - m[:, 0]
+    lor_prod = torch.unsqueeze(lor_prod, dim=-1)
+    return lor_prod
+
 
 def lorentz_tangent_norm(x):
     """
@@ -98,8 +100,7 @@ def lorentz_sampling(mu_h, logvar):
     mu0 = to_cuda_var(torch.zeros(batch_size, n))
     std = torch.exp(0.5 * logvar)
     eps = torch.randn_like(mu0)
-    vt = mu0 + std * eps
-    #vt = MultivariateNormal(mu0, cov).sample()
+    vt = mu0 + std * eps   # reparameterization trick
     #step 2: Interpret v as an element of tangent space of the origin of the hyperbolic space
     v0 = torch.cat((to_cuda_var(torch.ones(batch_size,1)), to_cuda_var(torch.zeros(batch_size,n))),1)
     v = torch.cat((to_cuda_var(torch.zeros(batch_size, 1)), vt), 1)
@@ -153,4 +154,11 @@ def pseudo_hyperbolic_gaussian(z, mu_h, cov, version, vt=None, u=None):
     return logp_vt, logp_z
 
 def lorentz_to_poincare(h):
-    return h[:,1:]/(h[:,0]+1).view(-1,1)
+    if type(h) is torch.Tensor:
+        return h[:,1:]/(h[:,0]+1).view(-1,1)
+    elif type(h) is np.ndarray:
+        return h[:, 1:] / (h[:, 0] + 1).reshape(-1, 1)
+
+def poincare_dist(u, v):
+    w = 1 + 2 * np.linalg.norm(u-v,ord=2,axis=1)/((1-np.linalg.norm(u,ord=2,axis=1))*(1-np.linalg.norm(v,ord=2,axis=1)))
+    return np.arccosh(w)

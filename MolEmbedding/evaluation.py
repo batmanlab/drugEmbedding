@@ -2,6 +2,8 @@ import os
 import json
 import matplotlib.pyplot as plt
 
+from lorentz_model import arccosh, lorentz_model
+
 import pickle
 from model import *
 from collections import OrderedDict
@@ -22,10 +24,25 @@ import sys
 sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 import sascorer
 
+from rdkit import DataStructs
+from rdkit.Chem.Fingerprints import FingerprintMols
 
 from absl import app
 from absl import flags
 from absl import logging
+
+
+
+
+def dist_z(manifold_type, z1, z2):
+    if manifold_type == 'Euclidean':
+        d2 = torch.dist(z1, z2).item()
+    elif manifold_type == 'Lorentz' :
+        if lorentz_product(z1, z2).item() >= -1:
+            d2 = 0
+        else:
+            d2 = arccosh(-lorentz_product(z1,z2)).item()
+    return d2
 
 def smiles_to_mol(smiles):
     try:
@@ -311,7 +328,7 @@ def func_exp7(vae_smiles_sample):
 experiment configuration
 """
 FLAGS = flags.FLAGS
-flags.DEFINE_string('experiment_name', 'exp_a_8', 'Experiment name')
+flags.DEFINE_string('experiment_name', 'cpu_lor_5_50K', 'Experiment name')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch020.model', 'Checkpoint name')
 
 def main(argv):
@@ -321,16 +338,17 @@ def main(argv):
     checkpoint = FLAGS.checkpoint
 
     fda_drugs = 'all_drugs.smi'
-    exp_path = os.path.join('./experiments/SMILES/' + exp_name, 'configs.json')
-    checkpoint_path = os.path.join('./experiments/SMILES/' + exp_name, checkpoint)
+    exp_dir = './experiments/'
+    exp_path = os.path.join(exp_dir + exp_name, 'configs.json')
+    checkpoint_path = os.path.join(exp_dir + exp_name, checkpoint)
 
-    train_file = os.path.join('./experiments/SMILES/' + exp_name, 'smiles_train.smi')
-    valid_file = os.path.join('./experiments/SMILES/' + exp_name, 'smiles_valid.smi')
-    test_file = os.path.join('./experiments/SMILES/' + exp_name, 'smiles_test.smi')
+    train_file = os.path.join(exp_dir + exp_name, 'smiles_train.smi')
+    valid_file = os.path.join(exp_dir + exp_name, 'smiles_valid.smi')
+    test_file = os.path.join(exp_dir + exp_name, 'smiles_test.smi')
 
-    img_path = os.path.join('./experiments/SMILES/' + exp_name, checkpoint + '.png')
+    img_path = os.path.join(exp_dir + exp_name, checkpoint + '.png')
     fda_drugs_path = os.path.join('./data/', fda_drugs)
-    embeddings_output_path = os.path.join('./experiments/SMILES/'+exp_name, checkpoint + 'embeddings_output' + '.pickle')
+    embeddings_output_path = os.path.join(exp_dir + exp_name, checkpoint + 'embeddings_output' + '.pickle')
 
     nsample = 1000
     attempts = 20
@@ -363,7 +381,8 @@ def main(argv):
         sos_idx=datasets['train'].sos_idx,
         eos_idx=datasets['train'].eos_idx,
         pad_idx=datasets['train'].pad_idx,
-        unk_idx=datasets['train'].unk_idx
+        unk_idx=datasets['train'].unk_idx,
+        prior_var=1.0
     )
 
     # load checkpoint
@@ -371,6 +390,54 @@ def main(argv):
     if torch.cuda.is_available():
         model = model.cuda()
     model.eval()
+
+    """
+    experiment 10: Posterior sampling metrics
+    """
+
+
+
+    nsamples = 24
+    smile_x = 'CC(C)[C@@H](CO)Nc1ccc(N)cc1Br'
+    mean, logv = smiles2mean(configs, smile_x, model)
+    std = torch.exp(0.5 * logv)
+    if configs['manifold_type'] == 'Euclidean':
+        z = to_cuda_var(torch.randn([nsamples, configs['latent_size']]))
+        z = z * std + mean
+        vt = None
+        u = None
+    elif configs['manifold_type'] == 'Lorentz':
+        vt, u, z = lorentz_sampling(mean.repeat(nsamples, 1), logv.repeat(nsamples, 1))
+
+    samples_idx, z = model.inference(n=z.shape[0], sampling_mode='greedy', z=z)
+    smiles_x_samples = idx2smiles(configs, samples_idx)
+
+    # target metrics
+    mol_t = smiles_to_mol(smile_x)
+    validity_t = verify_chemical_validty(mol_t)
+    wt_t = mol_weight(smile_x)
+    qed_t = mol_qed(smile_x)
+    sas_t = mol_sas(smile_x)
+    logP_t = mol_logp(smile_x)
+
+    # samples metrics
+    smi_smpl_lst = []
+    for smi in smiles_x_samples:
+        try:
+            mol = smiles_to_mol(smi)
+            validity = verify_chemical_validty(mol)
+            wt = mol_weight(smi)
+            qed = mol_qed(smi)
+            sas = mol_sas(smi)
+            logP = mol_logp(smi)
+            smi_smpl_lst.append([smi, validity, wt, qed, sas, logP])
+        except:
+            pass
+    smi_smpl_df = pd.DataFrame(smi_smpl_lst,
+                               columns=['SMILES', 'VALIDITY', 'MolWeight', 'QED', 'SAS', 'logP'])
+
+
+    stop = True
 
     """
     experiment 1: sample a few SMILES from prior distribution P(z)
@@ -387,11 +454,11 @@ def main(argv):
     experiment 3: visualize 2D molecules from posterior distribution
     """
     #smile_x = 'CN1CC[C@]23c4c5ccc(O)c4O[C@H]2[C@@H](O)C=C[C@H]3[C@H]1C5' # Morphine
-    #smile_x = 'CC(C)Cc1ccc(C(C)C(=O)O)cc1' # Ibuprofen
+    smile_x = 'CC(C)Cc1ccc(C(C)C(=O)O)cc1' # Ibuprofen
     #smile_x = 'CSCC(=O)NNC(=O)c1c(C)oc(C)c1C'
     #smile_x = 'CC(C)[C@@H](CO)Nc1ccc(N)cc1Br'
     #smile_x = 'Nc1ncnc2nc[nH]c12'
-    smile_x = 'O=C(O)CCCCCCCC(=O)O'
+    #smile_x = 'O=C(O)CCCCCCCC(=O)O'
     func_exp3(configs, img_path, smile_x, model, sampling_mode='greedy')
 
     """
@@ -406,7 +473,7 @@ def main(argv):
     smiles_lst = []
     file = './data/all_drugs_only.smi'
     with open(file, 'r') as file:
-        for seq in file.readlines():
+gatechke        for seq in file.readlines():
             words = list(seq)[:-1]
             smiles_lst.append(''.join(words))
     file.close()
@@ -519,6 +586,13 @@ def main(argv):
     print('STD molecule SAS: %f' %(smi_prop_df['SAS'].std()))
     print('Mean molecule logP: %f' %(smi_prop_df['logP'].mean()))
     print('STD molecule logP: %f' %(smi_prop_df['logP'].std()))
+
+
+    """
+    experiment 9: Pairwise distance between latent points of molecules
+    """
+    smiles_fda = create_smiles_lst('./data', 'all_drugs_only.smi')
+
 
 # start training
 if __name__ == '__main__':

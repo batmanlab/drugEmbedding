@@ -3,6 +3,8 @@ import json
 import torch
 import numpy as np
 import pandas as pd
+from scipy.spatial.distance import pdist, squareform
+
 
 from rdkit import Chem
 from rdkit import rdBase
@@ -14,7 +16,6 @@ from rdkit.Chem import RDConfig
 import sys
 sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 import sascorer
-
 
 def create_smiles_lst(directory, datafile):
     """
@@ -86,17 +87,19 @@ def to_cuda_var(x):
     return x
 
 
-def epoch_update_loss(summary_writer, split, epoch, loss, nll_loss, kl_loss, kl_weight):
+def epoch_update_loss(summary_writer, split, epoch, loss, nll_loss, kl_loss, kl_weight, marginal_posterior_divergence):
     # convert list to numpy array
     loss = np.asarray(loss)
     nll_loss = np.asarray(nll_loss)
     kl_loss = np.asarray(kl_loss)
     kl_weight = np.asarray(kl_weight)
+    marginal_posterior_divergence = np.asarray(marginal_posterior_divergence)
 
     summary_writer.add_scalar('%s/avg_total_loss' % split, loss.mean(), epoch)
     summary_writer.add_scalar('%s/avg_nll_loss' % split, nll_loss.mean(), epoch)
     summary_writer.add_scalar('%s/avg_kl_loss' % split, kl_loss.mean(), epoch)
     summary_writer.add_scalar('%s/avg_kl_weight' % split, kl_weight.mean(), epoch)
+    summary_writer.add_scalar('%s/avg_marginal_posterior_divergence' % split, marginal_posterior_divergence.mean(), epoch)
     return
 
 
@@ -117,7 +120,7 @@ def all_drugs_smiles_only(fda_drugs_path):
 def perturb_z(z, noise_norm, constant_norm=False):
     if noise_norm > 0.0:
         noise_vec = np.random.normal(0, 1, size=z.shape)
-        noise_vec = noise_vec / np.linalg.norm(noise_vec)
+        noise_vec = noise_vec / np.linalg.norm(noise_vec, axis=1).reshape(z.shape[0], 1)
         if constant_norm:
             return z + (noise_norm * noise_vec)
         else:
@@ -298,4 +301,26 @@ def eval_prior_samples(configs, vae_smiles_sample):
     return perc_valid, perc_chem_valid, perc_unique, perc_novel
 
 
+def pairwise_dist(manifold_type, x):
+    """
+    pairwise distance, dim(x) = (n, d)
+    :param manifold_type: manifold type, 'Euclidean' or 'Lorentz'
+    :param x: input numpy array
+    :return: pairwise distance matrix
+    """
+    if manifold_type == 'Lorentz':
+        x0 = x[:,0].reshape(-1,1)
+        x1 = x[:,1:]
+        m = np.matmul(x1, x1.transpose()) - np.matmul(x0, x0.transpose())
+        np.fill_diagonal(m, -1-1e-12)
+        m = -m
+        dm = np.log(m + np.sqrt(m ** 2 - 1))
+        return upper_tri_indexing(dm) # convert to condense form
+    elif manifold_type == 'Euclidean':
+        dc = pdist(x, metric='euclidean')
+        return dc
 
+def upper_tri_indexing(A):
+    m = A.shape[0]
+    r,c = np.triu_indices(m,1)
+    return A[r,c]

@@ -1,4 +1,3 @@
-# Test new repo
 from textdata import textdata
 from model import *
 from utils import *
@@ -24,19 +23,19 @@ flags.DEFINE_string('data_file','all_drugs_zinc.smi', 'Data file name')
 flags.DEFINE_string('vocab_file', 'zinc_char_list.json', 'Vocabulary file name')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
-flags.DEFINE_integer('limit', 400, 'Training sample size limit')
-flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
+flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
+flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
-flags.DEFINE_float('max_norm', 1e4, 'Maximum total graident norm')
+flags.DEFINE_float('max_norm', 1e12, 'Maximum total graident norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
 flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('rnn_type', 'gru', 'RNN type')
 flags.DEFINE_boolean('bidirectional', False, 'RNN bidirectional indicator')
-flags.DEFINE_integer('num_layers', 2, 'RNN number of layers')
-flags.DEFINE_integer('hidden_size', 50, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 5, 'Dimension of latent space Z')
+flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
+flags.DEFINE_integer('hidden_size', 500, 'Dimension of RNN output')
+flags.DEFINE_integer('latent_size', 50, 'Dimension of latent space Z')
 flags.DEFINE_boolean('one_hot_rep', True, 'Use one hot vector to represent inputs or not')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_float('embedding_dropout_rate', 0.0, 'Embedding drop out rate')
@@ -50,6 +49,10 @@ flags.DEFINE_boolean('new_training', True, 'New training or restart from a pretr
 flags.DEFINE_boolean('new_annealing', False, 'Restart KL annealing from a pretrained checkpoint')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch005.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 5, 'Number of epochs that have been trained')
+flags.DEFINE_float('prior_var', 1.0, 'Variance of prior distribution')
+flags.DEFINE_float('beta', 1.0, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('alpha', 0.0, 'Weight of KL divergence between marginal posterior and prior')
+
 
 def save_and_load_flags():
     experiment_dir = os.path.join(FLAGS.checkpoint_dir, FLAGS.experiment_name)
@@ -94,7 +97,10 @@ def save_and_load_flags():
             'new_training': FLAGS.new_training,
             'new_annealing': FLAGS.new_annealing,
             'checkpoint': FLAGS.checkpoint,
-            'trained_epochs': FLAGS.trained_epochs
+            'trained_epochs': FLAGS.trained_epochs,
+            'prior_var': FLAGS.prior_var,
+            'beta': FLAGS.beta,
+            'alpha': FLAGS.alpha
         }
 
         with open(flag_saving_path, 'w') as fp:
@@ -176,8 +182,66 @@ def create_raw_files(configs, split_proportion):
 
     return True
 
+# estimate the KL divergence between marginal posterior to prior in a batch
+def marginal_posterior_divergence(vt, u, z, mean, logv, num_samples, manifold_type, prior_var):
+    [batch_size, n_h] = mean.shape
 
-def kl_anneal_function(anneal_function, step, epoch, k, x0):
+    mu0 = to_cuda_var(torch.zeros(1, n_h-1))
+    mu0_h = lorentz_mapping_origin(mu0)
+    diag0 = to_cuda_var(torch.eye(n_h-1).repeat(1, 1, 1))
+
+    logq_zb_lst = []
+    logp_zb_lst = []
+    for b in range(batch_size):
+        vt_b = vt[b,:].unsqueeze(0)
+        u_b = u[b,:].unsqueeze(0)
+        zb = z[b,:].unsqueeze(0)
+        mu_b = mean[b,:].unsqueeze(0)
+        logv_b = logv[b,:].unsqueeze(0)
+        diag_b= to_cuda_var(torch.eye(n_h-1).repeat(1, 1, 1))
+        cov_b = torch.exp(logv_b).unsqueeze(dim=2) * diag_b
+
+        # removing b-th mean and logv
+        vt_r = vt_b.repeat(batch_size-1,1)
+        u_r = u_b.repeat(batch_size-1,1)
+        zr = zb.repeat(batch_size-1,1)
+        mu_r = torch.cat((mean[:b,:],mean[b+1:,:]))
+        logv_r = torch.cat((logv[:b,:],logv[b+1:,:]))
+        diag_r = to_cuda_var(torch.eye(n_h - 1).repeat(batch_size-1, 1, 1))
+        cov_r = torch.exp(logv_r).unsqueeze(dim=2) * diag_r
+
+        if manifold_type == 'Euclidean':
+            pass
+        elif manifold_type == 'Lorentz':
+
+            # E[log q(zb)] = - H(q(z))
+            _, logq_zb_xb = pseudo_hyperbolic_gaussian(zb, mu_b, cov_b, version=2, vt=vt_b, u=u_b)
+            _, logq_zb_xr = pseudo_hyperbolic_gaussian(zr, mu_r, cov_r, version=2, vt=vt_r, u=u_r)
+
+            yb1 = logq_zb_xb - torch.log(to_cuda_var(torch.tensor(num_samples).float()))
+            yb2 = logq_zb_xr + torch.log(to_cuda_var(torch.tensor((num_samples-1)/((batch_size-1)*num_samples)).float()))
+            yb = torch.cat([yb1, yb2], dim=0)
+            logq_zb = torch.logsumexp(yb, dim=0)
+
+            # E[log p(zb)]
+            _, logp_zb = pseudo_hyperbolic_gaussian(zb, mu0_h, prior_var * diag0, version=2, vt=None, u=None)
+
+            logq_zb_lst.append(logq_zb)
+            logp_zb_lst.append(logp_zb)
+
+    logq_zb = torch.stack(logq_zb_lst, dim=0)
+    logp_zb = torch.stack(logp_zb_lst, dim=0).squeeze(-1)
+
+    mpd = (logq_zb - logp_zb).sum()
+
+    return logq_zb, logp_zb, mpd
+
+
+def kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, k, x0):
+
+    if new_training is False and new_annealing is True:
+        epoch = epoch - start_epoch
+
     if anneal_function == 'logistic':
         #return float(1 / (1 + np.exp(-k * (step - x0))))
         return float(1 / (1 + np.exp(-k * (epoch - x0))))
@@ -186,7 +250,7 @@ def kl_anneal_function(anneal_function, step, epoch, k, x0):
     elif anneal_function == 'constant':
         return 1
 
-def kl_lorentz(z, vt, u, mean, logv):
+def kl_lorentz(z, vt, u, mean, logv, prior_var):
     [batch_size, n_h] = mean.shape
     n = n_h - 1
     mu0 = to_cuda_var(torch.zeros(batch_size, n))
@@ -197,10 +261,19 @@ def kl_lorentz(z, vt, u, mean, logv):
     # posterior density
     _, logp_z = pseudo_hyperbolic_gaussian(z, mean, cov, version=2, vt=vt, u=u)
     # prior density
-    _, logp_z0 = pseudo_hyperbolic_gaussian(z, mu0_h, diag, version=2, vt=None, u=None)
-    return torch.sum(logp_z - logp_z0)
+    _, logp_z0 = pseudo_hyperbolic_gaussian(z, mu0_h, prior_var * diag, version=2, vt=None, u=None)
+    return logp_z, logp_z0, torch.sum(logp_z - logp_z0)
 
-def loss_fn(NLL, logp, target, length, z, vt, u, mean, logv, anneal_function, step, epoch, k, x0, manifold_type):
+def loss_fn(configs, NLL, logp, target, length, z, vt, u, mean, logv, step, epoch, start_epoch, num_samples):
+
+    anneal_function = configs['anneal_function']
+    k = configs['k']
+    x0 = configs['x0']
+    new_training = configs['new_training']
+    new_annealing = configs['new_annealing']
+    manifold_type = configs['manifold_type']
+    prior_var = to_cuda_var(torch.tensor(configs['prior_var']))
+
     # cut-off unnecessary padding from target, and flatten
     target = target[:, :torch.max(length).item()].contiguous().view(-1)
     logp = logp.view(-1, logp.size(2))
@@ -208,15 +281,19 @@ def loss_fn(NLL, logp, target, length, z, vt, u, mean, logv, anneal_function, st
     # Negative Log Likelihood
     NLL_loss = NLL(logp, target)
 
-    # KL Divergence
+    # KL divergence
     if manifold_type == 'Euclidean':
-        KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+        #KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+        KL_loss = -0.5 * torch.sum(1 + logv - prior_var.log() - (logv.exp() + mean.pow(2))/prior_var)
     elif manifold_type == 'Lorentz':
-        KL_loss = kl_lorentz(z, vt, u, mean, logv)
+        logq_zx_kl, logp_z0_kl, KL_loss = kl_lorentz(z, vt, u, mean, logv, prior_var)
 
-    KL_weight = kl_anneal_function(anneal_function, step, epoch, k, x0)
+    KL_weight = kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, k, x0)
 
-    return NLL_loss, KL_loss, KL_weight
+    # marginal posterior divergence
+    logq_zb, logp_zb, mpd = marginal_posterior_divergence(vt, u, z, mean, logv, num_samples, manifold_type, prior_var)
+
+    return NLL_loss, KL_loss, KL_weight, mpd
 
 
 def pipeline(configs):
@@ -290,7 +367,8 @@ def pipeline(configs):
         sos_idx=datasets['train'].sos_idx,
         eos_idx=datasets['train'].eos_idx,
         pad_idx=datasets['train'].pad_idx,
-        unk_idx=datasets['train'].unk_idx
+        unk_idx=datasets['train'].unk_idx,
+        prior_var=configs['prior_var']
     )
 
     # load checkpoint
@@ -326,12 +404,8 @@ def pipeline(configs):
             start_epoch = 0
             end_epoch = configs['epochs']
         else:
-            if configs['new_annealing']:
-                start_epoch = 0
-                end_epoch = configs['epochs']
-            else:
-                start_epoch = configs['trained_epochs']
-                end_epoch = configs['trained_epochs'] + configs['epochs']
+            start_epoch = configs['trained_epochs']
+            end_epoch = configs['trained_epochs'] + configs['epochs']
 
         for epoch in range(start_epoch, end_epoch):
 
@@ -354,11 +428,15 @@ def pipeline(configs):
                     pin_memory=torch.cuda.is_available()
                 )
 
+                # get num. of samples in data_loader
+                num_samples = len(data_loader.dataset.data.keys())
+
                 epoch_metric = {
                     'total_loss': [],
                     'nll_loss': [],
                     'kl_loss': [],
-                    'kl_weight': []
+                    'kl_weight': [],
+                    'marginal_posterior_divergence': []
                 }
 
                 start_time = time.time()
@@ -374,16 +452,19 @@ def pipeline(configs):
                     logp, mean, logv, z, vt, u = model(batch['inputs'], batch['len'])
 
                     # loss calculation
-                    NLL_loss, KL_loss, KL_weight = loss_fn(NLL, logp, batch['targets'],
-                        batch['len'], z, vt, u, mean, logv, configs['anneal_function'], step, epoch + 1, configs['k'], configs['x0'], configs['manifold_type'])
+                    NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence = loss_fn(configs, NLL, logp, batch['targets'],
+                        batch['len'], z, vt, u, mean, logv, step, epoch + 1, start_epoch, num_samples)
 
-                    loss = (NLL_loss + KL_weight * KL_loss)/batch_size
+                    loss = (NLL_loss + KL_weight * (configs['beta']*KL_loss + configs['alpha']*marginal_posterior_divergence))/batch_size
+                    #loss = (NLL_loss + KL_weight * (configs['alpha'] * marginal_posterior_divergence)) / batch_size
+                    #loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
                     #record metrics
                     epoch_metric['total_loss'].append(loss.item())
                     epoch_metric['nll_loss'].append(NLL_loss.item()/batch_size)
                     epoch_metric['kl_loss'].append(KL_loss.item()/batch_size)
                     epoch_metric['kl_weight'].append(KL_weight)
+                    epoch_metric['marginal_posterior_divergence'].append(marginal_posterior_divergence.item()/batch_size)
                     #epoch_metric['lr'].append((optimizer.param_groups[0]['lr']))
 
 
@@ -451,7 +532,7 @@ def pipeline(configs):
                             end_time = time.time()
 
                             # monitor loss during training
-                            logging_loss(epoch, end_epoch, iteration, data_loader, loss, NLL_loss, KL_loss, KL_weight, batch_size, start_time, end_time)
+                            logging_loss(epoch, end_epoch, iteration, data_loader, loss, NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence, batch_size, start_time, end_time)
 
                             start_time = time.time()
 
@@ -462,15 +543,18 @@ def pipeline(configs):
                             torch.save(model.state_dict(), checkpoint_name)
 
                 #epoch -> split level (e.g. train, valid, test) + epoch level
-                epoch_update_loss(summary_writer, split, epoch, epoch_metric['total_loss'], epoch_metric['nll_loss'], epoch_metric['kl_loss'], epoch_metric['kl_weight'])
+                epoch_update_loss(summary_writer, split, epoch, epoch_metric['total_loss'], epoch_metric['nll_loss'], epoch_metric['kl_loss'], epoch_metric['kl_weight'], epoch_metric['marginal_posterior_divergence'])
 
-            #epoch level
+            # epoch level
             # monitor network gradient during training
             training_grad_norm(epoch, train_grad_metric, summary_writer)
-            #fda drugs + epoch level
-            mean_f = fda_drugs_evaluation(model, fda_batch, fda_batch_size, NLL, configs, step, epoch, end_epoch, summary_writer)
-            # prior: % validty, uniqueness, novelty ~ p(z)
+
+            # fda drugs + epoch level
+            # mean_f = fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer)
+
+            # prior: % validity, uniqueness, novelty ~ p(z)
             prior_samples_evaluation(epoch, configs, model, summary_writer)
+
             # posterior: % accurately reconstructed
             posterior_recon_accuracy(configs, smiles_fda, 'fda', model, summary_writer, epoch)
             posterior_recon_accuracy(configs, smiles_test[:1000], 'test', model, summary_writer, epoch)
@@ -495,7 +579,7 @@ def pipeline(configs):
     return
 
 
-def posterior_recon_accuracy(configs, smiles_lst, dataset, model,summary_writer,epoch):
+def posterior_recon_accuracy(configs, smiles_lst, dataset, model, summary_writer, epoch):
     recon_cnt = 0
     for smi in smiles_lst:
         # skip smiles that has characters not in the ZINC char list
@@ -521,32 +605,34 @@ def prior_samples_evaluation(epoch, configs, model, summary_writer):
     summary_writer.add_scalar('%s/novelty' % split, perc_novel, epoch)
 
 
-def fda_drugs_evaluation(model, fda_batch, fda_batch_size, NLL, configs, step, epoch, end_epoch, summary_writer):
+def fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer):
+
     logp_f, mean_f, logv_f, z_f, vt_f, u_f = model(fda_batch['inputs'], fda_batch['len'])
-    NLL_loss_f, KL_loss_f, KL_weight_f = loss_fn(NLL, logp_f, fda_batch['targets'],
+    NLL_loss_f, KL_loss_f, KL_weight_f, marginal_posterior_divergence_f = loss_fn(configs, NLL, logp_f, fda_batch['targets'],
                                                  fda_batch['len'], z_f, vt_f, u_f, mean_f, logv_f,
-                                                 configs['anneal_function'], step, epoch + 1, configs['k'],
-                                                 configs['x0'], configs['manifold_type'])
-    loss_f = (NLL_loss_f + KL_weight_f * KL_loss_f)
+                                                 step, epoch + 1, start_epoch, fda_batch_size)
+    loss_f = (NLL_loss_f + KL_weight_f * KL_loss_f + marginal_posterior_divergence_f)
     # logging loss per epoch
     logging.info(
-        'FDA Drugs: Epoch [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f},'.
+        'FDA Drugs: Epoch [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}, Marginal Posterior Divergence: {:.4f}'.
             format(epoch + 1, end_epoch, loss_f.item()/fda_batch_size, NLL_loss_f.item() / fda_batch_size,
-                   KL_loss_f.item() / fda_batch_size, KL_weight_f))
+                   KL_loss_f.item() / fda_batch_size, KL_weight_f, marginal_posterior_divergence_f/fda_batch_size))
     # tensorboard
     split = 'FDA'
     summary_writer.add_scalar('%s/avg_total_loss' % split, loss_f/fda_batch_size, epoch)
     summary_writer.add_scalar('%s/avg_nll_loss' % split, NLL_loss_f/fda_batch_size, epoch)
     summary_writer.add_scalar('%s/avg_kl_loss' % split, KL_loss_f/fda_batch_size, epoch)
     summary_writer.add_scalar('%s/avg_kl_weight' % split, KL_weight_f, epoch)
+    summary_writer.add_scalar('%s/avg_marginal_posterior_divergence' % split, marginal_posterior_divergence_f/fda_batch_size, epoch)
     return mean_f
 
 
-def logging_loss(epoch, end_epoch, iteration, data_loader, loss, NLL_loss, KL_loss, KL_weight, batch_size, start_time, end_time):
+def logging_loss(epoch, end_epoch, iteration, data_loader, loss, NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence, batch_size, start_time, end_time):
     logging.info(
-        'Training: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}, Speed: {:4f} ms'.
+        'Training: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}, Marginal Posterior Divergence: {:.4f}, Speed: {:.4f} ms'.
             format(epoch + 1, end_epoch, iteration + 1, len(data_loader), loss.item(), NLL_loss.item() / batch_size,
-                   KL_loss.item() / batch_size, KL_weight, (end_time - start_time) * 100 / batch_size))
+                   KL_loss.item() / batch_size, KL_weight, marginal_posterior_divergence/batch_size, (end_time - start_time) * 100 / batch_size))
+
 
 def training_grad_norm(epoch, train_grad_metric, summary_writer):
 
@@ -562,6 +648,7 @@ def training_grad_norm(epoch, train_grad_metric, summary_writer):
     summary_writer.add_scalar('%s/decoder_gradient_norm_log10' % split, np.log10(dec_grad_norm.mean()), epoch)
     summary_writer.add_scalar('%s/h2mu_graddient_norm_log10' % split, np.log10(h2m_grad_norm.mean()), epoch)
     summary_writer.add_scalar('%s/h2logvar_graddient_norm_log10' % split, np.log10(h2v_grad_norm.mean()), epoch)
+
 
 def main(argv):
     del argv
