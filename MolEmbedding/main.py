@@ -23,19 +23,19 @@ flags.DEFINE_string('data_file','all_drugs_zinc.smi', 'Data file name')
 flags.DEFINE_string('vocab_file', 'zinc_char_list.json', 'Vocabulary file name')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
-flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
-flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
-flags.DEFINE_integer('epochs', 100, 'Number of epochs')
+flags.DEFINE_integer('limit', 400, 'Training sample size limit')
+flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
+flags.DEFINE_integer('epochs', 20, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e12, 'Maximum total graident norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
 flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('rnn_type', 'gru', 'RNN type')
-flags.DEFINE_boolean('bidirectional', False, 'RNN bidirectional indicator')
-flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
-flags.DEFINE_integer('hidden_size', 500, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 50, 'Dimension of latent space Z')
+flags.DEFINE_boolean('bidirectional', True, 'RNN bidirectional indicator')
+flags.DEFINE_integer('num_layers', 2, 'RNN number of layers')
+flags.DEFINE_integer('hidden_size', 50, 'Dimension of RNN output')
+flags.DEFINE_integer('latent_size', 5, 'Dimension of latent space Z')
 flags.DEFINE_boolean('one_hot_rep', True, 'Use one hot vector to represent inputs or not')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_float('embedding_dropout_rate', 0.0, 'Embedding drop out rate')
@@ -248,7 +248,7 @@ def kl_anneal_function(anneal_function, new_training, new_annealing, step, start
     elif anneal_function == 'linear':
         return min(1, step / x0)
     elif anneal_function == 'constant':
-        return 1
+        return 0
 
 def kl_lorentz(z, vt, u, mean, logv, prior_var):
     [batch_size, n_h] = mean.shape
@@ -291,7 +291,10 @@ def loss_fn(configs, NLL, logp, target, length, z, vt, u, mean, logv, step, epoc
     KL_weight = kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, k, x0)
 
     # marginal posterior divergence
-    logq_zb, logp_zb, mpd = marginal_posterior_divergence(vt, u, z, mean, logv, num_samples, manifold_type, prior_var)
+    if configs['alpha'] > 0:
+        logq_zb, logp_zb, mpd = marginal_posterior_divergence(vt, u, z, mean, logv, num_samples, manifold_type, prior_var)
+    else:
+        mpd = to_cuda_var(torch.tensor(0.0))
 
     return NLL_loss, KL_loss, KL_weight, mpd
 
@@ -456,8 +459,6 @@ def pipeline(configs):
                         batch['len'], z, vt, u, mean, logv, step, epoch + 1, start_epoch, num_samples)
 
                     loss = (NLL_loss + KL_weight * (configs['beta']*KL_loss + configs['alpha']*marginal_posterior_divergence))/batch_size
-                    #loss = (NLL_loss + KL_weight * (configs['alpha'] * marginal_posterior_divergence)) / batch_size
-                    #loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
                     #record metrics
                     epoch_metric['total_loss'].append(loss.item())
@@ -550,7 +551,7 @@ def pipeline(configs):
             training_grad_norm(epoch, train_grad_metric, summary_writer)
 
             # fda drugs + epoch level
-            # mean_f = fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer)
+            mean_f = fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer)
 
             # prior: % validity, uniqueness, novelty ~ p(z)
             prior_samples_evaluation(epoch, configs, model, summary_writer)

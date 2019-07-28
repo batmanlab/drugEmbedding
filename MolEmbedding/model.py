@@ -37,7 +37,9 @@ class MolVAE(nn.Module):
         self.rnn_type = rnn_type
         self.bidirectional = bidirectional
         self.num_layers = num_layers
+        self.bidirectional_factor = 2 if bidirectional else 1
         self.hidden_factor = (2 if bidirectional else 1) * num_layers
+
 
         self.word_dropout_rate = word_dropout_rate
         self.embedding_dropout_rate = embedding_dropout_rate
@@ -58,10 +60,12 @@ class MolVAE(nn.Module):
         else:
             raise ValueError()
 
-        self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-                               batch_first=True)
-        self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-                               batch_first=True)
+        self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional, batch_first=True)
+
+        # use a simple decoder (single layer, unidirectional)
+        self.decoder_rnn = rnn(embedding_size, hidden_size * self.hidden_factor, num_layers=1, bidirectional=False, batch_first=True)
+        # self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional, batch_first=True)
+
         # MLP -> stochastic
         self.hidden2mean = nn.Linear(hidden_size * self.hidden_factor, latent_size)
         self.hidden2logv = nn.Linear(hidden_size * self.hidden_factor, latent_size)
@@ -71,17 +75,9 @@ class MolVAE(nn.Module):
             self.latent2hidden = nn.Linear(latent_size, hidden_size * self.hidden_factor)
         elif manifold_type == 'Lorentz':
             self.latent2hidden = nn.Linear(latent_size + 1, hidden_size * self.hidden_factor)
-        self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
+        self.outputs2vocab = nn.Linear(hidden_size * self.hidden_factor, vocab_size)
 
-
-    def forward(self, input_sequence, sequence_length):
-
-        #batch first = True
-        batch_size = input_sequence.size(0) #[bacth_size, max_seq_len-1]
-        sorted_lengths, sorted_idx = torch.sort(sequence_length, descending=True)
-        input_sequence = input_sequence[sorted_idx]
-
-        #encoder
+    def encoder(self, batch_size, sorted_lengths, input_sequence):
         # using one-hot rep.
         if self.one_hot_rep:
             input_embedding = self.one_hot_embedding(input_sequence) #[batch_size, max_seq_len-1, one_hot_size]
@@ -95,10 +91,13 @@ class MolVAE(nn.Module):
 
         if self.bidirectional or self.num_layers > 1:
             # flatten hidden state
-            hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
+            #hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
+            hidden = hidden.permute(1,0,2).reshape(batch_size,self.hidden_size*self.hidden_factor)
         else:
             hidden = hidden.squeeze()
+        return hidden
 
+    def reparameterize(self, batch_size, hidden):
         # stochastic layer and reparameterization
         if len(hidden.shape) == 1:
             hidden = hidden.view(1, -1)  # if batch size = 1
@@ -116,15 +115,19 @@ class MolVAE(nn.Module):
             u = None
         elif self.manifold_type == 'Lorentz':
             vt, u, z = lorentz_sampling(mean, logv)
+        return mean, logv, vt, u, z
 
-        #decoder
+    def decoder(self, batch_size, input_sequence, sorted_lengths, sorted_idx, z):
+
         hidden = self.latent2hidden(z)
-
-        if self.bidirectional or self.num_layers > 1:
-            # unflatten hidden state
-            hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
+        hidden = hidden.unsqueeze(0)
+        """
+        if self.num_layers > 1:
+            h = hidden.view(batch_size, self.num_layers, self.hidden_size*self.bidirectional_factor)
+            hidden = h.permute(1,0,2)
         else:
             hidden = hidden.unsqueeze(0)
+        """
 
         #decoder input
         if self.word_dropout_rate > 0:
@@ -155,7 +158,23 @@ class MolVAE(nn.Module):
         # project outputs to vocab
         logp = F.log_softmax(self.outputs2vocab(padded_outputs.view(-1, padded_outputs.size(2))), dim=-1)
         logp = logp.view(b, s, self.vocab_size)
+        return logp
 
+    def forward(self, input_sequence, sequence_length):
+
+        #batch first = True
+        batch_size = input_sequence.size(0) #[bacth_size, max_seq_len-1]
+        sorted_lengths, sorted_idx = torch.sort(sequence_length, descending=True)
+        input_sequence = input_sequence[sorted_idx]
+
+        #eoncoder
+        hidden = self.encoder(batch_size, sorted_lengths, input_sequence)
+
+        #reparameterization
+        mean, logv, vt, u, z = self.reparameterize(batch_size, hidden)
+
+        #decoder
+        logp = self.decoder(batch_size, input_sequence, sorted_lengths, sorted_idx, z)
 
         return logp, mean, logv, z, vt, u
 
@@ -194,12 +213,15 @@ class MolVAE(nn.Module):
             batch_size = z.size(0)
 
         hidden = self.latent2hidden(z)
-
+        hidden = hidden.unsqueeze(0)
+        """
         if self.bidirectional or self.num_layers > 1:
             #unflatten hidden state
-            hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
+            h = hidden.view(batch_size, self.num_layers, self.hidden_size*self.bidirectional_factor)
+            hidden = h.permute(1,0,2)
         else:
             hidden = hidden.unsqueeze(0)
+        """
 
         #required for dynamic stopping of sentence generation
         sequence_idx = torch.arange(0, batch_size, out=self.tensor()).long() #all idx of batch
@@ -262,12 +284,16 @@ class MolVAE(nn.Module):
         # smile_x = 'CC(C)Cc1ccc(C(C)C(=O)O)cc1'  # Ibuprofen
         zi = to_cuda_var(z.repeat([B, 1]))
         h_in = self.latent2hidden(zi)
+        h_in = h_in.unsqueeze(0)
+        """
         if self.bidirectional or self.num_layers > 1:
             # unflatten hidden state
-            h_in = h_in.view(self.hidden_factor, B, self.hidden_size)
+            #h_in = h_in.view(self.hidden_factor, B, self.hidden_size)
+            h = h_in.view(B, self.num_layers, self.hidden_size*self.bidirectional_factor)
+            h_in = h.permute(1,0,2)
         else:
             h_in = h_in.unsqueeze(0)
-
+        """
         smiles_eos_lst = []
         t=0
         while(t<self.max_sequence_length):
