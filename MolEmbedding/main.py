@@ -1,6 +1,7 @@
 from textdata import textdata
 from model import *
 from utils import *
+from clustering import *
 
 from absl import app
 from absl import flags
@@ -12,28 +13,31 @@ from torch.utils.data import DataLoader
 import torch
 import time
 import datetime
+import math
 
 now = datetime.datetime.now()
 
 # define model hyper parameters
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('data_dir', './data', 'Directory where data is stored')
-flags.DEFINE_string('data_file','all_drugs_zinc.smi', 'Data file name')
-flags.DEFINE_string('vocab_file', 'zinc_char_list.json', 'Vocabulary file name')
+flags.DEFINE_string('data_dir', './data/zinc_fda_drugs_clean/', 'Directory where data is stored')
+flags.DEFINE_string('data_file','smiles_set_clean.smi', 'Data file name')
+flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
-flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
-flags.DEFINE_integer('limit', 400, 'Training sample size limit')
-flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
+flags.DEFINE_string('experiment_name', 'debug_euc_vamp', 'Experiment name')
+flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
+flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 20, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e12, 'Maximum total graident norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
+flags.DEFINE_string('prior_type', 'VampPrior', 'Prior type: Standard normal or VampPrior')
+flags.DEFINE_integer('num_centroids', 1, 'Number of centroids used in VampPrior')
 flags.DEFINE_string('rnn_type', 'gru', 'RNN type')
-flags.DEFINE_boolean('bidirectional', True, 'RNN bidirectional indicator')
-flags.DEFINE_integer('num_layers', 2, 'RNN number of layers')
+flags.DEFINE_boolean('bidirectional', False, 'RNN bidirectional indicator')
+flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
 flags.DEFINE_integer('hidden_size', 50, 'Dimension of RNN output')
 flags.DEFINE_integer('latent_size', 5, 'Dimension of latent space Z')
 flags.DEFINE_boolean('one_hot_rep', True, 'Use one hot vector to represent inputs or not')
@@ -42,13 +46,14 @@ flags.DEFINE_float('embedding_dropout_rate', 0.0, 'Embedding drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
 flags.DEFINE_float('k', 0.51, '1st parameter in KL logistic annealing function')
 flags.DEFINE_float('x0', 29, '2nd parameter in KL logistic annealing function')
+flags.DEFINE_float('C', 1, 'Constant value if KL annealing function is a constant')
 flags.DEFINE_integer('num_workers', 1, 'Number of workers in DataLoader')
 flags.DEFINE_integer('logging_steps', 1, 'Log per steps/mini-batch')
-flags.DEFINE_integer('save_per_epochs', 5, 'Save intermediate checkpoints every few training epochs')
-flags.DEFINE_boolean('new_training', True, 'New training or restart from a pretrained checkpoint')
-flags.DEFINE_boolean('new_annealing', False, 'Restart KL annealing from a pretrained checkpoint')
-flags.DEFINE_string('checkpoint', 'checkpoint_epoch005.model', 'Load checkpoint file')
-flags.DEFINE_integer('trained_epochs', 5, 'Number of epochs that have been trained')
+flags.DEFINE_integer('save_per_epochs', 1, 'Save intermediate checkpoints every few training epochs')
+flags.DEFINE_boolean('new_training', False, 'New training or restart from a pretrained checkpoint')
+flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pretrained checkpoint')
+flags.DEFINE_string('checkpoint', 'checkpoint_epoch020.model', 'Load checkpoint file')
+flags.DEFINE_integer('trained_epochs', 20, 'Number of epochs that have been trained')
 flags.DEFINE_float('prior_var', 1.0, 'Variance of prior distribution')
 flags.DEFINE_float('beta', 1.0, 'Weight of KL divergence between conditional posterior and prior')
 flags.DEFINE_float('alpha', 0.0, 'Weight of KL divergence between marginal posterior and prior')
@@ -80,6 +85,8 @@ def save_and_load_flags():
             'max_norm': FLAGS.max_norm,
             'wd': FLAGS.wd,
             'manifold_type': FLAGS.manifold_type,
+            'prior_type': FLAGS.prior_type,
+            'num_centroids': FLAGS.num_centroids,
             'rnn_type': FLAGS.rnn_type,
             'bidirectional': FLAGS.bidirectional,
             'num_layers': FLAGS.num_layers,
@@ -91,6 +98,7 @@ def save_and_load_flags():
             'anneal_function': FLAGS.anneal_function,
             'k': FLAGS.k,
             'x0': FLAGS.x0,
+            'C': FLAGS.C,
             'num_workers': FLAGS.num_workers,
             'logging_steps': FLAGS.logging_steps,
             'save_per_epochs': FLAGS.save_per_epochs,
@@ -110,10 +118,22 @@ def save_and_load_flags():
     else:
         with open(flag_saving_path, 'r') as fp:
             configs = json.load(fp)
+            # overwrite old configurations
             configs['new_training'] = FLAGS.new_training
             configs['new_annealing'] = FLAGS.new_annealing
             configs['checkpoint'] = FLAGS.checkpoint
+            configs['experiment_name'] = FLAGS.experiment_name
             configs['trained_epochs'] = FLAGS.trained_epochs
+            configs['epochs'] = FLAGS.epochs
+            configs['save_per_epochs'] = FLAGS.save_per_epochs
+            configs['prior_type'] = FLAGS.prior_type
+            configs['num_centroids'] = FLAGS.num_centroids
+            configs['anneal_function'] = FLAGS.anneal_function
+            configs['k'] = FLAGS.k
+            configs['x0'] = FLAGS.x0
+            configs['C'] = FLAGS.C
+            configs['beta'] = FLAGS.beta
+            configs['alpha'] = FLAGS.alpha
         fp.close()
 
     if not os.path.exists(flag_saving_path):
@@ -132,7 +152,7 @@ def create_raw_files(configs, split_proportion):
 
         # create train, valid, test files
         limit = configs['limit']
-        data_dir = configs['data_dir']
+        #data_dir = configs['data_dir']
         experiment_dir = os.path.join(FLAGS.checkpoint_dir, FLAGS.experiment_name)
         smiles_file = os.path.join(configs['data_dir'], configs['data_file'])
 
@@ -149,10 +169,10 @@ def create_raw_files(configs, split_proportion):
 
         cnt_cvrt_cans=0
 
-        f_train = open(os.path.join(data_dir, 'smiles_train.smi'), 'w')
+        #f_train = open(os.path.join(data_dir, 'smiles_train.smi'), 'w')
         #smiles_train, cnt_cvrt_cans = check_canonical_form(smiles_train)
-        f_train.writelines(smiles_train)
-        f_train.close()
+        #f_train.writelines(smiles_train)
+        #f_train.close()
         #save a copy in the experiment folder
         f_train = open(os.path.join(experiment_dir, 'smiles_train.smi'), 'w')
         #smiles_train, cnt_cvrt_cans = check_canonical_form(smiles_train)
@@ -160,20 +180,20 @@ def create_raw_files(configs, split_proportion):
         f_train.close()
         logging.info('Training data has been created. Size = %d. Converted %d non-canonical SMILES.' % (train_size, cnt_cvrt_cans))
 
-        f_valid = open(os.path.join(data_dir, 'smiles_valid.smi'), 'w')
+        #f_valid = open(os.path.join(data_dir, 'smiles_valid.smi'), 'w')
         #smiles_valid, cnt_cvrt_cans = check_canonical_form(smiles_valid)
-        f_valid.writelines(smiles_valid)
-        f_valid.close()
+        #f_valid.writelines(smiles_valid)
+        #f_valid.close()
         f_valid = open(os.path.join(experiment_dir, 'smiles_valid.smi'), 'w')
         #smiles_valid, cnt_cvrt_cans = check_canonical_form(smiles_valid)
         f_valid.writelines(smiles_valid)
         f_valid.close()
         logging.info('Validation data has been created. Size = %d. Converted %d non-canonical SMILES.' % (valid_size, cnt_cvrt_cans))
 
-        f_test = open(os.path.join(data_dir, 'smiles_test.smi'), 'w')
+        #f_test = open(os.path.join(data_dir, 'smiles_test.smi'), 'w')
         #smiles_test, cnt_cvrt_cans = check_canonical_form(smiles_test)
-        f_test.writelines(smiles_test)
-        f_test.close()
+        #f_test.writelines(smiles_test)
+        #f_test.close()
         f_test = open(os.path.join(experiment_dir, 'smiles_test.smi'), 'w')
         #smiles_test, cnt_cvrt_cans = check_canonical_form(smiles_test)
         f_test.writelines(smiles_test)
@@ -237,10 +257,14 @@ def marginal_posterior_divergence(vt, u, z, mean, logv, num_samples, manifold_ty
     return logq_zb, logp_zb, mpd
 
 
-def kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, k, x0):
+def kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, configs):
+
+    k = configs['k']
+    x0 = configs['x0']
+    C = configs['C']
 
     if new_training is False and new_annealing is True:
-        epoch = epoch - start_epoch
+        epoch = epoch - start_epoch + 1
 
     if anneal_function == 'logistic':
         #return float(1 / (1 + np.exp(-k * (step - x0))))
@@ -248,9 +272,71 @@ def kl_anneal_function(anneal_function, new_training, new_annealing, step, start
     elif anneal_function == 'linear':
         return min(1, step / x0)
     elif anneal_function == 'constant':
-        return 0
+        return C
 
-def kl_lorentz(z, vt, u, mean, logv, prior_var):
+def log_Normal_diag(x, mean, log_var, average=False, dim=None):
+    _, k, _ = mean.shape
+    log_normal = -0.5 * ( log_var + torch.pow( x - mean, 2 ) / torch.exp( log_var ) + k * math.log(2*math.pi) )
+    if average:
+        return torch.mean( log_normal, dim )
+    else:
+        return torch.sum( log_normal, dim )
+
+def batch_repeat(x, batch_size):
+    nr, nc = x.shape
+    x1 = x.unsqueeze(1)
+    x2 = x1.repeat(1,batch_size,1)
+    return x2.view(-1, nc)
+
+def kl_euclidean(model, z, mean, logv, prior_type, centroids):
+    batch_size, n = z.shape # n = dim(z)
+    diag = to_cuda_var(torch.eye(n).repeat(batch_size, 1, 1))
+    cov = torch.exp(logv).unsqueeze(dim=-1) * diag
+
+    # compute log probabilities of posterior
+    z_posterior_pdf = MultivariateNormal(mean, cov)
+    logp_posterior_z = z_posterior_pdf.log_prob(z)
+
+    if prior_type == 'Standard':
+        z_prior_pdf = MultivariateNormal(to_cuda_var(torch.zeros(n)), diag)
+        logp_prior_z = z_prior_pdf.log_prob(z)
+    elif prior_type == 'VampPrior':
+        k = centroids.shape[0]
+        inputs = to_cuda_var(torch.from_numpy(centroids))
+        lens = (inputs != 0).sum(dim=1) - 1
+        _, z_p_mean, z_p_logvar, _, _, _ = model(inputs, lens) # k * dim(z)
+
+        # bring z and z_p_mean to the same size
+        z_v = z.repeat(k,1) # (batch * k) * dim(z)
+
+        z_p_mean_v = batch_repeat(z_p_mean, batch_size)
+        z_p_logvar_v = batch_repeat(z_p_logvar, batch_size)
+        diag_v = to_cuda_var(torch.eye(n).repeat(k * batch_size, 1, 1))
+        cov_v = torch.exp(z_p_logvar_v).unsqueeze(dim=-1) * diag_v
+
+        z_prior_pdf_v = MultivariateNormal(z_p_mean_v, cov_v)
+        logp_prior_z_v = z_prior_pdf_v.log_prob(z_v)
+
+        logp_z_v = logp_prior_z_v.squeeze().view(k, batch_size).permute(1,0)
+        logp_prior_z = torch.logsumexp(logp_z_v, 1, keepdim=False, out=None) - math.log(k)
+
+        """
+        z_expand = z.unsqueeze(1) # batch * 1 * dim(z)
+        z_p_mean_expand = z_p_mean.unsqueeze(0) # 1 * k * dim(z)
+        z_p_logvar_expand = z_p_logvar.unsqueeze(0) # 1* k * dim(z)
+
+        #z_p_cov = torch.exp(z_p_logvar).unsqueeze(dim=-1) * diag
+        #z_prior_pdf = MultivariateNormal(z_p_mean, z_p_cov)
+        #logp_prior_z1 = z_prior_pdf.log_prob(z)
+
+        a = log_Normal_diag(z_expand, z_p_mean_expand, z_p_logvar_expand, dim=2) # a.shape = batch_size * number_components
+        logp_prior_z = torch.logsumexp(a, 1, keepdim=False, out=None) - math.log(k)
+        """
+
+    kl_loss = logp_posterior_z.squeeze() - logp_prior_z.squeeze()
+    return torch.sum(kl_loss)
+
+def kl_lorentz(model, z, vt, u, mean, logv, prior_var, prior_type, centroids):
     [batch_size, n_h] = mean.shape
     n = n_h - 1
     mu0 = to_cuda_var(torch.zeros(batch_size, n))
@@ -258,13 +344,32 @@ def kl_lorentz(z, vt, u, mean, logv, prior_var):
     diag = to_cuda_var(torch.eye(n).repeat(batch_size, 1, 1))
     # sampling z at mu_h on hyperbolic space
     cov = torch.exp(logv).unsqueeze(dim=2) * diag
-    # posterior density
-    _, logp_z = pseudo_hyperbolic_gaussian(z, mean, cov, version=2, vt=vt, u=u)
-    # prior density
-    _, logp_z0 = pseudo_hyperbolic_gaussian(z, mu0_h, prior_var * diag, version=2, vt=None, u=None)
-    return logp_z, logp_z0, torch.sum(logp_z - logp_z0)
 
-def loss_fn(configs, NLL, logp, target, length, z, vt, u, mean, logv, step, epoch, start_epoch, num_samples):
+    # posterior density
+    _, logp_posterior_z = pseudo_hyperbolic_gaussian(z, mean, cov, version=2, vt=vt, u=u)
+    # prior density
+    if prior_type == 'Standard':
+        _, logp_prior_z = pseudo_hyperbolic_gaussian(z, mu0_h, prior_var * diag, version=2, vt=None, u=None)
+    elif prior_type == 'VampPrior':
+        k = centroids.shape[0] #number of centroids/exemplars
+        inputs = to_cuda_var(torch.from_numpy(centroids))
+        lens = (inputs != 0).sum(dim=1) - 1
+        _, z_p_mean, z_p_logvar, _, _, _ = model(inputs, lens) # k * dim(z)
+
+        # bring z and z_p_mean to the same size
+        z_v = z.repeat(k, 1)  # (batch * k) * dim(z)
+        z_p_mean_v = batch_repeat(z_p_mean, batch_size)
+        z_p_logvar_v = batch_repeat(z_p_logvar, batch_size)
+        diag_v = to_cuda_var(torch.eye(n).repeat(k * batch_size, 1, 1))
+        cov_v = torch.exp(z_p_logvar_v).unsqueeze(dim=-1) * diag_v
+
+        _, logp_z_v = pseudo_hyperbolic_gaussian(z_v, z_p_mean_v, cov_v, version=2, vt=None, u=None)
+        logp_z_v = logp_z_v.squeeze().view(k, batch_size).permute(1,0)
+        logp_prior_z = torch.logsumexp(logp_z_v, 1, keepdim=False, out=None) - math.log(k)
+
+    return logp_posterior_z.squeeze(), logp_prior_z.squeeze(), torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
+
+def loss_fn(configs, model, NLL, logp, target, length, z, vt, u, mean, logv, step, epoch, start_epoch, num_samples, centroids):
 
     anneal_function = configs['anneal_function']
     k = configs['k']
@@ -284,11 +389,12 @@ def loss_fn(configs, NLL, logp, target, length, z, vt, u, mean, logv, step, epoc
     # KL divergence
     if manifold_type == 'Euclidean':
         #KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-        KL_loss = -0.5 * torch.sum(1 + logv - prior_var.log() - (logv.exp() + mean.pow(2))/prior_var)
+        #KL_loss = -0.5 * torch.sum(1 + logv - prior_var.log() - (logv.exp() + mean.pow(2))/prior_var)
+        KL_loss = kl_euclidean(model, z, mean, logv, configs['prior_type'], centroids)
     elif manifold_type == 'Lorentz':
-        logq_zx_kl, logp_z0_kl, KL_loss = kl_lorentz(z, vt, u, mean, logv, prior_var)
+        logq_zx_kl, logp_z0_kl, KL_loss = kl_lorentz(model, z, vt, u, mean, logv, prior_var, configs['prior_type'], centroids)
 
-    KL_weight = kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, k, x0)
+    KL_weight = kl_anneal_function(anneal_function, new_training, new_annealing, step, start_epoch, epoch, configs)
 
     # marginal posterior divergence
     if configs['alpha'] > 0:
@@ -307,6 +413,7 @@ def pipeline(configs):
 
     # experiment root directory
     root_dir = os.path.join(configs['checkpoint_dir'], configs['experiment_name'])
+    experiment_dir = os.path.join(configs['checkpoint_dir'], configs['experiment_name'])
 
     # save configurations
     with open(os.path.join(root_dir, "running_configs.cfg"), "w") as fp:
@@ -323,23 +430,11 @@ def pipeline(configs):
     datasets = OrderedDict()
     splits = ['train', 'valid', 'test']
     for split in splits:
-        datasets[split] = textdata(directory=configs['data_dir'], split=split, vocab_file=configs['vocab_file'],
+        datasets[split] = textdata(data_dir=configs['data_dir'], exp_dir=experiment_dir, split=split, vocab_file=configs['vocab_file'],
                                    max_sequence_length=configs['max_sequence_length'])
     # prepare FDA drugs dataset
-    fda_data = textdata(directory=configs['data_dir'], split=None, vocab_file=configs['vocab_file'],
+    fda_data = textdata(data_dir=configs['data_dir'], exp_dir='./data', split=None, vocab_file=configs['vocab_file'],
                         max_sequence_length=configs['max_sequence_length'], filename='all_drugs_only.smi')
-
-    valid_loader = DataLoader(
-        dataset=datasets['valid'],
-        batch_size=len(datasets['valid'].data),
-        shuffle=False,
-        pin_memory=torch.cuda.is_available()
-    )
-    for iteration, valid_batch in enumerate(valid_loader):
-        valid_batch_size = valid_batch['inputs'].size(0)
-        for k, v in valid_batch.items():
-            if torch.is_tensor(v):
-                valid_batch[k] = to_cuda_var(v)
 
     fda_loader = DataLoader(
         dataset=fda_data,
@@ -384,8 +479,26 @@ def pipeline(configs):
     else:
         if torch.cuda.is_available():
             model = model.cuda()
-            tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
+
     print(model)
+
+    # clustering and get centroids/exemplars
+    if configs['prior_type'] == 'VampPrior' and configs['beta'] > 0:
+        for batch_idx, fda_batch in enumerate(fda_loader):
+            fda_batch = fda_batch
+        # prepare inputs for clustering
+        logp_f, mean_f, logv_f, z_f, vt_f, u_f = model(fda_batch['inputs'], fda_batch['len'])
+        x_input = fda_batch['inputs'].data.cpu().numpy()
+        z_input = z_f.data.cpu().numpy()
+        centroids = clustering_z(x_input, z_input, configs['manifold_type'], configs['num_centroids'])
+
+        print('Centroids are:\n')
+        smiles = idx2smiles(configs, centroids)
+        print(smiles)
+
+    else:
+        centroids = None
+
 
     # define reconstruction loss
     NLL = torch.nn.NLLLoss(ignore_index=datasets['train'].pad_idx, reduction='sum')
@@ -394,23 +507,26 @@ def pipeline(configs):
     optimizer = torch.optim.Adam(model.parameters(), lr=configs['learning_rate'], weight_decay=configs['wd'])
 
     # learning rate scheduler
-    #scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2)
 
     # tensorboard tracker
     summary_writer = SummaryWriter(log_dir=root_dir)
     logging.info('Initialization complete. Start training.')
 
     step = 0
+    # initialize values for early stopping
+    prev_total_loss = float('inf')
+    patience = 0
     try:
 
         if configs ['new_training']:
-            start_epoch = 0
+            start_epoch = 1
             end_epoch = configs['epochs']
         else:
-            start_epoch = configs['trained_epochs']
-            end_epoch = configs['trained_epochs'] + configs['epochs']
+            start_epoch = configs['trained_epochs'] + 1
+            end_epoch = start_epoch + configs['epochs'] - 1
 
-        for epoch in range(start_epoch, end_epoch):
+        for epoch in range(start_epoch, end_epoch+1):
 
             train_grad_metric = {
                 'total_gradient_norm': [],
@@ -425,8 +541,7 @@ def pipeline(configs):
                 data_loader = DataLoader(
                     dataset=datasets[split],
                     batch_size=configs['batch_size'],
-                    #shuffle=(split=='train'),
-                    shuffle=False,
+                    shuffle=(split=='train'),
                     num_workers=8,
                     pin_memory=torch.cuda.is_available()
                 )
@@ -455,8 +570,8 @@ def pipeline(configs):
                     logp, mean, logv, z, vt, u = model(batch['inputs'], batch['len'])
 
                     # loss calculation
-                    NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence = loss_fn(configs, NLL, logp, batch['targets'],
-                        batch['len'], z, vt, u, mean, logv, step, epoch + 1, start_epoch, num_samples)
+                    NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence = loss_fn(configs, model, NLL, logp, batch['targets'],
+                        batch['len'], z, vt, u, mean, logv, step, epoch, start_epoch, num_samples, centroids)
 
                     loss = (NLL_loss + KL_weight * (configs['beta']*KL_loss + configs['alpha']*marginal_posterior_divergence))/batch_size
 
@@ -538,34 +653,52 @@ def pipeline(configs):
                             start_time = time.time()
 
                         # saving model checkpoint
-                        if (epoch + 1) % configs['save_per_epochs'] == 0 and iteration + 1 == len(data_loader):
+                        if (epoch) % configs['save_per_epochs'] == 0 and iteration + 1 == len(data_loader):
                             logging.info('Saving model checkpoint...')
-                            checkpoint_name = os.path.join(root_dir, 'checkpoint_epoch%03d.model' % (epoch + 1))
+                            checkpoint_name = os.path.join(root_dir, 'checkpoint_epoch%03d.model' % (epoch))
                             torch.save(model.state_dict(), checkpoint_name)
+
+
+                # early stopping
+                if split == 'valid':
+                    # monitor loss during training
+                    curr_total_loss = np.asarray(epoch_metric['total_loss']).mean()
+                    scheduler.step(curr_total_loss)
+                """
+                    if curr_total_loss > prev_total_loss:
+                        patience += 1
+                    if patience > 6:
+                        logging.info('Saving final model checkpoint...')
+                        checkpoint_name = os.path.join(root_dir, 'checkpoint_epoch%03d_early_stop.model' % (epoch))
+                        torch.save(model.state_dict(), checkpoint_name)
+                        return
+                    prev_total_loss = curr_total_loss
+                """
 
                 #epoch -> split level (e.g. train, valid, test) + epoch level
                 epoch_update_loss(summary_writer, split, epoch, epoch_metric['total_loss'], epoch_metric['nll_loss'], epoch_metric['kl_loss'], epoch_metric['kl_weight'], epoch_metric['marginal_posterior_divergence'])
 
+            """
             # epoch level
             # monitor network gradient during training
             training_grad_norm(epoch, train_grad_metric, summary_writer)
 
             # fda drugs + epoch level
-            mean_f = fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer)
+            _ = fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, epoch, start_epoch, end_epoch, summary_writer)
 
             # prior: % validity, uniqueness, novelty ~ p(z)
             prior_samples_evaluation(epoch, configs, model, summary_writer)
 
             # posterior: % accurately reconstructed
             posterior_recon_accuracy(configs, smiles_fda, 'fda', model, summary_writer, epoch)
-            posterior_recon_accuracy(configs, smiles_test[:1000], 'test', model, summary_writer, epoch)
-
+            posterior_recon_accuracy(configs, smiles_test[:1300], 'test', model, summary_writer, epoch)
+            """
 
     except KeyboardInterrupt:
         logging.info('Interrupted! Stop Training!')
 
         logging.info('Saving model checkpoint...')
-        checkpoint_name = os.path.join(root_dir, 'checkpoint_epoch%03d_batch%03d.model' % (epoch + 1, iteration + 1))
+        checkpoint_name = os.path.join(root_dir, 'checkpoint_epoch%03d_batch%03d.model' % (epoch, iteration + 1))
         torch.save(model.state_dict(), checkpoint_name)
         logging.info('Model saved at %s' % checkpoint_name)
 
@@ -611,13 +744,19 @@ def fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, e
     logp_f, mean_f, logv_f, z_f, vt_f, u_f = model(fda_batch['inputs'], fda_batch['len'])
     NLL_loss_f, KL_loss_f, KL_weight_f, marginal_posterior_divergence_f = loss_fn(configs, NLL, logp_f, fda_batch['targets'],
                                                  fda_batch['len'], z_f, vt_f, u_f, mean_f, logv_f,
-                                                 step, epoch + 1, start_epoch, fda_batch_size)
+                                                 step, epoch, start_epoch, fda_batch_size)
     loss_f = (NLL_loss_f + KL_weight_f * KL_loss_f + marginal_posterior_divergence_f)
     # logging loss per epoch
+    """
     logging.info(
         'FDA Drugs: Epoch [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}, Marginal Posterior Divergence: {:.4f}'.
-            format(epoch + 1, end_epoch, loss_f.item()/fda_batch_size, NLL_loss_f.item() / fda_batch_size,
+            format(epoch, end_epoch, loss_f.item()/fda_batch_size, NLL_loss_f.item() / fda_batch_size,
                    KL_loss_f.item() / fda_batch_size, KL_weight_f, marginal_posterior_divergence_f/fda_batch_size))
+    """
+    logging.info(
+        'FDA Drugs: Epoch [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}'.
+            format(epoch, end_epoch, loss_f.item()/fda_batch_size, NLL_loss_f.item() / fda_batch_size,
+                   KL_loss_f.item() / fda_batch_size, KL_weight_f))
     # tensorboard
     split = 'FDA'
     summary_writer.add_scalar('%s/avg_total_loss' % split, loss_f/fda_batch_size, epoch)
@@ -629,10 +768,16 @@ def fda_drugs_evaluation(configs, model, fda_batch, fda_batch_size, NLL, step, e
 
 
 def logging_loss(epoch, end_epoch, iteration, data_loader, loss, NLL_loss, KL_loss, KL_weight, marginal_posterior_divergence, batch_size, start_time, end_time):
+    """
     logging.info(
         'Training: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}, Marginal Posterior Divergence: {:.4f}, Speed: {:.4f} ms'.
-            format(epoch + 1, end_epoch, iteration + 1, len(data_loader), loss.item(), NLL_loss.item() / batch_size,
+            format(epoch, end_epoch, iteration + 1, len(data_loader), loss.item(), NLL_loss.item() / batch_size,
                    KL_loss.item() / batch_size, KL_weight, marginal_posterior_divergence/batch_size, (end_time - start_time) * 100 / batch_size))
+    """
+    logging.info(
+        'Training: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, NLL-Loss: {:.4f}, KL-Loss: {:.4f}, Annealing-Weight: {:.4f}'.
+            format(epoch, end_epoch, iteration + 1, len(data_loader), loss.item(), NLL_loss.item() / batch_size,
+                   KL_loss.item() / batch_size, KL_weight))
 
 
 def training_grad_norm(epoch, train_grad_metric, summary_writer):
@@ -658,7 +803,7 @@ def main(argv):
     configs = save_and_load_flags()
 
     # create train, valid, test data
-    splits_proportion = [0.8, 0.1, 0.1]
+    splits_proportion = [0.9, 0.05, 0.05]
     create_raw_files(configs, splits_proportion)
 
     # start pipeline

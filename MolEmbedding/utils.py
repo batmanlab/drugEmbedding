@@ -1,5 +1,6 @@
 import os
 import json
+import pickle
 import torch
 import numpy as np
 import pandas as pd
@@ -7,6 +8,7 @@ from scipy.spatial.distance import pdist, squareform
 
 
 from rdkit import Chem
+from rdkit.Chem.rdchem import Atom
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error') #disable RDKit warning messages
 from rdkit.Chem import QED
@@ -16,6 +18,48 @@ from rdkit.Chem import RDConfig
 import sys
 sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 import sascorer
+
+def mix_gaussian_sampling(pi_k, mu_k, logv_k, n):
+    """
+    sample n examples from the mixture Gaussian distribution
+    :param pi_k: distribution of weights of k Gaussiaan distribution
+    :param mu_k: means (k * d)
+    :param logv_k: log diagnoal variance (k * d)
+    :param n: number of samples
+    :return:
+    """
+    return None
+
+def smiles_to_tokens(data_dir, vocab_file, s):
+
+    with open(os.path.join(data_dir, vocab_file), 'rb') as fp:
+        char_list = pickle.load(fp)
+    fp.close()
+
+    s = s.strip()
+
+    j = 0
+    tokens_lst = []
+    while j < len(s):
+        # handle atoms with two characters
+        if j < len(s) - 1 and s[j:j + 2] in char_list:
+            token = s[j:j + 2]
+            j = j + 2
+
+        # handle atoms with one character including hydrogen
+        elif s[j] in char_list:
+            token = s[j]
+            j = j + 1
+
+        # handel unknown character
+        else:
+            token = '<unk>'
+            j = j + 1
+
+        tokens_lst.append(token)
+
+    return tokens_lst
+
 
 def create_smiles_lst(directory, datafile):
     """
@@ -28,7 +72,7 @@ def create_smiles_lst(directory, datafile):
     datapath = os.path.join(directory, datafile)
     with open(datapath, 'r') as f:
         for seq in f.readlines():
-            words = list(seq)[:-1]
+            words = seq.strip()
             smiles_lst.append(''.join(words))
     f.close()
     return smiles_lst
@@ -68,7 +112,10 @@ def idx2word(directory, vocab_file):
         w2i[st] = len(w2i)
 
     # load unique chars
-    char_list = json.load(open(os.path.join(directory, vocab_file)))
+    with open(os.path.join(directory, vocab_file), 'rb') as fp:
+        char_list = pickle.load(fp)
+    fp.close()
+    #char_list = json.load(open(os.path.join(directory, vocab_file)))
     for i, c in enumerate(char_list):
         i2w[len(w2i)] = c
         w2i[c] = len(w2i)
@@ -197,7 +244,8 @@ def smiles2mean(configs, smile_x, model):
     """
     w2i, i2w = idx2word(configs['data_dir'], configs['vocab_file'])
     input_sequence = [w2i['<sos>']]
-    for i in smile_x:
+    tokens = smiles_to_tokens(configs['data_dir'], configs['vocab_file'], smile_x)
+    for i in tokens:
         input_sequence.append(w2i[i])
     input_sequence.append(w2i['<eos>'])
     input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence)-1)
@@ -257,7 +305,8 @@ def eval_prior_samples(configs, vae_smiles_sample):
     smiles_train = []
     with open(train_file, 'r') as file:
         for seq in file.readlines():
-            words = list(seq)[:-1]
+            #words = list(seq)[:-1]
+            words = smiles_to_tokens(configs['data_dir'], configs['vocab_file'], seq)
             smiles_train.append(''.join(words))
     file.close()
 

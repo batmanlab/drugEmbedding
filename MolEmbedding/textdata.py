@@ -1,17 +1,22 @@
 import os
-import json
+#import json
+import pickle
 import numpy as np
 from torch.utils.data import Dataset
 from collections import defaultdict
 
+from rdkit import Chem
+from rdkit.Chem.rdchem import Atom
+
 class textdata(Dataset):
 
-    def __init__(self, directory, vocab_file, split, max_sequence_length, filename=None):
+    def __init__(self, data_dir, exp_dir, vocab_file, split, max_sequence_length, filename=None):
 
         super().__init__()
 
         #data directory
-        self.directory = directory
+        self.data_dir = data_dir
+        self.exp_dir = exp_dir
         self.vocab_file = vocab_file
         self.filename = filename
 
@@ -28,10 +33,10 @@ class textdata(Dataset):
     def _create_text_dataset(self):
 
         if self.filename is None:
-            dataset_raw_file = os.path.join(self.directory, 'smiles_' + self.split + '.smi')
+            dataset_raw_file = os.path.join(self.exp_dir, 'smiles_' + self.split + '.smi')
             assert os.path.exists(dataset_raw_file), 'File %s not found.'%(dataset_raw_file)
         else:
-            dataset_raw_file = os.path.join(self.directory, self.filename)
+            dataset_raw_file = os.path.join(self.exp_dir, self.filename)
             assert os.path.exists(dataset_raw_file), 'File %s not found.' % (dataset_raw_file)
 
         #initialize data
@@ -40,13 +45,13 @@ class textdata(Dataset):
         #create vocabulary
         self._create_vocab()
 
-        with open(dataset_raw_file, 'r') as file:
+        with open(dataset_raw_file) as file:
 
-            for seq in file.readlines():
-                words = list(seq)
+            smiles = file.read().splitlines()
 
-                #remove new line char \n
-                words = words[:-1]
+            for seq in smiles:
+                #convert to tokens
+                words = self._smiles_to_tokens(seq)
 
                 #data point id
                 id = len(self.data)
@@ -75,7 +80,32 @@ class textdata(Dataset):
                 self.data[id]['targets'] = word_idx[1:]
 
                 assert self.data[id]['len'] <= self.max_sequence_length
+        file.close()
 
+    def _smiles_to_tokens(self, s):
+        s = s.strip()
+
+        j = 0
+        tokens_lst = []
+        while j < len(s):
+            # handle atoms with two characters
+            if j < len(s) - 1 and s[j:j + 2] in self.w2i.keys():
+                token = s[j:j + 2]
+                j = j + 2
+
+            # handle atoms with one character including hydrogen
+            elif s[j] in self.w2i.keys():
+                token = s[j]
+                j = j + 1
+
+            # handle unknown characters
+            else:
+                token = '<unk>'
+                j = j + 1
+
+            tokens_lst.append(token)
+
+        return tokens_lst
 
     def _create_vocab(self):
 
@@ -89,7 +119,11 @@ class textdata(Dataset):
             w2i[st]=len(w2i)
 
         # load unique chars
-        char_list = json.load(open(os.path.join(self.directory, self.vocab_file)))
+        with open(os.path.join(self.data_dir, self.vocab_file), 'rb') as fp:
+            char_list = pickle.load(fp)
+        fp.close()
+        #char_list = json.load(open(os.path.join(self.data_dir, self.vocab_file)))
+
         for i, c in enumerate(char_list):
             i2w[len(w2i)] = c
             w2i[c] = len(w2i)

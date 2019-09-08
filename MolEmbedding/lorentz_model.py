@@ -74,7 +74,7 @@ def inv_exp_map(z,mu_h):
     debug
     """
     if torch.isnan(u.sum()).item() == 1:
-        stop = 0
+        print('u has nan value')
     return u
 
 def lorentz_mapping(x):
@@ -126,8 +126,17 @@ def pseudo_hyperbolic_gaussian(z, mu_h, cov, version, vt=None, u=None):
         u = inv_exp_map(z, mu_h)
         v = parallel_transport(u, mu_h, v0)
         vt = v[:,1:]
+        logp_vt = (MultivariateNormal(mu0, cov).log_prob(vt)).view(-1, 1)
+    else:
+        logp_vt = (MultivariateNormal(mu0, cov).log_prob(vt)).view(-1, 1)
 
-    logp_vt = (MultivariateNormal(mu0, cov).log_prob(vt)).view(-1, 1)
+    #try:
+    #    logp_vt = (MultivariateNormal(mu0, cov).log_prob(vt)).view(-1, 1)
+    #except:
+        #na_idx = torch.isnan(vt).sum(dim=1)==1
+        #print(u[na_idx,:])
+        #print(vt[na_idx,:])
+
     r = lorentz_tangent_norm(u)
 
     if version ==1:
@@ -150,7 +159,7 @@ def pseudo_hyperbolic_gaussian(z, mu_h, cov, version, vt=None, u=None):
     debug: z and mu_h are very close, causing r = 0
     """
     if torch.isnan(logp_z.sum()).item() == 1:
-        stop = 0
+        print('z and mu_h are very close, causing r = 0')
     return logp_vt, logp_z
 
 def lorentz_to_poincare(h):

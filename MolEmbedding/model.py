@@ -189,7 +189,6 @@ class MolVAE(nn.Module):
 
 
     def inference(self, n, sampling_mode, z=None):
-
         # sampling from prior distribution
         if z is None:
             if self.manifold_type == 'Euclidean':
@@ -376,11 +375,6 @@ class MolVAE(nn.Module):
     def _sample(self, dist, sampling_mode='greedy'):
         if sampling_mode == 'greedy':
             _, sample = torch.topk(dist, 1, dim=-1)
-
-            #debug
-            if sample.max().item()>38:
-                print(sample.max().item())
-                print(dist.shape)
 
         elif sampling_mode =='random':
             p = F.softmax(dist, dim=-1)
