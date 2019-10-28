@@ -1,3 +1,4 @@
+import pandas as pd
 
 def sample_fda_examplars():
     """
