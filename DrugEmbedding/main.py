@@ -55,7 +55,7 @@ flags.DEFINE_float('C', 1, 'Constant value if KL annealing function is a constan
 flags.DEFINE_integer('num_workers', 2, 'Number of workers in DataLoader')
 flags.DEFINE_integer('logging_steps', 1, 'Log per steps/mini-batch')
 flags.DEFINE_integer('save_per_epochs', 5, 'Save intermediate checkpoints every few training epochs')
-flags.DEFINE_boolean('new_training', False, 'New training or restart from a pre-trained checkpoint')
+flags.DEFINE_boolean('new_training', True, 'New training or restart from a pre-trained checkpoint')
 flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-trained checkpoint')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch010.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 10, 'Number of epochs that have been trained')
