@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="32b2b8a4-af45-4ab5-9dde-5172ab4959ad" name="Default Changelist" comment="" />
+    <list default="true" id="32b2b8a4-af45-4ab5-9dde-5172ab4959ad" name="Default Changelist" comment="commit test">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VampPrior.py" beforeDir="false" afterPath="$PROJECT_DIR$/VampPrior.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch005.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch010.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch011_batch015.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch011_batch029.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch012_batch014.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/checkpoint_epoch014_batch002.model" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/configs.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/events.out.tfevents.1572172562.Kes-MacBook-Pro.local" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/events.out.tfevents.1572172723.Kes-MacBook-Pro.local" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/events.out.tfevents.1572172859.Kes-MacBook-Pro.local" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/events.out.tfevents.1572173154.Kes-MacBook-Pro.local" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/smiles_test.smi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/smiles_train.smi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/SMILES/debug/smiles_valid.smi" beforeDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,17 +78,37 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="1458900135">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.3" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="35" />
+          <entry key="txt" value="11" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="11" />
+          <entry key="Python" value="35" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
+            <state relative-caret-position="-1915">
+              <caret line="57" column="37" lean-forward="true" selection-start-line="57" selection-start-column="37" selection-end-line="57" selection-end-column="41" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <marker date="1572173130845" expanded="true" signature="15726:15982" ph="..." />
+                <marker date="1572295632751" expanded="true" signature="15725:15981" ph="..." />
               </folding>
             </state>
           </provider>
@@ -90,13 +127,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/VampPrior.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
+            <state relative-caret-position="225">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
               <folding>
-                <marker date="1572142666618" expanded="true" signature="128:231" ph="..." />
+                <marker date="1572295809710" expanded="true" signature="148:251" ph="..." />
               </folding>
             </state>
           </provider>
@@ -105,7 +142,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="780">
+            <state relative-caret-position="750">
               <caret line="52" column="57" selection-start-line="52" selection-start-column="57" selection-end-line="52" selection-end-column="57" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -118,8 +155,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/drugdata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="290" column="41" lean-forward="true" selection-start-line="290" selection-start-column="41" selection-end-line="290" selection-end-column="41" />
+            <state relative-caret-position="4350">
+              <caret line="290" column="41" selection-start-line="290" selection-start-column="41" selection-end-line="290" selection-end-column="41" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
                 <marker date="1572130113665" expanded="true" signature="161:162" ph="..." />
@@ -128,26 +165,6 @@
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="true" current-in-tab="false">
-        <entry file="remoteDeploymentFS://&lt;dcc06d65-77c5-4a14-92fe-0466fbc646a3&gt;/DrugEmbedding/experiments/local_ranking_2D/Epoch_99.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="true" current-in-tab="false">
-        <entry file="remoteDeploymentFS://&lt;dcc06d65-77c5-4a14-92fe-0466fbc646a3&gt;/DrugEmbedding/experiments/local_ranking_2D/Epoch_1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_99.png">
-          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
     </leaf>
@@ -183,6 +200,9 @@
       <replace>self.smiles</replace>
     </replaceStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -202,9 +222,9 @@
         <option value="$PROJECT_DIR$/hvae.py" />
         <option value="$PROJECT_DIR$/run_pipeline.sh" />
         <option value="$PROJECT_DIR$/evae.py" />
-        <option value="$PROJECT_DIR$/VampPrior.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/utils.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/VampPrior.py" />
       </list>
     </option>
   </component>
@@ -215,17 +235,19 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2661" />
-    <option name="y" value="73" />
+    <option name="x" value="274" />
+    <option name="y" value="23" />
     <option name="width" value="2133" />
     <option name="height" value="1339" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -236,42 +258,13 @@
             <path>
               <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
               <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="fda_drugs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
               <item name="experiments" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
-              <item name="experiments" type="462c0819:PsiDirectoryNode" />
-              <item name="local_ranking_2D" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
-              <item name="experiments" type="462c0819:PsiDirectoryNode" />
-              <item name="SMILES" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
-              <item name="experiments" type="462c0819:PsiDirectoryNode" />
-              <item name="SMILES" type="462c0819:PsiDirectoryNode" />
-              <item name="debug" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -281,6 +274,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -366,6 +360,14 @@
       <option name="presentableId" value="Default" />
       <updated>1571351326237</updated>
     </task>
+    <task id="LOCAL-00001" summary="commit test">
+      <created>1572295711621</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1572295711621</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -378,10 +380,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="2661" y="73" width="2133" height="1339" extended-state="0" />
+    <frame x="274" y="23" width="2133" height="1339" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49898785" visible="true" weight="0.21186036" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49898785" visible="true" weight="0.21377331" />
       <window_info id="Structure" order="1" sideWeight="0.50101215" side_tool="true" weight="0.12765957" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -392,17 +394,17 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3287891" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.23015237" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.3287891" />
-      <window_info anchor="bottom" id="File Transfer" order="13" visible="true" weight="0.3287891" />
+      <window_info active="true" anchor="bottom" id="File Transfer" order="13" visible="true" weight="0.33520448" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="14" weight="0.3296" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Remote Host" order="3" visible="true" weight="0.27642277" />
+      <window_info anchor="right" id="Remote Host" order="3" visible="true" weight="0.24677187" />
       <window_info anchor="right" id="SciView" order="4" weight="0.30416068" />
       <window_info anchor="right" id="Database" order="5" />
     </layout>
@@ -438,14 +440,13 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="commit test" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit test" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>190</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>269</line>
@@ -615,17 +616,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-            <marker date="1572173130845" expanded="true" signature="15726:15982" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_0.png" />
     <entry file="file://$PROJECT_DIR$/hvae.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1710">
@@ -639,7 +630,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
+        <state relative-caret-position="750">
           <caret line="52" column="57" selection-start-line="52" selection-start-column="57" selection-end-line="52" selection-end-column="57" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -648,20 +639,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/VampPrior.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <marker date="1572142666618" expanded="true" signature="128:231" ph="..." />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_99.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_1.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/drugdata.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="290" column="41" lean-forward="true" selection-start-line="290" selection-start-column="41" selection-end-line="290" selection-end-column="41" />
+        <state relative-caret-position="4350">
+          <caret line="290" column="41" selection-start-line="290" selection-start-column="41" selection-end-line="290" selection-end-column="41" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
             <marker date="1572130113665" expanded="true" signature="161:162" ph="..." />
@@ -671,14 +658,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_0.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1915">
+          <caret line="57" column="37" lean-forward="true" selection-start-line="57" selection-start-column="37" selection-end-line="57" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+            <marker date="1572295632751" expanded="true" signature="15725:15981" ph="..." />
+          </folding>
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/local_ranking_2D/Epoch_99.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/VampPrior.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <marker date="1572295809710" expanded="true" signature="148:251" ph="..." />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
