@@ -19,7 +19,7 @@ python main.py \
   --checkpoint_dir="./experiments/SMILES" \
   --experiment_name="${EXPERIMENT}" \
   --task="vae" \
-  --limit=None \
+  --limit=0 \
   --batch_size=128 \
   --epochs=100 \
   --max_sequence_length=120 \

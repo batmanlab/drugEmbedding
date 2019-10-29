@@ -33,7 +33,7 @@ flags.DEFINE_string('atc_sim_file', 'drugs_sp.pkl', 'ATC drug-drug shortest path
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
 flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', 1000, 'Training sample size limit')
+flags.DEFINE_integer('limit', None, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
@@ -156,7 +156,7 @@ def create_raw_files(configs, split_proportion):
     with open(smiles_file, 'r') as f:
         smiles = f.readlines()
         random.shuffle(smiles) # random shuffle
-        if limit is None:
+        if limit == 0:
             limit = len(smiles)
         train_size = round(limit * split_proportion[0])
         valid_size = round(limit * split_proportion[1])
