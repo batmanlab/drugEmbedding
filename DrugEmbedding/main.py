@@ -29,18 +29,18 @@ flags.DEFINE_string('data_dir', './data/fda_drugs', 'Directory where data is sto
 flags.DEFINE_string('data_file', 'all_drugs.smi', 'Data file name')
 flags.DEFINE_string('fda_file', 'all_drugs.smi', 'FDA drugs SMILES file name')
 flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
-flags.DEFINE_string('atc_sim_file', 'drugs_sp.pkl', 'ATC drug-drug shortest path')
+flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
 flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', None, 'Training sample size limit')
+flags.DEFINE_integer('limit', 0, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e12, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
@@ -59,8 +59,8 @@ flags.DEFINE_boolean('new_training', True, 'New training or restart from a pre-t
 flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-trained checkpoint')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch010.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 10, 'Number of epochs that have been trained')
-flags.DEFINE_float('alpha', 1, 'Weight of KL divergence between marginal posterior and prior')
-flags.DEFINE_float('beta', 1, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('alpha', 1.0, 'Weight of KL divergence between marginal posterior and prior')
+flags.DEFINE_float('beta', 1.0/56, 'Weight of KL divergence between conditional posterior and prior')
 flags.DEFINE_integer('nneg', 5, 'Number of negative examples sampled when calculating local ranking loss')
 
 def save_and_load_flags():
@@ -271,6 +271,7 @@ def pipeline(configs):
                     dataset=datasets[split],
                     batch_size=configs['batch_size'],
                     shuffle=(split=='train'),
+                    drop_last=True,
                     pin_memory=torch.cuda.is_available()
                 )
 
@@ -284,6 +285,11 @@ def pipeline(configs):
                 }
 
                 for iteration, batch in enumerate(DrugsLoader):
+
+                    for k, v in batch.items():
+                        if torch.is_tensor(v):
+                            batch[k] = to_cuda_var(v)
+
                     recon_loss, kl_loss, mkl_loss, local_ranking_loss = model(configs['task'], batch, len(DrugsLoader.dataset)) # forward pass and compute losses
 
                     anneal_weight = kl_anneal_function(configs, start_epoch, epoch)

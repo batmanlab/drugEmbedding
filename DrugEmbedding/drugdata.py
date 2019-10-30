@@ -33,8 +33,7 @@ class drugdata(Dataset):
 
     # load drug-drug ATC shortest path
     def _load_fda_sp(self):
-        with open(os.path.join(self.fda_drugs_dir, self.fda_drugs_sp_file), 'rb') as fp:
-            self.fda_sp_dict = pickle.load(fp)
+        self.df_sp = pd.read_csv(os.path.join(self.fda_drugs_dir, self.fda_drugs_sp_file), index_col=0)
 
     # load FDA drug smiles
     def _load_fda_smiles(self):
@@ -195,32 +194,18 @@ class drugdata(Dataset):
         prepare dataset for local ranking decision
         :return:
         """
-        # convert dictionary to pandas dataframe
-        df_sp = pd.DataFrame(list(self.fda_sp_dict.items()), columns=['drugs', 'sp'])
-
-        drugs = list(df_sp['drugs'])
-        drug_target = [d[0] for d in drugs]
-        drug_comparison = [d[1] for d in drugs]
-
-        df_sp['drug_target'] =drug_target
-        df_sp['drug_comparison'] = drug_comparison
-
         # exclude self-pairs, i.e. sp = 0
-        df_sp = df_sp[df_sp['sp']>0]
+        self.df_sp = self.df_sp[self.df_sp['sp']>0]
 
         # find the nearest neighbors
-        min_sp = df_sp.groupby('drug_target')['sp'].min()
-        drugs_min_sp = pd.DataFrame({'drug_target':min_sp.index, 'sp':min_sp.values})
-        df_sp_nn = df_sp.merge(drugs_min_sp, how='inner', on=('drug_target', 'sp')) # nearest neighbors
+        min_idx = self.df_sp.groupby('drug_target')['sp'].idxmin()
 
-        # find the farther neighbors
-        df_sp_fn = df_sp[(~df_sp.drugs.isin(df_sp_nn.drugs))]
+        df_sp_nn = self.df_sp.loc[min_idx]
+        df_sp_fn = self.df_sp.loc[~self.df_sp.index.isin(min_idx)]
 
-        self.fda_atc_drugs = df_sp['drug_target'].unique().tolist()
-        self.df_sp = df_sp
+        self.fda_atc_drugs = self.df_sp['drug_target'].unique().tolist()
         self.df_sp_nn = df_sp_nn
         self.df_sp_fn = df_sp_fn
-
 
 
     @property
@@ -290,9 +275,9 @@ class drugdata(Dataset):
                 len_lst.append(self.fda_smiles[pos_key]['len'])
                 loc_sp_lst.append(pos_sp)
 
-
                 # sample nneg negative examples from the target drug's farther neighbor(s)
-                neg_sample = self.df_sp_fn[self.df_sp_fn['drug_target'] == drug_key].sample(n=self.nneg)
+                neg_idx = (self.df_sp_fn['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) # comparison can not be the positive example and can not be the drug itself
+                neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg)
                 neg_keys = neg_sample['drug_comparison']
                 neg_sp = neg_sample['sp']
                 for i, neg_key in enumerate(neg_keys):

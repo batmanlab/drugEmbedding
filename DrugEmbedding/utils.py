@@ -1,6 +1,7 @@
 import torch
 import pandas as pd
 import numpy as np
+import math
 
 def to_cuda_var(x):
     """
@@ -95,3 +96,12 @@ def track_gradient_norm(model):
     h2v_grad_norm = h2v_grad_norm ** (1. / 2)
 
     return (total_grad_norm, enc_grad_norm, dec_grad_norm, h2m_grad_norm, h2v_grad_norm)
+
+
+def log_Normal_diag(x, mean, log_var, average=False, dim=None):
+    _, k = mean.shape
+    log_normal = -0.5 * ( log_var + torch.pow( x - mean, 2 ) / torch.exp( log_var ) + k * math.log(2*math.pi) )
+    if average:
+        return torch.mean( log_normal, dim )
+    else:
+        return torch.sum( log_normal, dim )

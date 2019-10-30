@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="exp_001"
+EXPERIMENT="exp_021"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -15,7 +15,7 @@ python main.py \
   --data_file="${DATA_FILE}" \
   --fda_file="${FDA_FILE}" \
   --vocab_file="char_set_clean.pkl" \
-  --atc_smi_file="drugs_sp.pkl" \
+  --atc_sim_file="drugs_sp.pkl" \
   --checkpoint_dir="./experiments/SMILES" \
   --experiment_name="${EXPERIMENT}" \
   --task="vae" \
@@ -26,7 +26,7 @@ python main.py \
   --learning_rate=3e-4 \
   --max_norm=1e12 \
   --wd=0 \
-  --manifold_type="Euclidean" \
+  --manifold_type="Lorentz" \
   --prior_type="Standard" \
   --num_centroids=70 \
   --bidirectional=False \
