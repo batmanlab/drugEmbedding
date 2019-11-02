@@ -1,5 +1,5 @@
 # drugEmbedding
-Hierarchical Embedding for Drugs
+Hierarchical Embedding for Drugs.
 
 # Applications of drug embedding
 * for building a drug hierarchy
