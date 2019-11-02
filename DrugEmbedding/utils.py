@@ -1,7 +1,9 @@
+import os
+import json
 import torch
 import pandas as pd
 import numpy as np
-import math
+from scipy.spatial.distance import pdist
 
 def to_cuda_var(x):
     """
@@ -13,20 +15,25 @@ def to_cuda_var(x):
         x = x.cuda()
     return x
 
-def get_atc_hierarchy(drug_key):
+def drug_atc_path(drugs, atc_level = 4):
     """
-    :param drug_key: drug name
-    :return: drug ATC hierarchy
-    """
-    drug_dict = {}
-    df_atc = pd.read_csv('./data/fda_drugs/atc_fda_unique.csv', index_col=0) # load ATC hierarchy inf.
-    drug_dict['drug_name'] = drug_key
-    drug_dict['ATC_LVL4'] = df_atc[df_atc['ATC_LVL5'] == drug_key]['ATC_LVL4'].values[0]
-    drug_dict['ATC_LVL3'] = df_atc[df_atc['ATC_LVL5'] == drug_key]['ATC_LVL3'].values[0]
-    drug_dict['ATC_LVL2'] = df_atc[df_atc['ATC_LVL5'] == drug_key]['ATC_LVL2'].values[0]
-    drug_dict['ATC_LVL1'] = df_atc[df_atc['ATC_LVL5'] == drug_key]['ATC_LVL1'].values[0]
 
-    return drug_dict
+    :param durgs: FDA drug lists
+    :return: possible ATC path
+    """
+    df_atc = pd.read_csv('./data/fda_drugs/atc_fda_all.csv', index_col=0)
+    df_atc_select = df_atc.loc[df_atc['ATC_LVL5'].isin(drugs)].copy()
+
+    if atc_level == 1:
+        df_atc_select.loc[:, 'ATC_PATH'] = df_atc_select.loc[:, 'ATC_LVL1'].values
+    elif atc_level == 2:
+        df_atc_select.loc[:, 'ATC_PATH'] = df_atc_select.loc[:, 'ATC_LVL1'].values + '||' + df_atc_select.loc[:, 'ATC_LVL2'].values
+    elif atc_level == 3:
+        df_atc_select.loc[:, 'ATC_PATH'] = df_atc_select.loc[:, 'ATC_LVL1'].values + '||' + df_atc_select.loc[:, 'ATC_LVL2'].values + '||' + df_atc_select.loc[:, 'ATC_LVL3'].values
+    elif atc_level == 4:
+        df_atc_select.loc[:, 'ATC_PATH'] = df_atc_select.loc[:, 'ATC_LVL1'].values + '||' + df_atc_select.loc[:, 'ATC_LVL2'].values + '||' + df_atc_select.loc[:, 'ATC_LVL3'].values + '||' + df_atc_select.loc[:, 'ATC_LVL4'].values
+    return df_atc_select
+
 
 
 def kl_anneal_function(configs, start_epoch, epoch):
@@ -97,11 +104,30 @@ def track_gradient_norm(model):
 
     return (total_grad_norm, enc_grad_norm, dec_grad_norm, h2m_grad_norm, h2v_grad_norm)
 
+def upper_tri_indexing(A):
+    m = A.shape[0]
+    r,c = np.triu_indices(m, 1)
+    return A[r, c]
 
-def log_Normal_diag(x, mean, log_var, average=False, dim=None):
-    _, k = mean.shape
-    log_normal = -0.5 * ( log_var + torch.pow( x - mean, 2 ) / torch.exp( log_var ) + k * math.log(2*math.pi) )
-    if average:
-        return torch.mean( log_normal, dim )
-    else:
-        return torch.sum( log_normal, dim )
+def pairwise_dist(manifold_type, x):
+    """
+    pairwise distance, dim(x) = (n, d)
+    :param manifold_type: manifold type, 'Euclidean' or 'Lorentz'
+    :param x: input numpy array
+    :return: pairwise distance matrix
+    """
+    if manifold_type == 'Lorentz':
+        x0 = x[:,0].reshape(-1,1)
+        x1 = x[:,1:]
+        m = np.matmul(x1, x1.transpose()) - np.matmul(x0, x0.transpose())
+        np.fill_diagonal(m, -1-1e-12)
+        m = -m
+        m2 = m**2
+        m2 = np.where(m2<1.0, 1.0 + 1e-6, m2)
+        dm = np.log(m + np.sqrt(m2 - 1))
+        return upper_tri_indexing(dm) # convert to condense form
+    elif manifold_type == 'Euclidean':
+        dc = pdist(x, metric='euclidean')
+        return dc
+
+

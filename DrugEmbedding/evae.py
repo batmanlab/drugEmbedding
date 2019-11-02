@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.nn.utils.rnn as rnn_utils
 from torch.distributions import MultivariateNormal
 import numpy as np
-from utils import to_cuda_var, log_Normal_diag
+from utils import to_cuda_var
 
 class EVAE(nn.Module):
 

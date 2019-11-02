@@ -6,6 +6,7 @@ from utils import *
 import torch
 import numpy as np
 from torch.utils.data import DataLoader
+from torch.utils.data.sampler import Sampler
 
 import os
 import json
@@ -15,7 +16,7 @@ from absl import flags
 from absl import logging
 from collections import OrderedDict
 from tensorboardX import SummaryWriter
-
+from tqdm import tqdm
 
 # reproducibility
 random.seed(216)
@@ -26,26 +27,26 @@ np.random.seed(216)
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('data_dir', './data/fda_drugs', 'Directory where data is stored')
-flags.DEFINE_string('data_file', 'all_drugs.smi', 'Data file name')
+flags.DEFINE_string('data_file', 'smiles_set_clean.smi', 'Data file name')
 flags.DEFINE_string('fda_file', 'all_drugs.smi', 'FDA drugs SMILES file name')
 flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
-flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
+flags.DEFINE_string('experiment_name', 'debug_dp', 'Experiment name')
 flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
 flags.DEFINE_integer('limit', 0, 'Training sample size limit')
-flags.DEFINE_integer('batch_size', 32, 'Mini batch size')
+flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e12, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
-flags.DEFINE_integer('num_layers', 2, 'RNN number of layers')
-flags.DEFINE_integer('hidden_size', 50, 'Dimension of RNN output')
+flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
+flags.DEFINE_integer('hidden_size', 20, 'Dimension of RNN output')
 flags.DEFINE_integer('latent_size', 2, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
@@ -60,8 +61,9 @@ flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-tra
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch010.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 10, 'Number of epochs that have been trained')
 flags.DEFINE_float('alpha', 1.0, 'Weight of KL divergence between marginal posterior and prior')
-flags.DEFINE_float('beta', 1.0/56, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('beta', 0.5, 'Weight of KL divergence between conditional posterior and prior')
 flags.DEFINE_integer('nneg', 5, 'Number of negative examples sampled when calculating local ranking loss')
+flags.DEFINE_float('fda_prop', 0.2, 'Average proportion of FDA drugs in one batch')
 
 def save_and_load_flags():
     """
@@ -116,7 +118,8 @@ def save_and_load_flags():
             'trained_epochs': FLAGS.trained_epochs,
             'alpha': FLAGS.alpha,
             'beta': FLAGS.beta,
-            'nneg': FLAGS.nneg
+            'nneg': FLAGS.nneg,
+            'fda_prop': FLAGS.fda_prop
         }
 
         with open(flag_saving_path, 'w') as fp:
@@ -181,6 +184,28 @@ def create_raw_files(configs, split_proportion):
     f_test.close()
     logging.info('Testing data has been created. Size = %d.' % (limit - train_size - valid_size))
 
+
+class MixSampler(Sampler):
+
+    def __init__(self, data_source_1, data_source_2, prop, num_samples=None):
+        self.data_source_1 = data_source_1
+        self.data_source_2 = data_source_2
+        self.prop = prop
+        self.num_samples = num_samples
+        self.num_samples_1 = int(self.num_samples * prop)
+        self.num_samples_2 = self.num_samples - self.num_samples_1
+
+    def __iter__(self):
+        samples_idx = []
+        samples_idx = samples_idx + np.random.choice(self.data_source_1, self.num_samples_1).tolist()
+        samples_idx = samples_idx + np.random.choice(self.data_source_2, self.num_samples_2, replace=False).tolist()
+        random.shuffle(samples_idx)
+        return iter(samples_idx)
+
+    def __len__(self):
+        return self.num_samples
+
+
 def pipeline(configs):
 
     # step 1: prepare datasets for dataloader
@@ -196,8 +221,11 @@ def pipeline(configs):
                                    experiment_dir=experiment_dir,
                                    smi_file='smiles_' + split + '.smi',
                                    max_sequence_length=configs['max_sequence_length'],
+                                   fda_prop=configs['fda_prop'],
                                    nneg=configs['nneg'])
 
+    # create train sampler to ensure FDA drug sampling rate ~ configs['fda_prop'] in a batch
+    Mixsampler = MixSampler(datasets['train'].fda_idx, datasets['train'].zinc_idx, configs['fda_prop'], len(datasets['train']))
 
     # step 2: define model
     if configs['manifold_type'] == 'Euclidean':
@@ -267,13 +295,22 @@ def pipeline(configs):
             for split in splits:
 
                 # prepare dataloader
-                DrugsLoader = DataLoader(
-                    dataset=datasets[split],
-                    batch_size=configs['batch_size'],
-                    shuffle=(split=='train'),
-                    drop_last=True,
-                    pin_memory=torch.cuda.is_available()
-                )
+                if split == 'train': # using sampler and drop last batch during training
+                    DrugsLoader = DataLoader(
+                        dataset=datasets[split],
+                        batch_size=configs['batch_size'],
+                        sampler=Mixsampler,
+                        drop_last=True,
+                        pin_memory=torch.cuda.is_available()
+                    )
+                else:
+                    DrugsLoader = DataLoader(
+                        dataset=datasets[split],
+                        batch_size=configs['batch_size'],
+                        shuffle=False,
+                        drop_last=False,
+                        pin_memory=torch.cuda.is_available()
+                    )
 
                 # define performance metrics
                 epoch_metric = {

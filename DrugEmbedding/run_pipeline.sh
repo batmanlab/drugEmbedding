@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="exp_021"
+EXPERIMENT="debug_dp"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -15,10 +15,10 @@ python main.py \
   --data_file="${DATA_FILE}" \
   --fda_file="${FDA_FILE}" \
   --vocab_file="char_set_clean.pkl" \
-  --atc_sim_file="drugs_sp.pkl" \
+  --atc_sim_file="drugs_sp_all.csv" \
   --checkpoint_dir="./experiments/SMILES" \
   --experiment_name="${EXPERIMENT}" \
-  --task="vae" \
+  --task="vae + atc" \
   --limit=0 \
   --batch_size=128 \
   --epochs=100 \
@@ -31,7 +31,7 @@ python main.py \
   --num_centroids=70 \
   --bidirectional=False \
   --num_layers=1 \
-  --hidden_size=512 \
+  --hidden_size=20 \
   --latent_size=2 \
   --word_dropout_rate=0.2 \
   --anneal_function="logistic" \

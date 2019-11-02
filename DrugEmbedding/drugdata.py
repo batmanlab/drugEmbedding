@@ -5,11 +5,14 @@ from collections import defaultdict
 import pandas as pd
 import numpy as np
 
+NUM_ZINC = 224516
+NUM_FDA = 1241
+
 class drugdata(Dataset):
 
     def __init__(self, task, fda_drugs_dir, fda_smiles_file, fda_vocab_file, fda_drugs_sp_file,
                  experiment_dir, smi_file,
-                 max_sequence_length, nneg=None):
+                 max_sequence_length, fda_prop, nneg=None):
         super(drugdata, self).__init__()
 
         self.task = task
@@ -22,11 +25,13 @@ class drugdata(Dataset):
         self.smi_file = smi_file
 
         self.max_sequence_length = max_sequence_length
+        self.fda_prop = fda_prop
         self.nneg = nneg
 
         self._create_vocab()
         self._create_fda_smiles_dataset() # create FDA drugs SMILES only dataset
         self._create_smiles_dataset() # create train, valid, test SMILES dataset
+        self._smiles_class() # split index of FDA drugs, index of ZINC smiles
 
         self._load_fda_sp()
         self._create_sp_dataset()
@@ -34,22 +39,6 @@ class drugdata(Dataset):
     # load drug-drug ATC shortest path
     def _load_fda_sp(self):
         self.df_sp = pd.read_csv(os.path.join(self.fda_drugs_dir, self.fda_drugs_sp_file), index_col=0)
-
-    # load FDA drug smiles
-    def _load_fda_smiles(self):
-        fda_smiles_dict = {}
-        with open(os.path.join(self.experiment_dir, self.smi_file), 'r') as fp:
-            idx = 1
-            for line in fp.readlines():
-                if line != '\n':
-                    words = line.split(" ")
-                    if len(words) == 1: # the SMILES comes from ZINC 250K
-                        fda_smiles_dict['zinc_' + str(idx)] = line[:-1]
-                        idx += 1
-                    else: # the SMILES comes from FDA drugs
-                        fda_smiles_dict[words[1]] = words[0]
-        fp.close()
-        self.fda_smiles_dict = fda_smiles_dict
 
     def _create_vocab(self):
 
@@ -109,20 +98,22 @@ class drugdata(Dataset):
         """
 
         self.smiles = defaultdict(dict)
-
         with open(os.path.join(self.experiment_dir, self.smi_file)) as file:
 
             lines = file.read().splitlines()
-            idx = 1
+            idx = 0
             for l in lines:
                 # convert to tokens
                 if len(l.split(" ")) == 1: # the SMILES comes from ZINC 250k
                     smi = l # remove /n
                     id = 'zinc_' + str(idx) # use zinc + idx as instance ID
+                    self.smiles[id]['weight'] = (1-self.fda_prop)/NUM_ZINC
                     idx += 1
                 else: # the SMILES comes from FDA drug
                     smi = l.split(" ")[0]
                     id = l.split(" ")[1].lower() # use FDA drug name as instance ID
+                    self.smiles[id]['weight'] = self.fda_prop/NUM_FDA
+                    idx += 1
                 words = self._smiles_to_tokens(smi)
 
                 #add sos token
@@ -150,6 +141,15 @@ class drugdata(Dataset):
 
                 assert self.smiles[id]['len'] <= self.max_sequence_length
         file.close()
+
+    def _smiles_class(self):
+        """
+        index of FDA drugs, index of ZINC drugs in self.smiles
+        :return:
+        """
+        self.smiles_keys = list(self.smiles.keys())
+        self.zinc_idx = [i for i, key in enumerate(self.smiles_keys) if key[:4] == 'zinc']
+        self.fda_idx = [i for i, key in enumerate(self.smiles_keys) if key[:4] != 'zinc']
 
     def _create_fda_smiles_dataset(self):
         self.fda_smiles = defaultdict(dict)
@@ -244,13 +244,19 @@ class drugdata(Dataset):
         :return:
         """
 
-        keys = list(self.smiles.keys())
-        drug_key = keys[idx]
+        # ignore idx and sample from weighted dataset
+        #if np.random.rand(1) < self.fda_prop: # sample a data point from FDA drugs with probability fda_prop
+        #    idx = np.random.choice(self.fda_idx, 1)[0]
+        #else:
+        #    idx = np.random.choice(self.zinc_idx, 1)[0] # sample a data point from ZINC dataset
+
+        drug_key = self.smiles_keys[idx]
 
         drug_smiles = self.smiles[drug_key]['words']
         drug_inputs = np.asarray(self.smiles[drug_key]['inputs'])
         drug_targets = np.asarray(self.smiles[drug_key]['targets'])
         drug_len = self.smiles[drug_key]['len']
+        drug_weight = self.smiles[drug_key]['weight']
 
         drug_dict = {}
         if self.task == 'vae': # if the task is VAE only, i.e. recon. loss & KL loss
@@ -302,6 +308,7 @@ class drugdata(Dataset):
             drug_dict['drug_inputs'] = drug_inputs
             drug_dict['drug_targets'] = drug_targets
             drug_dict['drug_len'] = drug_len
+            drug_dict['drug_weight'] = drug_weight
             drug_dict['loc_ranking_indicator'] = loc_ranking_indicator
             drug_dict['loc_ranking_inputs'] = loc_ranking_inputs
             drug_dict['loc_ranking_len'] = loc_ranking_len
