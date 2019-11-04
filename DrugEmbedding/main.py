@@ -1,14 +1,15 @@
-from drugdata import drugdata
+from utils import *
 from evae import *
 from hvae import *
-from utils import *
-
+from drugdata import *
+from metrics import fda_drug_rep, dendrogram_purity_score
 import torch
 import numpy as np
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
 
 import os
+import time
 import json
 import random
 from absl import app
@@ -16,7 +17,9 @@ from absl import flags
 from absl import logging
 from collections import OrderedDict
 from tensorboardX import SummaryWriter
-from tqdm import tqdm
+from shutil import copyfile
+
+
 
 # reproducibility
 random.seed(216)
@@ -33,13 +36,13 @@ flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug_dp', 'Experiment name')
-flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', 0, 'Training sample size limit')
+flags.DEFINE_string('task', 'vae', 'Task(s) included in this experiment')
+flags.DEFINE_integer('limit', 500, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
-flags.DEFINE_float('max_norm', 1e12, 'Maximum total gradient norm')
+flags.DEFINE_float('max_norm', 1e3, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
 flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
@@ -184,6 +187,10 @@ def create_raw_files(configs, split_proportion):
     f_test.close()
     logging.info('Testing data has been created. Size = %d.' % (limit - train_size - valid_size))
 
+    # save a copy of all_drugs.smi
+    src = './data/fda_drugs/all_drugs.smi'
+    dst = os.path.join(experiment_dir, 'all_drugs.smi')
+    copyfile(src, dst)
 
 class MixSampler(Sampler):
 
@@ -221,8 +228,18 @@ def pipeline(configs):
                                    experiment_dir=experiment_dir,
                                    smi_file='smiles_' + split + '.smi',
                                    max_sequence_length=configs['max_sequence_length'],
-                                   fda_prop=configs['fda_prop'],
                                    nneg=configs['nneg'])
+
+    fda_dataset = drugdata(task=configs['task'],
+                       fda_drugs_dir=configs['data_dir'],
+                       fda_smiles_file=configs['fda_file'],
+                       fda_vocab_file=configs['vocab_file'],
+                       fda_drugs_sp_file=configs['atc_sim_file'],
+                       experiment_dir=experiment_dir,
+                       smi_file=configs['fda_file'],
+                       max_sequence_length=configs['max_sequence_length'],
+                       nneg=configs['nneg']
+                       )
 
     # create train sampler to ensure FDA drug sampling rate ~ configs['fda_prop'] in a batch
     Mixsampler = MixSampler(datasets['train'].fda_idx, datasets['train'].zinc_idx, configs['fda_prop'], len(datasets['train']))
@@ -369,12 +386,48 @@ def pipeline(configs):
                         #TODO: early stopping metric
                         pass
 
+
                 # tensorboardX tracker
                 summary_writer.add_scalar('%s/avg_total_loss' % split, np.array(epoch_metric['total_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_recon_loss' % split, np.array(epoch_metric['recon_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_kl_loss' % split, np.array(epoch_metric['kl_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_kl_weight' % split, np.array(epoch_metric['kl_weight']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_local_ranking_loss' % split, np.array(epoch_metric['local_ranking_loss']).mean(), epoch)
+
+                # compute dendrogram purity
+                if split == 'train':
+                    # DP on training
+                    start_time = time.time()
+                    drug_lst, mean_lst = fda_drug_rep(configs, datasets[split], model, all_drugs=False)
+                    dp_lvl4 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=4)
+                    dp_lvl3 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=3)
+                    dp_lvl2 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=2)
+                    dp_lvl1 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=1)
+                    end_time = time.time()
+                    summary_writer.add_scalar('%s/puprity_lvl4' % split, np.array(dp_lvl4), epoch)
+                    summary_writer.add_scalar('%s/puprity_lvl3' % split, np.array(dp_lvl3), epoch)
+                    summary_writer.add_scalar('%s/puprity_lvl2' % split, np.array(dp_lvl2), epoch)
+                    summary_writer.add_scalar('%s/puprity_lvl1' % split, np.array(dp_lvl1), epoch)
+                    logging.info(
+                        'Training DP: Epoch [{}/{}], DP ATC Lvl 1: {:.4f}, DP ATC Lvl2: {:.4f}, DP ATC Lvl3: {:.4f}, DP ATC Lvl4: {:.4f}, Time: {:.2f}'
+                        .format(epoch, end_epoch, dp_lvl1, dp_lvl2, dp_lvl3, dp_lvl4, (end_time-start_time)))
+
+                    # DP on FDA
+                    start_time = time.time()
+                    drug_lst, mean_lst = fda_drug_rep(configs, fda_dataset, model, all_drugs=True)
+                    dp_lvl4 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=4)
+                    dp_lvl3 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=3)
+                    dp_lvl2 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=2)
+                    dp_lvl1 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=1)
+                    end_time = time.time()
+                    summary_writer.add_scalar('FDA/puprity_lvl4', np.array(dp_lvl4), epoch)
+                    summary_writer.add_scalar('FDA/puprity_lvl3', np.array(dp_lvl3), epoch)
+                    summary_writer.add_scalar('FDA/puprity_lvl2', np.array(dp_lvl2), epoch)
+                    summary_writer.add_scalar('FDA/puprity_lvl1', np.array(dp_lvl1), epoch)
+                    logging.info(
+                        'FDA DP: Epoch [{}/{}], DP ATC Lvl 1: {:.4f}, DP ATC Lvl2: {:.4f}, DP ATC Lvl3: {:.4f}, DP ATC Lvl4: {:.4f}, Time: {:.2f}'
+                        .format(epoch, end_epoch, dp_lvl1, dp_lvl2, dp_lvl3, dp_lvl4, (end_time-start_time)))
+
 
     except KeyboardInterrupt:
         logging.info('Interrupted! Stop Training!')

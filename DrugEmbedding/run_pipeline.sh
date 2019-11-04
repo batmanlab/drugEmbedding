@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="debug_dp"
+EXPERIMENT="exp_002"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -18,9 +18,9 @@ python main.py \
   --atc_sim_file="drugs_sp_all.csv" \
   --checkpoint_dir="./experiments/SMILES" \
   --experiment_name="${EXPERIMENT}" \
-  --task="vae + atc" \
+  --task="vae" \
   --limit=0 \
-  --batch_size=128 \
+  --batch_size=256 \
   --epochs=100 \
   --max_sequence_length=120 \
   --learning_rate=3e-4 \
@@ -28,10 +28,10 @@ python main.py \
   --wd=0 \
   --manifold_type="Lorentz" \
   --prior_type="Standard" \
-  --num_centroids=70 \
+  --num_centroids=0 \
   --bidirectional=False \
   --num_layers=1 \
-  --hidden_size=20 \
+  --hidden_size=128 \
   --latent_size=2 \
   --word_dropout_rate=0.2 \
   --anneal_function="logistic" \
@@ -47,4 +47,5 @@ python main.py \
   --trained_epochs=100 \
   --alpha=0.0 \
   --beta=0.5 \
-  --nneg=5 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
+  --nneg=5 \
+  --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1

@@ -1,20 +1,13 @@
-import os
-import json
-import numpy as np
-from collections import OrderedDict
 from scipy.cluster.hierarchy import linkage
-
-from utils import *
-
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
 
+from utils import *
 from evae import *
 from hvae import *
 from drugdata import *
-
-from tqdm import tqdm
 import itertools
+from tqdm import tqdm
 
 def load_configs(experiment_dir, exp_name):
     experiment_path = os.path.join(experiment_dir, exp_name)
@@ -37,26 +30,11 @@ def load_dataset(experiment_dir, exp_name, dataset_name):
                        experiment_dir=experiment_path,
                        smi_file=dataset_name,
                        max_sequence_length=configs['max_sequence_length'],
-                       fda_prop=configs['fda_prop'],
                        nneg=configs['nneg']
                        )
     return dataset
 
-def load_model(experiment_dir, exp_name, checkpoint):
-    experiment_path = os.path.join(experiment_dir, exp_name)
-    configs = load_configs(experiment_dir, exp_name)
-
-    dataset = drugdata(task=configs['task'],
-                       fda_drugs_dir=configs['data_dir'],
-                       fda_smiles_file=configs['fda_file'],
-                       fda_vocab_file=configs['vocab_file'],
-                       fda_drugs_sp_file=configs['atc_sim_file'],
-                       experiment_dir=experiment_path,
-                       smi_file='smiles_train.smi',
-                       max_sequence_length=configs['max_sequence_length'],
-                       fda_prop=configs['fda_prop'],
-                       nneg=configs['nneg']
-                       )
+def load_model(configs, dataset, checkpoint):
 
     # load model
     if configs['manifold_type'] == 'Euclidean':
@@ -92,9 +70,8 @@ def load_model(experiment_dir, exp_name, checkpoint):
             alpha=configs['alpha']
         )
 
-    checkpoint_path = os.path.join(experiment_path, checkpoint)
     torch.no_grad()
-    model.load_state_dict(torch.load(checkpoint_path))
+    model.load_state_dict(torch.load(checkpoint))
     model.eval()
     return model
 
@@ -110,38 +87,43 @@ class FDASampler(Sampler):
     def __len__(self):
         return len(self.fda_idx)
 
-def dendrogram_purity_score(experiment_dir, exp_name, dataset_name, checkpoint):
-    # load configs, dataset and model
-    configs = load_configs(experiment_dir, exp_name)
-    dataset = load_dataset(experiment_dir, exp_name, dataset_name)
-    model = load_model(experiment_dir, exp_name, checkpoint)
-
+def fda_drug_rep(configs, dataset, model, all_drugs):
     # create train dataloader
-    fda_dataloader = DataLoader(
-                        dataset=dataset,
-                        batch_size=configs['batch_size'],
-                        sampler=FDASampler(dataset.fda_idx),
-                        pin_memory=torch.cuda.is_available()
-                    )
+    if all_drugs:  # dataset is loaded from 'all_drugs.smi'
+        fda_dataloader = DataLoader(
+            dataset=dataset,
+            batch_size=configs['batch_size'],
+            pin_memory=torch.cuda.is_available()
+        )
+    else:
+        fda_dataloader = DataLoader(
+            dataset=dataset,
+            batch_size=configs['batch_size'],
+            sampler=FDASampler(dataset.fda_idx),
+            pin_memory=torch.cuda.is_available()
+        )
 
     # read drug names, drug latent reps.
     mean_lst = []
     drug_lst = []
-    for iteration, batch in enumerate(fda_dataloader):
+    for iteration, batch in enumerate(tqdm(fda_dataloader)):
         if configs['manifold_type'] == 'Euclidean':
             mean, logv, z = model.get_intermediates(batch)
         else:
             mean, logv, _, _, z = model.get_intermediates(batch)
         mean_lst = mean_lst + mean.tolist()
         drug_lst = drug_lst + batch['drug_name']
+    return drug_lst, mean_lst
 
+
+def dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl):
     # read ATC hierarchy
-    df_drug_atc_path = drug_atc_path(drug_lst, atc_level=4)
+    df_drug_atc_path = drug_atc_path(drug_lst, atc_lvl)
 
     # compute linkage matrix
     fda_mean = torch.tensor(mean_lst)
-    lor_dist_condensed = pairwise_dist(configs['manifold_type'], fda_mean.numpy())
-    linkage_matrix = linkage(lor_dist_condensed, 'single')
+    dist_condensed = pairwise_dist(configs['manifold_type'], fda_mean.numpy())
+    linkage_matrix = linkage(dist_condensed, 'complete')
 
     N = fda_mean.shape[0]
     LL = [[item] for item in range(N)]
@@ -163,16 +145,29 @@ def dendrogram_purity_score(experiment_dir, exp_name, dataset_name, checkpoint):
                 drug_2_idx = drug_lst.index(p[1])
                 lca = [item for item in LL if drug_1_idx in item and drug_2_idx in item][0]
                 lvs = np.array(drug_lst)[lca]
-                ck_predict = np.array(drug_atc_path(lvs.tolist(), atc_level=4)['ATC_PATH'])
+                ck_predict = np.array(drug_atc_path(lvs.tolist(), atc_lvl)['ATC_PATH'])
                 purity += sum(ck_predict == ck) / len(ck_predict)
                 p_cnt += 1
+    if p_cnt > 0:
+        return purity / p_cnt
+    else:
+        return 0
 
-    dp = purity / p_cnt
-    return dp
 
+"""
 experiment_dir = './experiments/SMILES'
 exp_name = 'debug_dp'
+experiment_path = os.path.join(experiment_dir, exp_name)
 dataset_name = 'smiles_test.smi'
-checkpoint = 'checkpoint_epoch001_batch268.model'
+checkpoint = os.path.join(experiment_path, 'checkpoint_epoch001_batch018.model')
+atc_lvl = 4
 
-dp = dendrogram_purity_score(experiment_dir, exp_name, dataset_name, checkpoint)
+# load configs, dataset and model
+configs = load_configs(experiment_dir, exp_name)
+dataset = load_dataset(experiment_dir, exp_name, 'smiles_test.smi')
+model = load_model(configs, dataset, checkpoint)
+drug_lst, mean_lst = fda_drug_rep(configs, dataset, model, all_drugs=False)
+del dataset
+dp = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl)
+print(dp)
+"""

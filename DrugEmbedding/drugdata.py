@@ -5,14 +5,11 @@ from collections import defaultdict
 import pandas as pd
 import numpy as np
 
-NUM_ZINC = 224516
-NUM_FDA = 1241
-
 class drugdata(Dataset):
 
     def __init__(self, task, fda_drugs_dir, fda_smiles_file, fda_vocab_file, fda_drugs_sp_file,
                  experiment_dir, smi_file,
-                 max_sequence_length, fda_prop, nneg=None):
+                 max_sequence_length, nneg=None):
         super(drugdata, self).__init__()
 
         self.task = task
@@ -25,7 +22,6 @@ class drugdata(Dataset):
         self.smi_file = smi_file
 
         self.max_sequence_length = max_sequence_length
-        self.fda_prop = fda_prop
         self.nneg = nneg
 
         self._create_vocab()
@@ -107,12 +103,10 @@ class drugdata(Dataset):
                 if len(l.split(" ")) == 1: # the SMILES comes from ZINC 250k
                     smi = l # remove /n
                     id = 'zinc_' + str(idx) # use zinc + idx as instance ID
-                    self.smiles[id]['weight'] = (1-self.fda_prop)/NUM_ZINC
                     idx += 1
                 else: # the SMILES comes from FDA drug
                     smi = l.split(" ")[0]
                     id = l.split(" ")[1].lower() # use FDA drug name as instance ID
-                    self.smiles[id]['weight'] = self.fda_prop/NUM_FDA
                     idx += 1
                 words = self._smiles_to_tokens(smi)
 
@@ -256,7 +250,6 @@ class drugdata(Dataset):
         drug_inputs = np.asarray(self.smiles[drug_key]['inputs'])
         drug_targets = np.asarray(self.smiles[drug_key]['targets'])
         drug_len = self.smiles[drug_key]['len']
-        drug_weight = self.smiles[drug_key]['weight']
 
         drug_dict = {}
         if self.task == 'vae': # if the task is VAE only, i.e. recon. loss & KL loss
@@ -308,7 +301,6 @@ class drugdata(Dataset):
             drug_dict['drug_inputs'] = drug_inputs
             drug_dict['drug_targets'] = drug_targets
             drug_dict['drug_len'] = drug_len
-            drug_dict['drug_weight'] = drug_weight
             drug_dict['loc_ranking_indicator'] = loc_ranking_indicator
             drug_dict['loc_ranking_inputs'] = loc_ranking_inputs
             drug_dict['loc_ranking_len'] = loc_ranking_len
