@@ -259,7 +259,7 @@ class drugdata(Dataset):
             drug_dict['drug_targets'] = drug_targets
             drug_dict['drug_len'] = drug_len
 
-        elif self.task == 'vae + atc':
+        elif self.task in ['atc', 'vae + atc']:
             # if ATC information is available for the sampled drug
             if drug_key in self.fda_atc_drugs:
                 # sample 1 positive examples from the target drug's nearest neighbor(s)
@@ -268,8 +268,8 @@ class drugdata(Dataset):
                 loc_sp_lst = []
 
                 pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1)
-                pos_key = pos_sample['drug_comparison'].get_values()[0]
-                pos_sp = pos_sample['sp'].get_values()[0]
+                pos_key = pos_sample['drug_comparison'].to_numpy()[0]
+                pos_sp = pos_sample['sp'].to_numpy()[0]
                 loc_ranking_lst.append(np.asarray(self.fda_smiles[pos_key]['inputs'])) # always first save positive example
                 len_lst.append(self.fda_smiles[pos_key]['len'])
                 loc_sp_lst.append(pos_sp)
@@ -282,7 +282,7 @@ class drugdata(Dataset):
                 for i, neg_key in enumerate(neg_keys):
                     loc_ranking_lst.append(np.asarray(self.fda_smiles[neg_key]['inputs']))
                     len_lst.append(self.fda_smiles[neg_key]['len'])
-                    loc_sp_lst.append(neg_sp.get_values()[i])
+                    loc_sp_lst.append(neg_sp.to_numpy()[i])
 
                 loc_ranking_indicator = np.ones(1, dtype=np.long) # indicator that local ranking info is available
                 loc_ranking_inputs = np.stack(loc_ranking_lst)

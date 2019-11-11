@@ -119,6 +119,10 @@ class HVAE(nn.Module):
             recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             return recon_loss, kl_loss, mkl_loss, to_cuda_var(torch.tensor(0.0))
 
+        elif task == 'atc':
+            local_ranking_loss = self.ranking_loss(batch)  # ATC local ranking loss
+            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), local_ranking_loss
+
         elif task == 'vae + atc':
             recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             local_ranking_loss = self.ranking_loss(batch) # ATC local ranking loss

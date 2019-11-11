@@ -1,5 +1,3 @@
-#TODO: check potential numerical instability
-
 import torch
 from torch.distributions import MultivariateNormal
 import numpy as np
@@ -140,3 +138,13 @@ def pseudo_hyperbolic_gaussian(z, mu_h, cov, version, vt=None, u=None):
     logp_z = logp_vt - log_det_proj_mu
 
     return logp_vt, logp_z
+
+
+def _log_multivariate_normal_density_diag(X, means, covars):
+    """Compute Gaussian log-density at X for a diagonal model."""
+    n_samples, n_dim = X.shape
+    lpr = -0.5 * (n_dim * np.log(2 * np.pi) + np.sum(np.log(covars), 1)
+                  + np.sum((means ** 2) / covars, 1)
+                  - 2 * np.dot(X, (means / covars).T)
+                  + np.dot(X ** 2, (1.0 / covars).T))
+    return lpr

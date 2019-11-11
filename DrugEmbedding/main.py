@@ -36,8 +36,8 @@ flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug_dp', 'Experiment name')
-flags.DEFINE_string('task', 'vae', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', 500, 'Training sample size limit')
+flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
+flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
@@ -48,7 +48,7 @@ flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
-flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
+flags.DEFINE_integer('num_layers', 3, 'RNN number of layers')
 flags.DEFINE_integer('hidden_size', 20, 'Dimension of RNN output')
 flags.DEFINE_integer('latent_size', 2, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
@@ -218,6 +218,20 @@ def pipeline(configs):
     # step 1: prepare datasets for dataloader
     experiment_dir = os.path.join(configs['checkpoint_dir'], configs['experiment_name'])
     datasets = OrderedDict()
+
+    # prepare FDA only dataset
+    fda_dataset = drugdata(task=configs['task'],
+                       fda_drugs_dir=configs['data_dir'],
+                       fda_smiles_file=configs['fda_file'],
+                       fda_vocab_file=configs['vocab_file'],
+                       fda_drugs_sp_file=configs['atc_sim_file'],
+                       experiment_dir=experiment_dir,
+                       smi_file=configs['fda_file'],
+                       max_sequence_length=configs['max_sequence_length'],
+                       nneg=configs['nneg']
+                       )
+
+    # prepare train, valid, test datasets
     splits = ['train', 'valid', 'test']
     for split in splits:
         datasets[split] = drugdata(task = configs['task'],
@@ -229,17 +243,6 @@ def pipeline(configs):
                                    smi_file='smiles_' + split + '.smi',
                                    max_sequence_length=configs['max_sequence_length'],
                                    nneg=configs['nneg'])
-
-    fda_dataset = drugdata(task=configs['task'],
-                       fda_drugs_dir=configs['data_dir'],
-                       fda_smiles_file=configs['fda_file'],
-                       fda_vocab_file=configs['vocab_file'],
-                       fda_drugs_sp_file=configs['atc_sim_file'],
-                       experiment_dir=experiment_dir,
-                       smi_file=configs['fda_file'],
-                       max_sequence_length=configs['max_sequence_length'],
-                       nneg=configs['nneg']
-                       )
 
     # create train sampler to ensure FDA drug sampling rate ~ configs['fda_prop'] in a batch
     Mixsampler = MixSampler(datasets['train'].fda_idx, datasets['train'].zinc_idx, configs['fda_prop'], len(datasets['train']))
@@ -312,20 +315,31 @@ def pipeline(configs):
             for split in splits:
 
                 # prepare dataloader
-                if split == 'train': # using sampler and drop last batch during training
-                    DrugsLoader = DataLoader(
-                        dataset=datasets[split],
-                        batch_size=configs['batch_size'],
-                        sampler=Mixsampler,
-                        drop_last=True,
-                        pin_memory=torch.cuda.is_available()
-                    )
-                else:
+                if split == 'train':
+                    if configs['data_file'] == 'smiles_set_clean.smi': # if dataset = ZINC + FDA
+                        DrugsLoader = DataLoader(
+                            dataset=datasets[split],
+                            batch_size=configs['batch_size'],
+                            sampler=Mixsampler,
+                            drop_last=True,
+                            num_workers=configs['num_workers'],
+                            pin_memory=torch.cuda.is_available()
+                        )
+                    elif configs['data_file'] == 'all_drugs.smi': # if dataset = FDA
+                        DrugsLoader = DataLoader(
+                            dataset=datasets[split],
+                            batch_size=configs['batch_size'],
+                            drop_last=False,
+                            num_workers=configs['num_workers'],
+                            pin_memory=torch.cuda.is_available()
+                        )
+                else: # split = valida or test
                     DrugsLoader = DataLoader(
                         dataset=datasets[split],
                         batch_size=configs['batch_size'],
                         shuffle=False,
                         drop_last=False,
+                        num_workers=configs['num_workers'],
                         pin_memory=torch.cuda.is_available()
                     )
 
@@ -349,7 +363,7 @@ def pipeline(configs):
                     anneal_weight = kl_anneal_function(configs, start_epoch, epoch)
                     loss = (recon_loss
                             + anneal_weight * (configs['beta'] * kl_loss + configs['alpha'] * mkl_loss)
-                            + local_ranking_loss)
+                            + (configs['nneg']) * local_ranking_loss)
 
                     # initialize performance metrics
                     epoch_metric['total_loss'].append(loss.item())
@@ -395,7 +409,7 @@ def pipeline(configs):
                 summary_writer.add_scalar('%s/avg_local_ranking_loss' % split, np.array(epoch_metric['local_ranking_loss']).mean(), epoch)
 
                 # compute dendrogram purity
-                if split == 'train':
+                if split == 'train' and (epoch % 10 == 0):
                     # DP on training
                     start_time = time.time()
                     drug_lst, mean_lst = fda_drug_rep(configs, datasets[split], model, all_drugs=False)
@@ -411,6 +425,7 @@ def pipeline(configs):
                     logging.info(
                         'Training DP: Epoch [{}/{}], DP ATC Lvl 1: {:.4f}, DP ATC Lvl2: {:.4f}, DP ATC Lvl3: {:.4f}, DP ATC Lvl4: {:.4f}, Time: {:.2f}'
                         .format(epoch, end_epoch, dp_lvl1, dp_lvl2, dp_lvl3, dp_lvl4, (end_time-start_time)))
+
 
                     # DP on FDA
                     start_time = time.time()

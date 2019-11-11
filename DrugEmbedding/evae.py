@@ -122,6 +122,10 @@ class EVAE(nn.Module):
             recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             return recon_loss, kl_loss, mkl_loss, to_cuda_var(torch.tensor(0.0))
 
+        elif task == 'atc':
+            local_ranking_loss = self.ranking_loss(batch)  # ATC local ranking loss
+            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), local_ranking_loss
+
         elif task == 'vae + atc':
             recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             local_ranking_loss = self.ranking_loss(batch) # ATC local ranking loss
@@ -284,8 +288,10 @@ class EVAE(nn.Module):
             mean_drug_exp = mean_drug.unsqueeze(0).repeat(1, 1, nneg + 1).view(-1, self.latent_size)
 
             # step 5, Lorentz distance between z_drug and z_local_ranking
-            euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+            euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1)
             euclidean_dist = euclidean_dist.view(len(select_idx), 1+nneg)
+            euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+            euclidean_dist = torch.clamp(euclidean_dist, min=0.0)
 
             # step 6, compute local ranking loss (as a classification task)
             #ranking_loss = - torch.log((torch.exp(-euclidean_dist[:, 0])/torch.exp(-euclidean_dist).sum(dim=1))).sum()

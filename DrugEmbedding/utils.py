@@ -125,9 +125,22 @@ def pairwise_dist(manifold_type, x):
         m2 = m**2
         m2 = np.where(m2<1.0, 1.0 + 1e-6, m2)
         dm = np.log(m + np.sqrt(m2 - 1))
+        # prevent Inf. distance in dm
+        dm = np.nan_to_num(dm)
         return upper_tri_indexing(dm) # convert to condense form
     elif manifold_type == 'Euclidean':
         dc = pdist(x, metric='euclidean')
+        # prevent Inf. distance in dc
+        dc = np.nan_to_num(dc)
         return dc
 
+def _log_multivariate_normal_density_diag(X, means, covars):
+    """Compute Gaussian log-density at X for a diagonal model."""
+    X = np.concatenate((X), axis = 0)
+    n_samples, n_dim = X.shape
+    lpr = -0.5 * (n_dim * np.log(2 * np.pi) + np.sum(np.log(covars), 1)
+                  + np.sum((means ** 2) / covars, 1)
+                  - 2 * np.dot(X, (means / covars).T)
+                  + np.dot(X ** 2, (1.0 / covars).T))
+    return lpr
 
