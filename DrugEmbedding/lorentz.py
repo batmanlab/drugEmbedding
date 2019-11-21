@@ -3,6 +3,9 @@ from torch.distributions import MultivariateNormal
 import numpy as np
 from utils import to_cuda_var
 
+# reproducibility
+torch.manual_seed(216)
+np.random.seed(216)
 
 def lorentz_to_poincare(h):
     if type(h) is torch.Tensor:

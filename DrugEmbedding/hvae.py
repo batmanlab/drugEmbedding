@@ -2,6 +2,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from lorentz import *
 import torch.nn.utils.rnn as rnn_utils
+from utils import to_cuda_var
+
+# reproducibility
+torch.manual_seed(216)
+np.random.seed(216)
 
 class HVAE(nn.Module):
 
@@ -11,7 +16,7 @@ class HVAE(nn.Module):
                  word_dropout_rate,
                  vocab_size, max_sequence_length,
                  sos_idx, eos_idx, pad_idx, unk_idx,
-                 prior, alpha):
+                 prior, alpha, beta, gamma):
         super().__init__()
 
         self.hidden_size = hidden_size
@@ -45,6 +50,10 @@ class HVAE(nn.Module):
 
         # marginal KL coefficient alpha * KL(q(z)||p(z))
         self.alpha = alpha
+        # conditional KL coefficient beta * KL(q(z|x)||p(z))
+        self.beta = beta
+        # MMD coefficent gamma * MMD
+        self.gamma = gamma
 
         # define loss function
         self.RECON = torch.nn.NLLLoss(ignore_index=self.pad_idx, reduction='sum')
@@ -67,7 +76,7 @@ class HVAE(nn.Module):
         _, hidden = self.encoder_rnn(packed_input) # hidden_factor, batch_size, hidden_size
 
         if self.hidden_factor > 1:
-            hidden = hidden.permute(1, 0, 2).reshape(batch_size, self.hidden_size * self.hidden_factor) # batch_size, hidden_size * hidden_factor
+            hidden = hidden.permute(1, 0, 2).reshape(batch_size, self.hidden_size * self.hidden_factor).contiguous() # batch_size, hidden_size * hidden_factor
         else:
             hidden = hidden.squeeze(0)
         return hidden
@@ -84,7 +93,7 @@ class HVAE(nn.Module):
 
     def decoder(self, input_sequence, sorted_lengths, sorted_idx, z):
         hidden = self.latent2hidden(z) # batch_size, hidden_size * hidden_factor
-        hidden = hidden.reshape(-1, self.num_layers, self.hidden_size).permute(1, 0, 2) # hidden_factor, batch_size, hidden_size
+        hidden = hidden.reshape(-1, self.num_layers, self.hidden_size).permute(1, 0, 2).contiguous() # hidden_factor, batch_size, hidden_size
 
         # teacher forcing dropout
         if self.word_dropout_rate > 0:
@@ -116,17 +125,17 @@ class HVAE(nn.Module):
     def forward(self, task, batch, num_samples):
 
         if task == 'vae':
-            recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
-            return recon_loss, kl_loss, mkl_loss, to_cuda_var(torch.tensor(0.0))
+            recon_loss, kl_loss, mkl_loss, mmd_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
+            return recon_loss, kl_loss, mkl_loss, mmd_loss, to_cuda_var(torch.tensor(0.0))
 
         elif task == 'atc':
             local_ranking_loss = self.ranking_loss(batch)  # ATC local ranking loss
-            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), local_ranking_loss
+            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), to_cuda_var(torch.tensor(0.0)), to_cuda_var(torch.tensor(0.0)), local_ranking_loss
 
         elif task == 'vae + atc':
-            recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
+            recon_loss, kl_loss, mkl_loss, mmd_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             local_ranking_loss = self.ranking_loss(batch) # ATC local ranking loss
-            return recon_loss, kl_loss, mkl_loss, local_ranking_loss
+            return recon_loss, kl_loss, mkl_loss, mmd_loss, local_ranking_loss
 
     def get_intermediates(self, batch):
         """
@@ -168,13 +177,21 @@ class HVAE(nn.Module):
         # reconstruction loss
         recon_loss = self.RECON(logp, target)/batch_size
         # kl loss
-        kl_loss = self.kl_loss(mean, logv, vt, u, z)/batch_size
+        if self.beta > 0.0:
+            kl_loss = self.kl_loss(mean, logv, vt, u, z)/batch_size
+        else:
+            kl_loss = to_cuda_var(torch.tensor(0.0))
         # marginal kl loss
         if self.alpha > 0.0:
             mkl_loss = self.marginal_posterior_divergence(vt, u, z, mean, logv, num_samples)/batch_size
         else:
             mkl_loss = to_cuda_var(torch.tensor(0.0))
-        return recon_loss, kl_loss, mkl_loss
+        # MMD loss
+        if self.gamma > 0.0:
+            mmd_loss = self.mmd_loss(mean)
+        else:
+            mmd_loss = to_cuda_var(torch.tensor(0.0))
+        return recon_loss, kl_loss, mkl_loss, mmd_loss
 
     def kl_loss(self, mean, logv, vt, u, z):
         batch_size, n_h = mean.shape
@@ -189,8 +206,8 @@ class HVAE(nn.Module):
 
         if self.prior == 'Standard':
             _, logp_prior_z = pseudo_hyperbolic_gaussian(z, mu0_h, diag, version=2, vt=None, u=None)
-
-        return torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
+            kl_loss = torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
+        return kl_loss
 
     # estimate the KL divergence between marginal posterior q(z) to prior p(z) in a batch
     def marginal_posterior_divergence(self, vt, u, z, mean, logv, num_samples):
@@ -298,5 +315,35 @@ class HVAE(nn.Module):
 
         return ranking_loss/len(select_idx)
 
+    def mmd_loss(self, mean):
+        # true standard normal distribution samples
+        batch_size, n_h = mean.shape
+        n = n_h -1
+        mu0 = to_cuda_var(torch.zeros(batch_size, n))
+        mu0_h = lorentz_mapping_origin(mu0)
+        logv = to_cuda_var(torch.zeros(batch_size, n))
+        vt, u, z = lorentz_sampling(mu0_h, logv)
+        # compute mmd
+        mmd = self.compute_mmd(z, mean)
+        return mmd
 
+    def compute_kernel(self, x, y):
+        x_size = x.size(0)
+        y_size = y.size(0)
+        dim = x.size(1)
+        x = x.unsqueeze(1)  # (x_size, 1, dim)
+        y = y.unsqueeze(0)  # (1, y_size, dim)
+        tiled_x = x.expand(x_size, y_size, dim).reshape(-1, dim)
+        tiled_y = y.expand(x_size, y_size, dim).reshape(-1, dim)
 
+        lor_prod = lorentz_product(tiled_x, tiled_y)
+        lor_dist = arccosh(-lor_prod)
+        kernel_input = lor_dist.reshape(x_size, y_size).pow(2)
+        return torch.exp(-kernel_input)  # (x_size, y_size)
+
+    def compute_mmd(self, x, y):
+        x_kernel = self.compute_kernel(x, x)
+        y_kernel = self.compute_kernel(y, y)
+        xy_kernel = self.compute_kernel(x, y)
+        mmd = x_kernel.mean() + y_kernel.mean() - 2 * xy_kernel.mean()
+        return mmd

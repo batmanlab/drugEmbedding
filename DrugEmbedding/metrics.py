@@ -8,6 +8,11 @@ from hvae import *
 from drugdata import *
 import itertools
 from tqdm import tqdm
+import json
+
+# reproducibility
+torch.manual_seed(216)
+np.random.seed(216)
 
 def load_configs(experiment_dir, exp_name):
     experiment_path = os.path.join(experiment_dir, exp_name)

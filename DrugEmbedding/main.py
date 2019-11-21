@@ -19,8 +19,6 @@ from collections import OrderedDict
 from tensorboardX import SummaryWriter
 from shutil import copyfile
 
-
-
 # reproducibility
 random.seed(216)
 torch.manual_seed(216)
@@ -36,7 +34,7 @@ flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug_dp', 'Experiment name')
-flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
+flags.DEFINE_string('task', 'vae', 'Task(s) included in this experiment')
 flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
@@ -44,13 +42,13 @@ flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequen
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e3, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
 flags.DEFINE_integer('num_layers', 3, 'RNN number of layers')
-flags.DEFINE_integer('hidden_size', 20, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 2, 'Dimension of latent space Z')
+flags.DEFINE_integer('hidden_size', 200, 'Dimension of RNN output')
+flags.DEFINE_integer('latent_size', 56, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
 flags.DEFINE_float('k', 0.51, '1st parameter in KL logistic annealing function')
@@ -63,8 +61,10 @@ flags.DEFINE_boolean('new_training', True, 'New training or restart from a pre-t
 flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-trained checkpoint')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch010.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 10, 'Number of epochs that have been trained')
-flags.DEFINE_float('alpha', 1.0, 'Weight of KL divergence between marginal posterior and prior')
-flags.DEFINE_float('beta', 0.5, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('alpha', 0.0, 'Weight of KL divergence between marginal posterior and prior')
+flags.DEFINE_float('beta', 1.0, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('gamma', 1.0, 'Weight of MMD divergence between conditional posterior and prior')
+flags.DEFINE_float('delta', 5, 'Weight of ATC local ranking loss')
 flags.DEFINE_integer('nneg', 5, 'Number of negative examples sampled when calculating local ranking loss')
 flags.DEFINE_float('fda_prop', 0.2, 'Average proportion of FDA drugs in one batch')
 
@@ -121,6 +121,8 @@ def save_and_load_flags():
             'trained_epochs': FLAGS.trained_epochs,
             'alpha': FLAGS.alpha,
             'beta': FLAGS.beta,
+            'gamma': FLAGS.gamma,
+            'delta': FLAGS.gamma,
             'nneg': FLAGS.nneg,
             'fda_prop': FLAGS.fda_prop
         }
@@ -262,7 +264,9 @@ def pipeline(configs):
             pad_idx=datasets['train'].pad_idx,
             unk_idx=datasets['train'].unk_idx,
             prior=configs['prior_type'],
-            alpha=configs['alpha']
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
         )
     elif configs['manifold_type'] == 'Lorentz':
         model = HVAE(
@@ -278,7 +282,9 @@ def pipeline(configs):
             pad_idx=datasets['train'].pad_idx,
             unk_idx=datasets['train'].unk_idx,
             prior=configs['prior_type'],
-            alpha=configs['alpha']
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
         )
 
     # load checkpoint
@@ -348,6 +354,8 @@ def pipeline(configs):
                     'total_loss': [],
                     'recon_loss': [],
                     'kl_loss': [],
+                    'mkl_loss': [],
+                    'mmd_loss': [],
                     'kl_weight': [],
                     'local_ranking_loss': []
                 }
@@ -358,17 +366,19 @@ def pipeline(configs):
                         if torch.is_tensor(v):
                             batch[k] = to_cuda_var(v)
 
-                    recon_loss, kl_loss, mkl_loss, local_ranking_loss = model(configs['task'], batch, len(DrugsLoader.dataset)) # forward pass and compute losses
+                    recon_loss, kl_loss, mkl_loss, mmd_loss, local_ranking_loss = model(configs['task'], batch, len(DrugsLoader.dataset)) # forward pass and compute losses
 
                     anneal_weight = kl_anneal_function(configs, start_epoch, epoch)
                     loss = (recon_loss
-                            + anneal_weight * (configs['beta'] * kl_loss + configs['alpha'] * mkl_loss)
-                            + (configs['nneg']) * local_ranking_loss)
+                            + anneal_weight * (configs['beta'] * kl_loss + configs['alpha'] * mkl_loss + configs['gamma'] * mmd_loss)
+                            + (configs['delta']) * local_ranking_loss)
 
                     # initialize performance metrics
                     epoch_metric['total_loss'].append(loss.item())
                     epoch_metric['recon_loss'].append(recon_loss.item())
                     epoch_metric['kl_loss'].append(kl_loss.item())
+                    epoch_metric['mkl_loss'].append(mkl_loss.item())
+                    epoch_metric['mmd_loss'].append(mmd_loss.item())
                     epoch_metric['kl_weight'].append(anneal_weight)
                     if local_ranking_loss > 0: # samples with ATC information
                         epoch_metric['local_ranking_loss'].append(local_ranking_loss.item())
@@ -387,8 +397,8 @@ def pipeline(configs):
                         # track model gradients norm
                         #(total_grad_norm, enc_grad_norm, dec_grad_norm, h2m_grad_norm, h2v_grad_norm) = track_gradient_norm(model)
 
-                        logging.info('Training: Epoch [{}/{}], Batch [{}/{}], RECON-Loss: {:.4f}, KL-Loss: {:.4f}, KL-Annealing: {:.4f}, MKL-Loss: {:.4f},  RANK-Loss: {:.4f}'
-                            .format(epoch, end_epoch, iteration + 1, len(DrugsLoader), recon_loss.item(), kl_loss.item(), anneal_weight, mkl_loss.item(), local_ranking_loss.item()))
+                        logging.info('Training: Epoch [{}/{}], Batch [{}/{}], RECON-Loss: {:.4f}, KL-Loss: {:.4f}, MKL-Loss: {:.4f}, MMD-Loss: {:.4f}, KL-Annealing: {:.4f}, RANK-Loss: {:.4f}'
+                            .format(epoch, end_epoch, iteration + 1, len(DrugsLoader), recon_loss.item(), kl_loss.item(), mkl_loss.item(), mmd_loss.item(), anneal_weight, local_ranking_loss.item()))
 
                         # saving model checkpoint
                         if (epoch) % configs['save_per_epochs'] == 0 and iteration + 1 == len(DrugsLoader):
@@ -405,6 +415,8 @@ def pipeline(configs):
                 summary_writer.add_scalar('%s/avg_total_loss' % split, np.array(epoch_metric['total_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_recon_loss' % split, np.array(epoch_metric['recon_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_kl_loss' % split, np.array(epoch_metric['kl_loss']).mean(), epoch)
+                summary_writer.add_scalar('%s/avg_mkl_loss' % split, np.array(epoch_metric['mkl_loss']).mean(), epoch)
+                summary_writer.add_scalar('%s/avg_mmd_loss' % split, np.array(epoch_metric['mmd_loss']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_kl_weight' % split, np.array(epoch_metric['kl_weight']).mean(), epoch)
                 summary_writer.add_scalar('%s/avg_local_ranking_loss' % split, np.array(epoch_metric['local_ranking_loss']).mean(), epoch)
 

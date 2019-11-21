@@ -1,9 +1,11 @@
-import os
-import json
 import torch
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import pdist
+
+# reproducibility
+torch.manual_seed(216)
+np.random.seed(216)
 
 def to_cuda_var(x):
     """

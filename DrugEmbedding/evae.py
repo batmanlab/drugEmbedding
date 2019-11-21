@@ -4,7 +4,11 @@ import torch.nn.functional as F
 import torch.nn.utils.rnn as rnn_utils
 from torch.distributions import MultivariateNormal
 import numpy as np
-from utils import to_cuda_var
+from utils import to_cuda_var, pairwise_dist
+
+# reproducibility
+torch.manual_seed(216)
+np.random.seed(216)
 
 class EVAE(nn.Module):
 
@@ -14,7 +18,7 @@ class EVAE(nn.Module):
                  word_dropout_rate,
                  vocab_size, max_sequence_length,
                  sos_idx, eos_idx, pad_idx, unk_idx,
-                 prior, alpha):
+                 prior, alpha, beta, gamma):
         super().__init__()
 
         self.hidden_size = hidden_size
@@ -48,6 +52,10 @@ class EVAE(nn.Module):
 
         # marginal KL coefficient alpha * KL(q(z)||p(z))
         self.alpha = alpha
+        # conditional KL coefficient beta * KL(q(z|x)||p(z))
+        self.beta = beta
+        # MMD coefficent gamma * MMD
+        self.gamma = gamma
 
         # define loss function
         self.RECON = torch.nn.NLLLoss(ignore_index=self.pad_idx, reduction='sum')
@@ -70,7 +78,7 @@ class EVAE(nn.Module):
         _, hidden = self.encoder_rnn(packed_input) # hidden_factor, batch_size, hidden_size
 
         if self.hidden_factor > 1:
-            hidden = hidden.permute(1, 0, 2).reshape(batch_size, self.hidden_size * self.hidden_factor) # batch_size, hidden_size * hidden_factor
+            hidden = hidden.permute(1, 0, 2).reshape(batch_size, self.hidden_size * self.hidden_factor).contiguous() # batch_size, hidden_size * hidden_factor
         else:
             hidden = hidden.squeeze(0)
         return hidden
@@ -87,7 +95,7 @@ class EVAE(nn.Module):
 
     def decoder(self, input_sequence, sorted_lengths, sorted_idx, z):
         hidden = self.latent2hidden(z) # batch_size, hidden_size * hidden_factor
-        hidden = hidden.reshape(-1, self.num_layers, self.hidden_size).permute(1, 0, 2) # hidden_factor, batch_size, hidden_size
+        hidden = hidden.reshape(-1, self.num_layers, self.hidden_size).permute(1, 0, 2).contiguous() # hidden_factor, batch_size, hidden_size
 
         # teacher forcing dropout
         if self.word_dropout_rate > 0:
@@ -119,17 +127,17 @@ class EVAE(nn.Module):
     def forward(self, task, batch, num_samples):
 
         if task == 'vae':
-            recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
-            return recon_loss, kl_loss, mkl_loss, to_cuda_var(torch.tensor(0.0))
+            recon_loss, kl_loss, mkl_loss, mmd_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
+            return recon_loss, kl_loss, mkl_loss, mmd_loss, to_cuda_var(torch.tensor(0.0))
 
         elif task == 'atc':
             local_ranking_loss = self.ranking_loss(batch)  # ATC local ranking loss
-            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), local_ranking_loss
+            return  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)),  to_cuda_var(torch.tensor(0.0)), to_cuda_var(torch.tensor(0.0)), local_ranking_loss
 
         elif task == 'vae + atc':
-            recon_loss, kl_loss, mkl_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
+            recon_loss, kl_loss, mkl_loss, mmd_loss = self.vae_loss(batch, num_samples) # SMILES recon. loss
             local_ranking_loss = self.ranking_loss(batch) # ATC local ranking loss
-            return recon_loss, kl_loss, mkl_loss, local_ranking_loss
+            return recon_loss, kl_loss, mkl_loss, mmd_loss, local_ranking_loss
 
     def get_intermediates(self, batch):
         """
@@ -171,13 +179,21 @@ class EVAE(nn.Module):
         # reconstruction loss
         recon_loss = self.RECON(logp, target)/batch_size
         # kl loss
-        kl_loss = self.kl_loss(mean, logv, z)/batch_size
+        if self.beta > 0.0:
+            kl_loss = self.kl_loss(mean, logv, z)/batch_size
+        else:
+            kl_loss = to_cuda_var(torch.tensor(0.0))
         # marginal kl loss
         if self.alpha > 0.0:
             mkl_loss = self.marginal_posterior_divergence(z, mean, logv, num_samples)/batch_size
         else:
             mkl_loss = to_cuda_var(torch.tensor(0.0))
-        return recon_loss, kl_loss, mkl_loss
+        # MMD loss, p(z) ~ standard normal distribution
+        if self.gamma > 0.0:
+            mmd_loss = self.mmd_loss(mean)
+        else:
+            mmd_loss = to_cuda_var(torch.tensor(0.0))
+        return recon_loss, kl_loss, mkl_loss, mmd_loss
 
     def kl_loss(self, mean, logv, z):
         batch_size, n = mean.shape
@@ -191,8 +207,8 @@ class EVAE(nn.Module):
         if self.prior == 'Standard':
             z_prior_pdf = MultivariateNormal(to_cuda_var(torch.zeros(n)), diag)
             logp_prior_z = z_prior_pdf.log_prob(z)
-
-        return torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
+            kl_loss = torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
+        return kl_loss
 
     # estimate the KL divergence between marginal posterior q(z) to prior p(z) in a batch
     def marginal_posterior_divergence(self, z, mean, logv, num_samples):
@@ -223,8 +239,7 @@ class EVAE(nn.Module):
             logq_zb_xr = zb_xr_posterior_pdf.log_prob(zr)
 
             yb1 = logq_zb_xb - torch.log(to_cuda_var(torch.tensor(num_samples).float()))
-            yb2 = logq_zb_xr + torch.log(
-                to_cuda_var(torch.tensor((num_samples - 1) / ((batch_size - 1) * num_samples)).float()))
+            yb2 = logq_zb_xr + torch.log(to_cuda_var(torch.tensor((num_samples - 1) / ((batch_size - 1) * num_samples)).float()))
             yb = torch.cat([yb1, yb2], dim=0)
             logq_zb = torch.logsumexp(yb, dim=0)
 
@@ -290,13 +305,36 @@ class EVAE(nn.Module):
             # step 5, Lorentz distance between z_drug and z_local_ranking
             euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1)
             euclidean_dist = euclidean_dist.view(len(select_idx), 1+nneg)
-            euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
-            euclidean_dist = torch.clamp(euclidean_dist, min=0.0)
+            #euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+            #euclidean_dist = torch.clamp(euclidean_dist, min=0.0)
 
             # step 6, compute local ranking loss (as a classification task)
             #ranking_loss = - torch.log((torch.exp(-euclidean_dist[:, 0])/torch.exp(-euclidean_dist).sum(dim=1))).sum()
             ranking_loss = (euclidean_dist[:, 0] + torch.logsumexp(-euclidean_dist, dim=1)).sum()
         return ranking_loss/len(select_idx)
 
+    def mmd_loss(self, mean):
+        # true standard normal distribution samples
+        true_samples = to_cuda_var(torch.randn([mean.shape[0], self.latent_size]))
+        # compute mmd
+        mmd = self.compute_mmd(true_samples, mean)
+        return mmd
 
+    def compute_kernel(self, x, y):
+        x_size = x.size(0)
+        y_size = y.size(0)
+        dim = x.size(1)
+        x = x.unsqueeze(1)  # (x_size, 1, dim)
+        y = y.unsqueeze(0)  # (1, y_size, dim)
+        tiled_x = x.expand(x_size, y_size, dim)
+        tiled_y = y.expand(x_size, y_size, dim)
+        kernel_input = (tiled_x - tiled_y).pow(2).mean(2) / float(dim)
+        return torch.exp(-kernel_input)  # (x_size, y_size)
+
+    def compute_mmd(self, x, y):
+        x_kernel = self.compute_kernel(x, x)
+        y_kernel = self.compute_kernel(y, y)
+        xy_kernel = self.compute_kernel(x, y)
+        mmd = x_kernel.mean() + y_kernel.mean() - 2 * xy_kernel.mean()
+        return mmd
 
