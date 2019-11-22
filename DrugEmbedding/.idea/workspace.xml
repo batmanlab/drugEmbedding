@@ -3,14 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="32b2b8a4-af45-4ab5-9dde-5172ab4959ad" name="Default Changelist" comment="commit test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/drugdata.py" beforeDir="false" afterPath="$PROJECT_DIR$/drugdata.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evae.py" beforeDir="false" afterPath="$PROJECT_DIR$/evae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hvae.py" beforeDir="false" afterPath="$PROJECT_DIR$/hvae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lorentz.py" beforeDir="false" afterPath="$PROJECT_DIR$/lorentz.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_pipeline.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_pipeline.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,7 +14,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DrugEmbedding$lorentz.coverage" NAME="lorentz Coverage Results" MODIFIED="1571357280489" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
-    <SUITE FILE_PATH="coverage/DrugEmbedding$main.coverage" NAME="main Coverage Results" MODIFIED="1574363905145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
+    <SUITE FILE_PATH="coverage/DrugEmbedding$main.coverage" NAME="main Coverage Results" MODIFIED="1574449781619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/DrugEmbedding$VampPrior.coverage" NAME="VampPrior Coverage Results" MODIFIED="1572141181882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/DrugEmbedding$atc_drug_distance.coverage" NAME="atc_drug_distance Coverage Results" MODIFIED="1572393234925" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
     <SUITE FILE_PATH="coverage/DrugEmbedding$metrics.coverage" NAME="metrics Coverage Results" MODIFIED="1572745422175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/" />
@@ -90,55 +84,55 @@
     <session id="1458900135">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="20" />
+          <entry key="project.closed" value="22" />
           <entry key="project.open.time.1" value="4" />
           <entry key="project.open.time.10" value="2" />
-          <entry key="project.open.time.2" value="5" />
-          <entry key="project.open.time.3" value="4" />
+          <entry key="project.open.time.2" value="6" />
+          <entry key="project.open.time.3" value="5" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="3" />
-          <entry key="project.opened" value="23" />
+          <entry key="project.opened" value="25" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="9325" />
           <entry key="log" value="1" />
-          <entry key="py" value="17072" />
-          <entry key="sh" value="1148" />
+          <entry key="py" value="17087" />
+          <entry key="sh" value="1780" />
           <entry key="txt" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Bash" value="1148" />
+          <entry key="Bash" value="1780" />
           <entry key="Log" value="1" />
           <entry key="PLAIN_TEXT" value="27" />
-          <entry key="Python" value="26397" />
+          <entry key="Python" value="26412" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="csv" value="2" />
-          <entry key="json" value="3" />
-          <entry key="log" value="185" />
-          <entry key="out" value="11" />
+          <entry key="json" value="8" />
+          <entry key="log" value="214" />
+          <entry key="out" value="34" />
           <entry key="png" value="3" />
           <entry key="py" value="54" />
-          <entry key="sh" value="2" />
+          <entry key="sh" value="6" />
           <entry key="smi" value="16" />
           <entry key="tensorboard" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Bash" value="2" />
+          <entry key="Bash" value="6" />
           <entry key="Image" value="3" />
-          <entry key="JSON" value="3" />
-          <entry key="Log" value="185" />
-          <entry key="PLAIN_TEXT" value="29" />
+          <entry key="JSON" value="8" />
+          <entry key="Log" value="214" />
+          <entry key="PLAIN_TEXT" value="52" />
           <entry key="Python" value="55" />
         </counts>
       </usages-collector>
@@ -146,49 +140,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/run_pipeline.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="720">
+              <caret line="48" column="14" lean-forward="true" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+            <state relative-caret-position="286">
+              <caret line="115" column="49" lean-forward="true" selection-start-line="115" selection-start-column="49" selection-end-line="115" selection-end-column="49" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1574363955738" expanded="true" signature="8626:9377" ph="..." />
-                <marker date="1574363955738" expanded="true" signature="22658:22914" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/metrics.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/evae.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" selection-start-line="8" selection-end-line="10" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hvae.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-                <marker date="1574363756366" expanded="true" signature="5316:5321" ph="..." />
+                <marker date="1574449689731" expanded="true" signature="8634:9385" ph="..." />
+                <marker date="1574449689731" expanded="true" signature="22666:22922" ph="..." />
               </folding>
             </state>
           </provider>
@@ -197,10 +166,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="127" column="45" lean-forward="true" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
+            <state relative-caret-position="1860">
+              <caret line="127" column="45" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
               <folding>
-                <element signature="e#1#13#0" expanded="true" />
                 <marker date="1574363763483" expanded="true" signature="383:1362" ph="..." />
                 <marker date="1574363763483" expanded="true" signature="2272:2273" ph="..." />
               </folding>
@@ -209,18 +177,9 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/run_pipeline.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="48" column="14" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/drugdata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
+            <state relative-caret-position="135">
               <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -233,11 +192,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lorentz.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+            <state relative-caret-position="270">
+              <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -310,14 +269,14 @@
         <option value="$PROJECT_DIR$/EVAE.py" />
         <option value="$PROJECT_DIR$/VampPrior.py" />
         <option value="$PROJECT_DIR$/atc_drug_distance.py" />
-        <option value="$PROJECT_DIR$/run_pipeline.sh" />
         <option value="$PROJECT_DIR$/evae.py" />
         <option value="$PROJECT_DIR$/hvae.py" />
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/drugdata.py" />
         <option value="$PROJECT_DIR$/lorentz.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/metrics.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/run_pipeline.sh" />
       </list>
     </option>
   </component>
@@ -327,11 +286,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="668" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="214" />
     <option name="y" value="23" />
-    <option name="width" value="1855" />
-    <option name="height" value="1344" />
+    <option name="width" value="2139" />
+    <option name="height" value="1345" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -341,6 +300,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -352,6 +312,12 @@
               <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
               <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="fda_drugs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
@@ -368,7 +334,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -552,15 +517,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="668" y="23" width="1855" height="1344" extended-state="0" />
+    <frame x="214" y="23" width="2139" height="1345" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49898785" visible="true" weight="0.13734142" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49898785" visible="true" weight="0.14592275" />
       <window_info id="Structure" order="1" sideWeight="0.50101215" side_tool="true" weight="0.12765957" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329591" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.4784345" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.5171588" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49924126" weight="0.5111821" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -569,14 +534,14 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3259053" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50114626" side_tool="true" weight="0.50519586" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49885374" weight="0.4888179" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49885374" visible="true" weight="0.52593774" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49931225" weight="0.44707522" />
-      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.29392973" />
+      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.50758183" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="14" weight="0.3296" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Remote Host" order="3" visible="true" weight="0.2084942" />
+      <window_info anchor="right" id="Remote Host" order="3" visible="true" weight="0.24749643" />
       <window_info anchor="right" id="SciView" order="4" weight="0.23369823" />
       <window_info anchor="right" id="Database" order="5" weight="0.32998565" />
     </layout>
@@ -629,20 +594,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/anaconda3/envs/py37/lib/python3.6/site-packages/torch/nn/utils/rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="183" selection-start-line="183" selection-end-line="183" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/envs/py37/lib/python3.6/site-packages/torch/nn/modules/rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="147" selection-start-line="147" selection-end-line="147" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda3/envs/py37/lib/python3.6/site-packages/torch/nn/functional.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
@@ -836,23 +787,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1574363955738" expanded="true" signature="8626:9377" ph="..." />
-            <marker date="1574363955738" expanded="true" signature="22658:22914" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/metrics.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/exp_012.log">
+      <provider selected="true" editor-type-id="LogFileEditorProvider">
+        <state relative-caret-position="-100679" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/evae.py">
@@ -878,26 +822,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="127" column="45" lean-forward="true" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
+        <state relative-caret-position="1860">
+          <caret line="127" column="45" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
           <folding>
-            <element signature="e#1#13#0" expanded="true" />
             <marker date="1574363763483" expanded="true" signature="383:1362" ph="..." />
             <marker date="1574363763483" expanded="true" signature="2272:2273" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run_pipeline.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="48" column="14" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/drugdata.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
+        <state relative-caret-position="135">
           <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -911,11 +847,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lorentz.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+        <state relative-caret-position="270">
+          <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/SMILES/debug_dp/configs.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-94" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="115" column="49" lean-forward="true" selection-start-line="115" selection-start-column="49" selection-end-line="115" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1574449689731" expanded="true" signature="8634:9385" ph="..." />
+            <marker date="1574449689731" expanded="true" signature="22666:22922" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_pipeline.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="48" column="14" lean-forward="true" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
         </state>
       </provider>
     </entry>

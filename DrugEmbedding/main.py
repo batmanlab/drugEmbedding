@@ -34,7 +34,7 @@ flags.DEFINE_string('vocab_file', 'char_set_clean.pkl', 'Vocabulary file name')
 flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path distances')
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug_dp', 'Experiment name')
-flags.DEFINE_string('task', 'vae', 'Task(s) included in this experiment')
+flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
 flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
@@ -62,9 +62,9 @@ flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-tra
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch010.model', 'Load checkpoint file')
 flags.DEFINE_integer('trained_epochs', 10, 'Number of epochs that have been trained')
 flags.DEFINE_float('alpha', 0.0, 'Weight of KL divergence between marginal posterior and prior')
-flags.DEFINE_float('beta', 1.0, 'Weight of KL divergence between conditional posterior and prior')
+flags.DEFINE_float('beta', 0.0, 'Weight of KL divergence between conditional posterior and prior')
 flags.DEFINE_float('gamma', 1.0, 'Weight of MMD divergence between conditional posterior and prior')
-flags.DEFINE_float('delta', 5, 'Weight of ATC local ranking loss')
+flags.DEFINE_float('delta', 5.0, 'Weight of ATC local ranking loss')
 flags.DEFINE_integer('nneg', 5, 'Number of negative examples sampled when calculating local ranking loss')
 flags.DEFINE_float('fda_prop', 0.2, 'Average proportion of FDA drugs in one batch')
 
@@ -122,7 +122,7 @@ def save_and_load_flags():
             'alpha': FLAGS.alpha,
             'beta': FLAGS.beta,
             'gamma': FLAGS.gamma,
-            'delta': FLAGS.gamma,
+            'delta': FLAGS.delta,
             'nneg': FLAGS.nneg,
             'fda_prop': FLAGS.fda_prop
         }

@@ -2,9 +2,9 @@
 
 set -x
 
-EXPERIMENT="base_001"
+EXPERIMENT="base_016"
 DATA_DIR="./data/fda_drugs"
-DATA_FILE="smiles_set_clean.smi"
+DATA_FILE="all_drugs.smi"
 FDA_FILE="all_drugs.smi"
 LOG_DIR="./logs"
 
@@ -18,7 +18,7 @@ python main.py \
   --atc_sim_file="drugs_sp_all.csv" \
   --checkpoint_dir="./experiments/BASELINE" \
   --experiment_name="${EXPERIMENT}" \
-  --task="vae" \
+  --task="atc" \
   --limit=0 \
   --batch_size=128 \
   --epochs=100 \
@@ -26,13 +26,13 @@ python main.py \
   --learning_rate=3e-4 \
   --max_norm=1e12 \
   --wd=0 \
-  --manifold_type="Euclidean" \
+  --manifold_type="Lorentz" \
   --prior_type="Standard" \
   --num_centroids=0 \
   --bidirectional=False \
   --num_layers=1 \
   --hidden_size=512 \
-  --latent_size=2 \
+  --latent_size=56 \
   --word_dropout_rate=0.2 \
   --anneal_function="constant" \
   --k=0.51 \
@@ -40,14 +40,14 @@ python main.py \
   --C=1.0 \
   --num_workers=4 \
   --logging_steps=1 \
-  --save_per_epochs=10 \
+  --save_per_epochs=5 \
   --new_training=True \
   --new_annealing=True \
   --checkpoint="checkpoint_epoch000.model" \
   --trained_epochs=0 \
   --alpha=0.0 \
   --beta=0.0 \
-  --gamma=1.0 \
-  --delta=0.0 \
+  --gamma=0.0 \
+  --delta=1.0 \
   --nneg=5 \
   --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
