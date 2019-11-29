@@ -7,9 +7,9 @@ import pandas as pd
 import numpy as np
 
 # reproducibility
-torch.manual_seed(216)
-np.random.seed(216)
-RANDOM_STATE = 216
+#torch.manual_seed(216)
+#np.random.seed(216)
+#RANDOM_STATE = 216
 
 class drugdata(Dataset):
 
@@ -273,7 +273,8 @@ class drugdata(Dataset):
                 len_lst = []
                 loc_sp_lst = []
 
-                pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1, random_state=RANDOM_STATE)
+                #pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1, random_state=RANDOM_STATE)
+                pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1)
                 pos_key = pos_sample['drug_comparison'].to_numpy()[0]
                 pos_sp = pos_sample['sp'].to_numpy()[0]
                 loc_ranking_lst.append(np.asarray(self.fda_smiles[pos_key]['inputs'])) # always first save positive example
@@ -282,7 +283,8 @@ class drugdata(Dataset):
 
                 # sample nneg negative examples from the target drug's farther neighbor(s)
                 neg_idx = (self.df_sp_fn['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) # comparison can not be the positive example and can not be the drug itself
-                neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg, random_state=RANDOM_STATE)
+                #neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg, random_state=RANDOM_STATE)
+                neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg)
                 neg_keys = neg_sample['drug_comparison']
                 neg_sp = neg_sample['sp']
                 for i, neg_key in enumerate(neg_keys):

@@ -42,7 +42,7 @@ flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequen
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e3, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
@@ -369,9 +369,9 @@ def pipeline(configs):
                     recon_loss, kl_loss, mkl_loss, mmd_loss, local_ranking_loss = model(configs['task'], batch, len(DrugsLoader.dataset)) # forward pass and compute losses
 
                     anneal_weight = kl_anneal_function(configs, start_epoch, epoch)
-                    loss = (recon_loss
+                    loss = (1.0 * recon_loss
                             + anneal_weight * (configs['beta'] * kl_loss + configs['alpha'] * mkl_loss + configs['gamma'] * mmd_loss)
-                            + (configs['delta']) * local_ranking_loss)
+                            + configs['delta'] * local_ranking_loss)
 
                     # initialize performance metrics
                     epoch_metric['total_loss'].append(loss.item())
@@ -421,7 +421,7 @@ def pipeline(configs):
                 summary_writer.add_scalar('%s/avg_local_ranking_loss' % split, np.array(epoch_metric['local_ranking_loss']).mean(), epoch)
 
                 # compute dendrogram purity
-                if split == 'train' and (epoch % 10 == 0):
+                if split == 'train' and (epoch % configs['save_per_epochs'] == 0):
                     # DP on training
                     start_time = time.time()
                     drug_lst, mean_lst = fda_drug_rep(configs, datasets[split], model, all_drugs=False)

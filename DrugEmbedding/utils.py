@@ -4,8 +4,8 @@ import numpy as np
 from scipy.spatial.distance import pdist
 
 # reproducibility
-torch.manual_seed(216)
-np.random.seed(216)
+#torch.manual_seed(216)
+#np.random.seed(216)
 
 def to_cuda_var(x):
     """
@@ -145,4 +145,3 @@ def _log_multivariate_normal_density_diag(X, means, covars):
                   - 2 * np.dot(X, (means / covars).T)
                   + np.dot(X ** 2, (1.0 / covars).T))
     return lpr
-

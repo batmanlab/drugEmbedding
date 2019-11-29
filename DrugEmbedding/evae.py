@@ -7,8 +7,8 @@ import numpy as np
 from utils import to_cuda_var, pairwise_dist
 
 # reproducibility
-torch.manual_seed(216)
-np.random.seed(216)
+#torch.manual_seed(216)
+#np.random.seed(216)
 
 class EVAE(nn.Module):
 
@@ -44,7 +44,7 @@ class EVAE(nn.Module):
 
         self.hidden2mean = nn.Linear(self.hidden_size*self.hidden_factor, self.latent_size)
         self.hidden2logv = nn.Linear(self.hidden_size*self.hidden_factor, self.latent_size)
-        self.latent2hidden = nn.Linear(self.latent_size, self.hidden_size*self.hidden_factor)
+        self.latent2hidden = nn.Linear(self.latent_size, self.hidden_size*self.num_layers)
         self.outputs2vocab = nn.Linear(self.hidden_size, self.vocab_size)
 
         # define prior type

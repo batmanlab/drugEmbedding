@@ -8,38 +8,23 @@ from hvae import *
 from drugdata import *
 import itertools
 from tqdm import tqdm
-import json
 
 # reproducibility
-torch.manual_seed(216)
-np.random.seed(216)
+#torch.manual_seed(216)
+#np.random.seed(216)
+import json
 
-def load_configs(experiment_dir, exp_name):
-    experiment_path = os.path.join(experiment_dir, exp_name)
-
-    # get experiment configurations
-    with open(os.path.join(experiment_path, 'configs.json'), 'r') as fp:
-        configs = json.load(fp)
-    fp.close()
-    return configs
-
-def load_dataset(experiment_dir, exp_name, dataset_name):
-    experiment_path = os.path.join(experiment_dir, exp_name)
-    configs = load_configs(experiment_dir, exp_name)
-
+def load_model(configs):
     dataset = drugdata(task=configs['task'],
                        fda_drugs_dir=configs['data_dir'],
                        fda_smiles_file=configs['fda_file'],
                        fda_vocab_file=configs['vocab_file'],
                        fda_drugs_sp_file=configs['atc_sim_file'],
-                       experiment_dir=experiment_path,
-                       smi_file=dataset_name,
+                       experiment_dir=os.path.join(configs['checkpoint_dir'], configs['experiment_name']),
+                       smi_file='smiles_train.smi',
                        max_sequence_length=configs['max_sequence_length'],
                        nneg=configs['nneg']
                        )
-    return dataset
-
-def load_model(configs, dataset, checkpoint):
 
     # load model
     if configs['manifold_type'] == 'Euclidean':
@@ -56,8 +41,11 @@ def load_model(configs, dataset, checkpoint):
             pad_idx=dataset.pad_idx,
             unk_idx=dataset.unk_idx,
             prior=configs['prior_type'],
-            alpha=configs['alpha']
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
         )
+
     elif configs['manifold_type'] == 'Lorentz':
         model = HVAE(
             vocab_size=dataset.vocab_size,
@@ -72,13 +60,21 @@ def load_model(configs, dataset, checkpoint):
             pad_idx=dataset.pad_idx,
             unk_idx=dataset.unk_idx,
             prior=configs['prior_type'],
-            alpha=configs['alpha']
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
         )
 
+    del dataset
+
     torch.no_grad()
-    model.load_state_dict(torch.load(checkpoint))
-    model.eval()
+    checkpoint_path = os.path.join(configs['checkpoint_dir'] + '/' + configs['experiment_name'], configs['checkpoint'])
+    model.load_state_dict(torch.load(checkpoint_path))
+    if torch.cuda.is_available():
+        model = model.cuda()
+
     return model
+
 
 # FDA drugs sampler
 class FDASampler(Sampler):
@@ -160,12 +156,19 @@ def dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl):
 
 
 """
-experiment_dir = './experiments/SMILES'
-exp_name = 'debug_dp'
-experiment_path = os.path.join(experiment_dir, exp_name)
-dataset_name = 'smiles_test.smi'
-checkpoint = os.path.join(experiment_path, 'checkpoint_epoch001_batch018.model')
-atc_lvl = 4
+exp_dir = './experiments/SMILES/exp_012'
+checkpoint = 'checkpoint_epoch070.model'
+config_path = os.path.join(exp_dir, 'configs.json')
+checkpoint_path = os.path.join(exp_dir, checkpoint)
+
+with open(config_path, 'r') as fp:
+    configs = json.load(fp)
+fp.close()
+
+# temp
+configs['gamma'] = 5.0
+
+model = load_model(configs)
 
 # load configs, dataset and model
 configs = load_configs(experiment_dir, exp_name)

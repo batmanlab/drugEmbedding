@@ -5,8 +5,8 @@ import torch.nn.utils.rnn as rnn_utils
 from utils import to_cuda_var
 
 # reproducibility
-torch.manual_seed(216)
-np.random.seed(216)
+#torch.manual_seed(216)
+#np.random.seed(216)
 
 class HVAE(nn.Module):
 
@@ -42,7 +42,7 @@ class HVAE(nn.Module):
 
         self.hidden2mean = nn.Linear(self.hidden_size*self.hidden_factor, self.latent_size)
         self.hidden2logv = nn.Linear(self.hidden_size*self.hidden_factor, self.latent_size)
-        self.latent2hidden = nn.Linear(self.latent_size+1, self.hidden_size*self.hidden_factor)
+        self.latent2hidden = nn.Linear(self.latent_size+1, self.hidden_size*self.num_layers)
         self.outputs2vocab = nn.Linear(self.hidden_size, self.vocab_size)
 
         # define prior type
