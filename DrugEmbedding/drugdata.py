@@ -9,7 +9,6 @@ import numpy as np
 # reproducibility
 #torch.manual_seed(216)
 #np.random.seed(216)
-#RANDOM_STATE = 216
 
 class drugdata(Dataset):
 
@@ -37,6 +36,8 @@ class drugdata(Dataset):
 
         self._load_fda_sp()
         self._create_sp_dataset()
+
+        self.sampling_strategy = 'balanced' # simple: positive sample from the nearest neighbor; balanced: positive uniformly sampled from the non-fartherest neighors
 
     # load drug-drug ATC shortest path
     def _load_fda_sp(self):
@@ -207,6 +208,14 @@ class drugdata(Dataset):
         self.df_sp_nn = df_sp_nn
         self.df_sp_fn = df_sp_fn
 
+        # find the fartherest neighbors
+        max_idx = self.df_sp.index[self.df_sp['sp'] == 10]
+
+        # non-fartherest neighbors
+        self.df_sp_mn = self.df_sp.loc[~self.df_sp.index.isin(max_idx)]
+
+
+
 
     @property
     def vocab_size(self):
@@ -268,29 +277,60 @@ class drugdata(Dataset):
         elif self.task in ['atc', 'vae + atc']:
             # if ATC information is available for the sampled drug
             if drug_key in self.fda_atc_drugs:
-                # sample 1 positive examples from the target drug's nearest neighbor(s)
+
                 loc_ranking_lst = []
                 len_lst = []
                 loc_sp_lst = []
 
-                #pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1, random_state=RANDOM_STATE)
-                pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1)
-                pos_key = pos_sample['drug_comparison'].to_numpy()[0]
-                pos_sp = pos_sample['sp'].to_numpy()[0]
-                loc_ranking_lst.append(np.asarray(self.fda_smiles[pos_key]['inputs'])) # always first save positive example
-                len_lst.append(self.fda_smiles[pos_key]['len'])
-                loc_sp_lst.append(pos_sp)
+                if self.sampling_strategy == 'simple':
+                    """
+                    sampling strategy 1: sample 1 positive example from the target drug's nearest neighbor(s)
+                                        & sample nneg negative examples from the target drug's farther neighbor(s)
+                    """
+                    # sample 1 positive example from the target drug's nearest neighbor(s)
+                    pos_sample = self.df_sp_nn[self.df_sp_nn['drug_target'] == drug_key].sample(n=1)
+                    pos_key = pos_sample['drug_comparison'].to_numpy()[0]
+                    pos_sp = pos_sample['sp'].to_numpy()[0]
+                    loc_ranking_lst.append(np.asarray(self.fda_smiles[pos_key]['inputs'])) # always first save positive example
+                    len_lst.append(self.fda_smiles[pos_key]['len'])
+                    loc_sp_lst.append(pos_sp)
 
-                # sample nneg negative examples from the target drug's farther neighbor(s)
-                neg_idx = (self.df_sp_fn['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) # comparison can not be the positive example and can not be the drug itself
-                #neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg, random_state=RANDOM_STATE)
-                neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg)
-                neg_keys = neg_sample['drug_comparison']
-                neg_sp = neg_sample['sp']
-                for i, neg_key in enumerate(neg_keys):
-                    loc_ranking_lst.append(np.asarray(self.fda_smiles[neg_key]['inputs']))
-                    len_lst.append(self.fda_smiles[neg_key]['len'])
-                    loc_sp_lst.append(neg_sp.to_numpy()[i])
+                    # sample nneg negative examples from the target drug's farther neighbor(s)
+                    neg_idx = (self.df_sp_fn['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) # comparison can not be the positive example and can not be the drug itself
+                    neg_sample = self.df_sp_fn[neg_idx].sample(n=self.nneg)
+                    neg_keys = neg_sample['drug_comparison']
+                    neg_sp = neg_sample['sp']
+                    for i, neg_key in enumerate(neg_keys):
+                        loc_ranking_lst.append(np.asarray(self.fda_smiles[neg_key]['inputs']))
+                        len_lst.append(self.fda_smiles[neg_key]['len'])
+                        loc_sp_lst.append(neg_sp.to_numpy()[i])
+
+                elif self.sampling_strategy == 'balanced':
+                    """
+                    sampling strategy 2: randomly sample 1 positive example from the non-fartherest neighbor(s) (e.g., sp in [2, ,4, 6, 8] but not 10)
+                                    & randomly sample nneg examples that are further from the positive example
+                    """
+                    # sample 1 positive example from non-fartherest neighbor(s)
+                    # uniformly sample (sp = 2, 4, 6, 8)
+                    df_sp_mn_target = self.df_sp_mn[self.df_sp_mn['drug_target'] == drug_key]
+                    df_sp_mn_target['weight'] = len(df_sp_mn_target.index) / df_sp_mn_target.groupby('sp')['sp'].transform('count')
+                    pos_sample = df_sp_mn_target.sample(n=1, weights='weight')
+
+                    pos_key = pos_sample['drug_comparison'].to_numpy()[0]
+                    pos_sp = pos_sample['sp'].to_numpy()[0]
+                    loc_ranking_lst.append(np.asarray(self.fda_smiles[pos_key]['inputs'])) # always first save positive example
+                    len_lst.append(self.fda_smiles[pos_key]['len'])
+                    loc_sp_lst.append(pos_sp)
+
+                    # sample nneg examples that are further from the positive example
+                    neg_idx = (self.df_sp['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) & (self.df_sp['sp'] > pos_sp)
+                    neg_sample = self.df_sp[neg_idx].sample(n=self.nneg)
+                    neg_keys = neg_sample['drug_comparison']
+                    neg_sp = neg_sample['sp']
+                    for i, neg_key in enumerate(neg_keys):
+                        loc_ranking_lst.append(np.asarray(self.fda_smiles[neg_key]['inputs']))
+                        len_lst.append(self.fda_smiles[neg_key]['len'])
+                        loc_sp_lst.append(neg_sp.to_numpy()[i])
 
                 loc_ranking_indicator = np.ones(1, dtype=np.long) # indicator that local ranking info is available
                 loc_ranking_inputs = np.stack(loc_ranking_lst)

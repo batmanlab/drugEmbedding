@@ -19,6 +19,9 @@ from collections import OrderedDict
 from tensorboardX import SummaryWriter
 from shutil import copyfile
 
+import warnings
+warnings.simplefilter(action='ignore')
+
 # reproducibility
 random.seed(216)
 torch.manual_seed(216)
@@ -47,8 +50,8 @@ flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or Va
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
 flags.DEFINE_integer('num_layers', 3, 'RNN number of layers')
-flags.DEFINE_integer('hidden_size', 200, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 56, 'Dimension of latent space Z')
+flags.DEFINE_integer('hidden_size', 20, 'Dimension of RNN output')
+flags.DEFINE_integer('latent_size', 2, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
 flags.DEFINE_float('k', 0.51, '1st parameter in KL logistic annealing function')
