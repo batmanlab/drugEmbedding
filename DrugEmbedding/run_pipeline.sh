@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="abl_nneg_006"
+EXPERIMENT="abl_dimz_009"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -16,7 +16,7 @@ python main.py \
   --fda_file="${FDA_FILE}" \
   --vocab_file="char_set_clean.pkl" \
   --atc_sim_file="drugs_sp_all.csv" \
-  --checkpoint_dir="./experiments/ABL_NNEG" \
+  --checkpoint_dir="./experiments/ABL_DIMZ" \
   --experiment_name="${EXPERIMENT}" \
   --task="vae + atc" \
   --limit=0 \
@@ -32,7 +32,7 @@ python main.py \
   --bidirectional=False \
   --num_layers=1 \
   --hidden_size=512 \
-  --latent_size=64 \
+  --latent_size=2 \
   --word_dropout_rate=0.2 \
   --anneal_function="constant" \
   --k=0.51 \

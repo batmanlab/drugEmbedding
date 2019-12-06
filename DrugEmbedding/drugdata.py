@@ -211,10 +211,12 @@ class drugdata(Dataset):
         # find the fartherest neighbors
         max_idx = self.df_sp.index[self.df_sp['sp'] == 10]
 
-        # non-fartherest neighbors
+        # non-fartherest neighbors and assign sampling weights
         self.df_sp_mn = self.df_sp.loc[~self.df_sp.index.isin(max_idx)]
-
-
+        # for each target drug reweight drug2drug distance by sp, in order to sample sp uniformly
+        self.df_sp_mn['sp_count'] = self.df_sp_mn.groupby(['drug_target','sp'])['sp'].transform('count')
+        self.df_sp_mn['ttl_count'] = self.df_sp_mn.groupby(['drug_target'])['drug_target'].transform('count')
+        self.df_sp_mn['weight'] =self.df_sp_mn['ttl_count'] /  self.df_sp_mn['sp_count']
 
 
     @property
@@ -312,9 +314,9 @@ class drugdata(Dataset):
                     """
                     # sample 1 positive example from non-fartherest neighbor(s)
                     # uniformly sample (sp = 2, 4, 6, 8)
-                    df_sp_mn_target = self.df_sp_mn[self.df_sp_mn['drug_target'] == drug_key]
-                    df_sp_mn_target['weight'] = len(df_sp_mn_target.index) / df_sp_mn_target.groupby('sp')['sp'].transform('count')
-                    pos_sample = df_sp_mn_target.sample(n=1, weights='weight')
+                    pos_sample = self.df_sp_mn[self.df_sp_mn['drug_target'] == drug_key].sample(n=1, weights='weight')
+                    #df_sp_mn_target['weight'] = len(df_sp_mn_target.index) / df_sp_mn_target.groupby('sp')['sp'].transform('count')
+                    #pos_sample = df_sp_mn_target.sample(n=1, weights='weight')
 
                     pos_key = pos_sample['drug_comparison'].to_numpy()[0]
                     pos_sp = pos_sample['sp'].to_numpy()[0]
@@ -323,7 +325,7 @@ class drugdata(Dataset):
                     loc_sp_lst.append(pos_sp)
 
                     # sample nneg examples that are further from the positive example
-                    neg_idx = (self.df_sp['drug_target'] == drug_key) & (self.df_sp_fn['drug_comparison'] != pos_key) & (self.df_sp_fn['drug_comparison'] != drug_key) & (self.df_sp['sp'] > pos_sp)
+                    neg_idx = (self.df_sp['drug_target'] == drug_key) & (self.df_sp['drug_comparison'] != pos_key) & (self.df_sp['drug_comparison'] != drug_key) & (self.df_sp['sp'] > pos_sp)
                     neg_sample = self.df_sp[neg_idx].sample(n=self.nneg)
                     neg_keys = neg_sample['drug_comparison']
                     neg_sp = neg_sample['sp']
