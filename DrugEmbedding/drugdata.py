@@ -216,7 +216,10 @@ class drugdata(Dataset):
         # for each target drug reweight drug2drug distance by sp, in order to sample sp uniformly
         self.df_sp_mn['sp_count'] = self.df_sp_mn.groupby(['drug_target','sp'])['sp'].transform('count')
         self.df_sp_mn['ttl_count'] = self.df_sp_mn.groupby(['drug_target'])['drug_target'].transform('count')
-        self.df_sp_mn['weight'] =self.df_sp_mn['ttl_count'] /  self.df_sp_mn['sp_count']
+        self.df_sp_mn['weight'] =self.df_sp_mn['ttl_count'] / self.df_sp_mn['sp_count']
+
+        # custom proportion [2,4,6,8] ~ [0.4, 0.2, 0.2, 0.2]
+        self.df_sp_mn.loc[self.df_sp_mn['sp'].isin([2]), 'weight'] = self.df_sp_mn['weight'] * 2
 
 
     @property
@@ -313,10 +316,7 @@ class drugdata(Dataset):
                                     & randomly sample nneg examples that are further from the positive example
                     """
                     # sample 1 positive example from non-fartherest neighbor(s)
-                    # uniformly sample (sp = 2, 4, 6, 8)
                     pos_sample = self.df_sp_mn[self.df_sp_mn['drug_target'] == drug_key].sample(n=1, weights='weight')
-                    #df_sp_mn_target['weight'] = len(df_sp_mn_target.index) / df_sp_mn_target.groupby('sp')['sp'].transform('count')
-                    #pos_sample = df_sp_mn_target.sample(n=1, weights='weight')
 
                     pos_key = pos_sample['drug_comparison'].to_numpy()[0]
                     pos_sp = pos_sample['sp'].to_numpy()[0]

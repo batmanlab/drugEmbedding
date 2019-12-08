@@ -427,7 +427,7 @@ def pipeline(configs):
                 if split == 'train' and (epoch % configs['save_per_epochs'] == 0):
                     # DP on training
                     start_time = time.time()
-                    drug_lst, mean_lst = fda_drug_rep(configs, datasets[split], model, all_drugs=False)
+                    drug_lst, mean_lst, _ = fda_drug_rep(configs, datasets[split], model, all_drugs=False)
                     dp_lvl4 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=4)
                     dp_lvl3 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=3)
                     dp_lvl2 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=2)
@@ -444,7 +444,7 @@ def pipeline(configs):
 
                     # DP on FDA
                     start_time = time.time()
-                    drug_lst, mean_lst = fda_drug_rep(configs, fda_dataset, model, all_drugs=True)
+                    drug_lst, mean_lst, _ = fda_drug_rep(configs, fda_dataset, model, all_drugs=True)
                     dp_lvl4 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=4)
                     dp_lvl3 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=3)
                     dp_lvl2 = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl=2)

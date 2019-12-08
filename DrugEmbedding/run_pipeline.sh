@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="abl_dimz_009"
+EXPERIMENT="exp_mani_005"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -16,7 +16,7 @@ python main.py \
   --fda_file="${FDA_FILE}" \
   --vocab_file="char_set_clean.pkl" \
   --atc_sim_file="drugs_sp_all.csv" \
-  --checkpoint_dir="./experiments/ABL_DIMZ" \
+  --checkpoint_dir="./experiments/EXP_MANI" \
   --experiment_name="${EXPERIMENT}" \
   --task="vae + atc" \
   --limit=0 \
@@ -26,13 +26,13 @@ python main.py \
   --learning_rate=3e-4 \
   --max_norm=1e12 \
   --wd=0 \
-  --manifold_type="Lorentz" \
+  --manifold_type="Euclidean" \
   --prior_type="Standard" \
   --num_centroids=0 \
   --bidirectional=False \
   --num_layers=1 \
   --hidden_size=512 \
-  --latent_size=2 \
+  --latent_size=64 \
   --word_dropout_rate=0.2 \
   --anneal_function="constant" \
   --k=0.51 \
@@ -50,4 +50,4 @@ python main.py \
   --gamma=1.0 \
   --delta=5.0 \
   --nneg=5 \
-  --fda_prop=0.3 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
+  --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1

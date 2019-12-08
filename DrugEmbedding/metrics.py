@@ -105,7 +105,9 @@ def fda_drug_rep(configs, dataset, model, all_drugs):
         )
 
     # read drug names, drug latent reps.
+    smiles_lst = []
     mean_lst = []
+    logv_lst = []
     drug_lst = []
     for iteration, batch in enumerate(tqdm(fda_dataloader)):
         if configs['manifold_type'] == 'Euclidean':
@@ -113,8 +115,9 @@ def fda_drug_rep(configs, dataset, model, all_drugs):
         else:
             mean, logv, _, _, z = model.get_intermediates(batch)
         mean_lst = mean_lst + mean.tolist()
+        logv_lst = logv_lst + logv.tolist()
         drug_lst = drug_lst + batch['drug_name']
-    return drug_lst, mean_lst
+    return drug_lst, mean_lst, logv_lst
 
 
 def dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl):
