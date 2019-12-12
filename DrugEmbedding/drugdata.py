@@ -219,7 +219,7 @@ class drugdata(Dataset):
         self.df_sp_mn['weight'] =self.df_sp_mn['ttl_count'] / self.df_sp_mn['sp_count']
 
         # custom proportion [2,4,6,8] ~ [0.4, 0.2, 0.2, 0.2]
-        self.df_sp_mn.loc[self.df_sp_mn['sp'].isin([2]), 'weight'] = self.df_sp_mn['weight'] * 2
+        #self.df_sp_mn.loc[self.df_sp_mn['sp'].isin([2]), 'weight'] = self.df_sp_mn['weight'] * 2
 
 
     @property

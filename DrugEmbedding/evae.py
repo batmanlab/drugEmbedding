@@ -303,10 +303,13 @@ class EVAE(nn.Module):
             mean_drug_exp = mean_drug.unsqueeze(0).repeat(1, 1, nneg + 1).view(-1, self.latent_size)
 
             # step 5, Lorentz distance between z_drug and z_local_ranking
-            euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1)
-            euclidean_dist = euclidean_dist.view(len(select_idx), 1+nneg)
-            #euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+            #euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1)
+            #euclidean_dist = euclidean_dist.view(len(select_idx), 1+nneg)
             #euclidean_dist = torch.clamp(euclidean_dist, min=0.0)
+            #euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+
+            euclidean_dist = F.pairwise_distance(mean_local_ranking, mean_drug_exp)
+            euclidean_dist = euclidean_dist.view(len(select_idx), 1 + nneg)
 
             # step 6, compute local ranking loss (as a classification task)
             #ranking_loss = - torch.log((torch.exp(-euclidean_dist[:, 0])/torch.exp(-euclidean_dist).sum(dim=1))).sum()

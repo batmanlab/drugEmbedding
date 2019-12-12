@@ -45,7 +45,7 @@ flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequen
 flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e3, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
-flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
+flags.DEFINE_string('manifold_type', 'Euclidean', 'Latent space type')
 flags.DEFINE_string('prior_type', 'Standard', 'Prior type: Standard normal or VampPrior')
 flags.DEFINE_integer('num_centroids', 20, 'Number of centroids used in VampPrior')
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
