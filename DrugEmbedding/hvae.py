@@ -188,10 +188,11 @@ class HVAE(nn.Module):
             mkl_loss = to_cuda_var(torch.tensor(0.0))
         # MMD loss
         if self.gamma > 0.0:
-            mmd_loss = self.mmd_loss(mean)
+            mmd_loss = self.mmd_loss(z)
         else:
             mmd_loss = to_cuda_var(torch.tensor(0.0))
         return recon_loss, kl_loss, mkl_loss, mmd_loss
+
 
     def kl_loss(self, mean, logv, vt, u, z):
         batch_size, n_h = mean.shape
@@ -208,6 +209,7 @@ class HVAE(nn.Module):
             _, logp_prior_z = pseudo_hyperbolic_gaussian(z, mu0_h, diag, version=2, vt=None, u=None)
             kl_loss = torch.sum(logp_posterior_z.squeeze() - logp_prior_z.squeeze())
         return kl_loss
+
 
     # estimate the KL divergence between marginal posterior q(z) to prior p(z) in a batch
     def marginal_posterior_divergence(self, vt, u, z, mean, logv, num_samples):
@@ -257,6 +259,7 @@ class HVAE(nn.Module):
         logp_zb = torch.stack(logp_zb_lst, dim=0).squeeze(-1)
 
         return (logq_zb - logp_zb).sum()
+
 
     def ranking_loss(self, batch):
 
@@ -315,16 +318,16 @@ class HVAE(nn.Module):
 
         return ranking_loss/len(select_idx)
 
-    def mmd_loss(self, mean):
+    def mmd_loss(self, zq):
         # true standard normal distribution samples
-        batch_size, n_h = mean.shape
+        batch_size, n_h = zq.shape
         n = n_h -1
         mu0 = to_cuda_var(torch.zeros(batch_size, n))
         mu0_h = lorentz_mapping_origin(mu0)
         logv = to_cuda_var(torch.zeros(batch_size, n))
         vt, u, z = lorentz_sampling(mu0_h, logv)
         # compute mmd
-        mmd = self.compute_mmd(z, mean)
+        mmd = self.compute_mmd(z, zq)
         return mmd
 
     def compute_kernel(self, x, y):
@@ -338,7 +341,7 @@ class HVAE(nn.Module):
 
         lor_prod = lorentz_product(tiled_x, tiled_y)
         lor_dist = arccosh(-lor_prod)
-        kernel_input = lor_dist.reshape(x_size, y_size).pow(2)
+        kernel_input = lor_dist.reshape(x_size, y_size).pow(2) / float(dim**2) # sigma2 = dim^2
         return torch.exp(-kernel_input)  # (x_size, y_size)
 
     def compute_mmd(self, x, y):

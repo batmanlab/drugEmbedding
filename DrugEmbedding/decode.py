@@ -1,17 +1,68 @@
-import os
-import pickle
-import json
-
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.nn.utils.rnn as rnn_utils
 import torch.distributions as dis
-
-from lorentz import *
-from utils import to_cuda_var
 from drugdata import *
 from evae import *
 from hvae import *
+
+def load_model(configs):
+    dataset = drugdata(task=configs['task'],
+                       fda_drugs_dir=configs['data_dir'],
+                       fda_smiles_file=configs['fda_file'],
+                       fda_vocab_file=configs['vocab_file'],
+                       fda_drugs_sp_file=configs['atc_sim_file'],
+                       experiment_dir=os.path.join(configs['checkpoint_dir'], configs['experiment_name']),
+                       smi_file='smiles_train.smi',
+                       max_sequence_length=configs['max_sequence_length'],
+                       nneg=configs['nneg']
+                       )
+
+    # load model
+    if configs['manifold_type'] == 'Euclidean':
+        model = EVAE(
+            vocab_size=dataset.vocab_size,
+            hidden_size=configs['hidden_size'],
+            latent_size=configs['latent_size'],
+            bidirectional=configs['bidirectional'],
+            num_layers=configs['num_layers'],
+            word_dropout_rate=configs['word_dropout_rate'],
+            max_sequence_length=configs['max_sequence_length'],
+            sos_idx=dataset.sos_idx,
+            eos_idx=dataset.eos_idx,
+            pad_idx=dataset.pad_idx,
+            unk_idx=dataset.unk_idx,
+            prior=configs['prior_type'],
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
+        )
+
+    elif configs['manifold_type'] == 'Lorentz':
+        model = HVAE(
+            vocab_size=dataset.vocab_size,
+            hidden_size=configs['hidden_size'],
+            latent_size=configs['latent_size'],
+            bidirectional=configs['bidirectional'],
+            num_layers=configs['num_layers'],
+            word_dropout_rate=configs['word_dropout_rate'],
+            max_sequence_length=configs['max_sequence_length'],
+            sos_idx=dataset.sos_idx,
+            eos_idx=dataset.eos_idx,
+            pad_idx=dataset.pad_idx,
+            unk_idx=dataset.unk_idx,
+            prior=configs['prior_type'],
+            alpha=configs['alpha'],
+            beta=configs['beta'],
+            gamma=configs['gamma']
+        )
+
+    del dataset
+
+    torch.no_grad()
+    checkpoint_path = os.path.join(configs['checkpoint_dir'] + '/' + configs['experiment_name'], configs['checkpoint'])
+    model.load_state_dict(torch.load(checkpoint_path))
+    if torch.cuda.is_available():
+        model = model.cuda()
+
+    return model
 
 def inference(configs, model, n, sampling_mode, z=None):
 
@@ -112,66 +163,6 @@ def _save_sample(save_to, sample, running_seqs, t):
     save_to[running_seqs] = running_latest
     return save_to
 
-def load_model(configs):
-    dataset = drugdata(task=configs['task'],
-                       fda_drugs_dir=configs['data_dir'],
-                       fda_smiles_file=configs['fda_file'],
-                       fda_vocab_file=configs['vocab_file'],
-                       fda_drugs_sp_file=configs['atc_sim_file'],
-                       experiment_dir=os.path.join(configs['checkpoint_dir'], configs['experiment_name']),
-                       smi_file='smiles_train.smi',
-                       max_sequence_length=configs['max_sequence_length'],
-                       nneg=configs['nneg']
-                       )
-
-    # load model
-    if configs['manifold_type'] == 'Euclidean':
-        model = EVAE(
-            vocab_size=dataset.vocab_size,
-            hidden_size=configs['hidden_size'],
-            latent_size=configs['latent_size'],
-            bidirectional=configs['bidirectional'],
-            num_layers=configs['num_layers'],
-            word_dropout_rate=configs['word_dropout_rate'],
-            max_sequence_length=configs['max_sequence_length'],
-            sos_idx=dataset.sos_idx,
-            eos_idx=dataset.eos_idx,
-            pad_idx=dataset.pad_idx,
-            unk_idx=dataset.unk_idx,
-            prior=configs['prior_type'],
-            alpha=configs['alpha'],
-            beta=configs['beta'],
-            gamma=configs['gamma']
-        )
-
-    elif configs['manifold_type'] == 'Lorentz':
-        model = HVAE(
-            vocab_size=dataset.vocab_size,
-            hidden_size=configs['hidden_size'],
-            latent_size=configs['latent_size'],
-            bidirectional=configs['bidirectional'],
-            num_layers=configs['num_layers'],
-            word_dropout_rate=configs['word_dropout_rate'],
-            max_sequence_length=configs['max_sequence_length'],
-            sos_idx=dataset.sos_idx,
-            eos_idx=dataset.eos_idx,
-            pad_idx=dataset.pad_idx,
-            unk_idx=dataset.unk_idx,
-            prior=configs['prior_type'],
-            alpha=configs['alpha'],
-            beta=configs['beta'],
-            gamma=configs['gamma']
-        )
-
-    del dataset
-
-    torch.no_grad()
-    checkpoint_path = os.path.join(configs['checkpoint_dir'] + '/' + configs['experiment_name'], configs['checkpoint'])
-    model.load_state_dict(torch.load(checkpoint_path))
-    if torch.cuda.is_available():
-        model = model.cuda()
-
-    return model
 
 def smiles_to_tokens(data_dir, vocab_file, s):
     """
@@ -295,32 +286,5 @@ def latent2smiles(configs, model, z, nsamples, sampling_mode):
         samples_idx, z = inference(configs, model, nsamples, sampling_mode, z)
     smiles_lst = idx2smiles(configs, samples_idx)
     return z, samples_idx, smiles_lst
-
-"""
-# Example
-data_dir = './data/fda_drugs'
-vocab_file = 'char_set_clean.pkl'
-smiles_x = 'COc1cc2c(Nc3ccc(Br)cc3F)ncnc2cc1OCC1CCN(C)CC1'
-
-exp_dir = './experiments/SMILES/debug_dp'
-checkpoint = 'checkpoint_epoch005.model'
-config_path = os.path.join(exp_dir, 'configs.json')
-checkpoint_path = os.path.join(exp_dir, checkpoint)
-
-with open(config_path, 'r') as fp:
-    configs = json.load(fp)
-fp.close()
-configs['checkpoint'] = checkpoint
-
-model = load_model(configs)
-
-# SMILES -> Mean
-mean, logv = smiles2mean(configs, smiles_x, model)
-
-# Mean -> SMILES decoded
-z, samples_idx, smiles_lst = latent2smiles(configs, model, z=mean, nsamples=10,  sampling_mode='random')
-
-stop= 0
-"""
 
 

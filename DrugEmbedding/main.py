@@ -12,6 +12,7 @@ import os
 import time
 import json
 import random
+import math
 from absl import app
 from absl import flags
 from absl import logging
@@ -42,7 +43,7 @@ flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
-flags.DEFINE_float('learning_rate', 3e-4, 'Initial learning rate')
+flags.DEFINE_float('learning_rate', 3e-2, 'Initial learning rate')
 flags.DEFINE_float('max_norm', 1e3, 'Maximum total gradient norm')
 flags.DEFINE_float('wd', 0, 'Weight decay(L2 penalty)')
 flags.DEFINE_string('manifold_type', 'Lorentz', 'Latent space type')
@@ -305,7 +306,7 @@ def pipeline(configs):
     optimizer = torch.optim.Adam(model.parameters(), lr=configs['learning_rate'], weight_decay=configs['wd'])
 
     # learning rate scheduler
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
+    #scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
 
     # step 3: start training
     summary_writer = SummaryWriter(log_dir=experiment_dir)
@@ -400,8 +401,8 @@ def pipeline(configs):
                         # track model gradients norm
                         #(total_grad_norm, enc_grad_norm, dec_grad_norm, h2m_grad_norm, h2v_grad_norm) = track_gradient_norm(model)
 
-                        logging.info('Training: Epoch [{}/{}], Batch [{}/{}], RECON-Loss: {:.4f}, KL-Loss: {:.4f}, MKL-Loss: {:.4f}, MMD-Loss: {:.4f}, KL-Annealing: {:.4f}, RANK-Loss: {:.4f}'
-                            .format(epoch, end_epoch, iteration + 1, len(DrugsLoader), recon_loss.item(), kl_loss.item(), mkl_loss.item(), mmd_loss.item(), anneal_weight, local_ranking_loss.item()))
+                        logging.info('Training: Epoch [{}/{}], Batch [{}/{}], RECON-Loss: {:.4f}, KL-Loss: {:.4f}, MKL-Loss: {:.4f}, MMD-Loss: {:.4f}, KL-Annealing: {:.4f}, RANK-Loss: {:.4f}, LR: {:.4f}'
+                            .format(epoch, end_epoch, iteration + 1, len(DrugsLoader), recon_loss.item(), kl_loss.item(), mkl_loss.item(), mmd_loss.item(), anneal_weight, local_ranking_loss.item(), optimizer.param_groups[0]['lr']))
 
                         # saving model checkpoint
                         if (epoch) % configs['save_per_epochs'] == 0 and iteration + 1 == len(DrugsLoader):

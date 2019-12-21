@@ -190,7 +190,7 @@ class EVAE(nn.Module):
             mkl_loss = to_cuda_var(torch.tensor(0.0))
         # MMD loss, p(z) ~ standard normal distribution
         if self.gamma > 0.0:
-            mmd_loss = self.mmd_loss(mean)
+            mmd_loss = self.mmd_loss(z)
         else:
             mmd_loss = to_cuda_var(torch.tensor(0.0))
         return recon_loss, kl_loss, mkl_loss, mmd_loss
@@ -306,7 +306,7 @@ class EVAE(nn.Module):
             #euclidean_dist = torch.sum((mean_local_ranking - mean_drug_exp)**2, dim=1)
             #euclidean_dist = euclidean_dist.view(len(select_idx), 1+nneg)
             #euclidean_dist = torch.clamp(euclidean_dist, min=0.0)
-            #euclidean_dist = torch.pow(euclidean_dist, 0.5) # TODO: using L2 distance, i.e. **0.5 causing nan graidents
+            #euclidean_dist = torch.pow(euclidean_dist, 0.5)
 
             euclidean_dist = F.pairwise_distance(mean_local_ranking, mean_drug_exp)
             euclidean_dist = euclidean_dist.view(len(select_idx), 1 + nneg)
@@ -316,11 +316,11 @@ class EVAE(nn.Module):
             ranking_loss = (euclidean_dist[:, 0] + torch.logsumexp(-euclidean_dist, dim=1)).sum()
         return ranking_loss/len(select_idx)
 
-    def mmd_loss(self, mean):
+    def mmd_loss(self, zq):
         # true standard normal distribution samples
-        true_samples = to_cuda_var(torch.randn([mean.shape[0], self.latent_size]))
+        true_samples = to_cuda_var(torch.randn([zq.shape[0], self.latent_size]))
         # compute mmd
-        mmd = self.compute_mmd(true_samples, mean)
+        mmd = self.compute_mmd(true_samples, zq)
         return mmd
 
     def compute_kernel(self, x, y):
@@ -331,7 +331,7 @@ class EVAE(nn.Module):
         y = y.unsqueeze(0)  # (1, y_size, dim)
         tiled_x = x.expand(x_size, y_size, dim)
         tiled_y = y.expand(x_size, y_size, dim)
-        kernel_input = (tiled_x - tiled_y).pow(2).mean(2) / float(dim)
+        kernel_input = (tiled_x - tiled_y).pow(2).mean(2) / float(dim) # sigma2 = dim^2
         return torch.exp(-kernel_input)  # (x_size, y_size)
 
     def compute_mmd(self, x, y):

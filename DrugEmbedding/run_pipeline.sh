@@ -2,13 +2,13 @@
 
 set -x
 
-EXPERIMENT="exp_task_002"
+EXPERIMENT="exp_task_003"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
 LOG_DIR="./logs"
 
-mkdir -p ${LOG_DIR}
+mkdir -p ${LOG_DIR}squ
 
 python main.py \
   --data_dir="${DATA_DIR}" \
@@ -16,9 +16,9 @@ python main.py \
   --fda_file="${FDA_FILE}" \
   --vocab_file="char_set_clean.pkl" \
   --atc_sim_file="drugs_sp_all.csv" \
-  --checkpoint_dir="./experiments/EXP_MANI" \
+  --checkpoint_dir="./experiments/EXP_TASK" \
   --experiment_name="${EXPERIMENT}" \
-  --task="vae" \
+  --task="vae + atc" \
   --limit=0 \
   --batch_size=128 \
   --epochs=100 \
@@ -26,13 +26,13 @@ python main.py \
   --learning_rate=3e-4 \
   --max_norm=1e12 \
   --wd=0 \
-  --manifold_type="Lorentz" \
+  --manifold_type="Euclidean" \
   --prior_type="Standard" \
   --num_centroids=0 \
   --bidirectional=False \
   --num_layers=1 \
   --hidden_size=512 \
-  --latent_size=64 \
+  --latent_size=32 \
   --word_dropout_rate=0.2 \
   --anneal_function="constant" \
   --k=0.51 \
@@ -48,6 +48,6 @@ python main.py \
   --alpha=0.0 \
   --beta=0.0 \
   --gamma=1.0 \
-  --delta=0 \
-  --nneg=0 \
+  --delta=5.0 \
+  --nneg=5 \
   --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
