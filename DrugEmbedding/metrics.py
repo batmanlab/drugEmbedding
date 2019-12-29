@@ -1,6 +1,7 @@
 from scipy.cluster.hierarchy import linkage
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
+#from numba import jit
 
 from utils import *
 from evae import *
@@ -119,7 +120,7 @@ def fda_drug_rep(configs, dataset, model, all_drugs):
         drug_lst = drug_lst + batch['drug_name']
     return drug_lst, mean_lst, logv_lst
 
-
+#@jit(nopython=True)
 def dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl):
     # read ATC hierarchy
     df_drug_atc_path = drug_atc_path(drug_lst, atc_lvl)
