@@ -247,7 +247,10 @@ def smiles2mean(configs, smiles_x, model):
 
     # run through encoder
     hidden = model.encoder(input_sequence, sequence_length)
-    mean, logv, _, _, _ = model.reparameterize(hidden)
+    if configs['manifold_type'] == 'Euclidean':
+        mean, logv, _ = model.reparameterize(hidden)
+    elif configs['manifold_type'] == 'Lorentz':
+        mean, logv, _, _, _ = model.reparameterize(hidden)
     return mean, logv
 
 

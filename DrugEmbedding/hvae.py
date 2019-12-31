@@ -341,8 +341,7 @@ class HVAE(nn.Module):
 
         lor_prod = lorentz_product(tiled_x, tiled_y)
         lor_dist = arccosh(-lor_prod)
-        #kernel_input = lor_dist.reshape(x_size, y_size).pow(2) / float(dim**2) # 2*sigma2 = dim^2
-        kernel_input = lor_dist.reshape(x_size, y_size).pow(2) / float(dim)  # 2*sigma2 = dim
+        kernel_input = lor_dist.reshape(x_size, y_size).pow(2) / float(dim**2) # 2*sigma2 = dim^2
         return torch.exp(-kernel_input)  # (x_size, y_size)
 
     def compute_mmd(self, x, y):

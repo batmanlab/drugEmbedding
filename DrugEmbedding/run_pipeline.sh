@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="exp_task_004"
+EXPERIMENT="kdd_020"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -32,9 +32,9 @@ python main.py \
   --bidirectional=False \
   --num_layers=1 \
   --hidden_size=512 \
-  --latent_size=64 \
+  --latent_size=4 \
   --word_dropout_rate=0.2 \
-  --anneal_function="constant" \
+  --anneal_function="logistic" \
   --k=0.51 \
   --x0=29 \
   --C=1.0 \
@@ -46,8 +46,8 @@ python main.py \
   --checkpoint="checkpoint_epoch000.model" \
   --trained_epochs=0 \
   --alpha=0.0 \
-  --beta=0.0 \
-  --gamma=1.0 \
+  --beta=0.25 \
+  --gamma=0.0 \
   --delta=11.0 \
   --nneg=11 \
   --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
