@@ -39,7 +39,7 @@ flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path dist
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
 flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
+flags.DEFINE_integer('limit', 500, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
@@ -52,7 +52,7 @@ flags.DEFINE_integer('num_centroids', 0, 'Number of centroids used in VampPrior'
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
 flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
 flags.DEFINE_integer('hidden_size', 512, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 64, 'Dimension of latent space Z')
+flags.DEFINE_integer('latent_size', 4, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
 flags.DEFINE_float('k', 0.51, '1st parameter in KL logistic annealing function')
@@ -60,7 +60,7 @@ flags.DEFINE_float('x0', 29, '2nd parameter in KL logistic annealing function')
 flags.DEFINE_float('C', 1, 'Constant value if KL annealing function is a constant')
 flags.DEFINE_integer('num_workers', 4, 'Number of workers in DataLoader')
 flags.DEFINE_integer('logging_steps', 1, 'Log per steps/mini-batch')
-flags.DEFINE_integer('save_per_epochs', 10, 'Save intermediate checkpoints every few training epochs')
+flags.DEFINE_integer('save_per_epochs', 1, 'Save intermediate checkpoints every few training epochs')
 flags.DEFINE_boolean('new_training', True, 'New training or restart from a pre-trained checkpoint')
 flags.DEFINE_boolean('new_annealing', True, 'Restart KL annealing from a pre-trained checkpoint')
 flags.DEFINE_string('checkpoint', 'checkpoint_epoch000.model', 'Load checkpoint file')
@@ -82,10 +82,10 @@ def save_and_load_flags():
 
     # save model configurations
     if FLAGS.new_training:
-        if os.path.isdir(experiment_dir):
-            raise ValueError('Experiment directory already exist. Please change experiment name.')
-        else:
-            os.makedirs(experiment_dir)
+        #if os.path.isdir(experiment_dir):
+        #    raise ValueError('Experiment directory already exist. Please change experiment name.')
+        #else:
+        #    os.makedirs(experiment_dir)
 
         # define model configuration
         configs = {
@@ -323,6 +323,7 @@ def pipeline(configs):
         step = 0 # SGD updates
         for epoch in range(start_epoch, end_epoch + 1):
             for split in splits:
+            #for split in ['train']: #TODO: change for experiments with different random seeds
 
                 # prepare dataloader
                 if split == 'train':
@@ -425,7 +426,8 @@ def pipeline(configs):
                 summary_writer.add_scalar('%s/avg_local_ranking_loss' % split, np.array(epoch_metric['local_ranking_loss']).mean(), epoch)
 
                 # compute dendrogram purity
-                if split == 'train' and (epoch % configs['save_per_epochs'] == 0):
+                if split == 'train' and (epoch % (2 * configs['save_per_epochs']) == 0):
+                    """
                     # DP on training
                     start_time = time.time()
                     drug_lst, mean_lst, _ = fda_drug_rep(configs, datasets[split], model, all_drugs=False)
@@ -441,7 +443,7 @@ def pipeline(configs):
                     logging.info(
                         'Training DP: Epoch [{}/{}], DP ATC Lvl 1: {:.4f}, DP ATC Lvl2: {:.4f}, DP ATC Lvl3: {:.4f}, DP ATC Lvl4: {:.4f}, Time: {:.2f}'
                         .format(epoch, end_epoch, dp_lvl1, dp_lvl2, dp_lvl3, dp_lvl4, (end_time-start_time)))
-
+                    """
 
                     # DP on FDA
                     start_time = time.time()
@@ -458,7 +460,6 @@ def pipeline(configs):
                     logging.info(
                         'FDA DP: Epoch [{}/{}], DP ATC Lvl 1: {:.4f}, DP ATC Lvl2: {:.4f}, DP ATC Lvl3: {:.4f}, DP ATC Lvl4: {:.4f}, Time: {:.2f}'
                         .format(epoch, end_epoch, dp_lvl1, dp_lvl2, dp_lvl3, dp_lvl4, (end_time-start_time)))
-
 
     except KeyboardInterrupt:
         logging.info('Interrupted! Stop Training!')
@@ -480,7 +481,7 @@ def main(args):
 
     # create train, valid, test data
     splits_proportion = [0.9, 0.05, 0.05]
-    create_raw_files(configs, splits_proportion)
+    #create_raw_files(configs, splits_proportion)
 
     # start pipeline
     pipeline(configs)
