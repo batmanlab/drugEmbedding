@@ -82,7 +82,7 @@
     <session id="1458900135">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="76" />
+          <entry key="project.closed" value="77" />
           <entry key="project.open.time.1" value="4" />
           <entry key="project.open.time.10" value="4" />
           <entry key="project.open.time.11" value="3" />
@@ -571,7 +571,7 @@
   <component name="ToolWindowManager">
     <frame x="400" y="23" width="2049" height="1292" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7430657" visible="true" weight="0.16342801" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7430657" visible="true" weight="0.16342801" />
       <window_info id="Structure" order="1" sideWeight="0.50101215" side_tool="true" weight="0.12765957" />
       <window_info id="Favorites" order="2" sideWeight="0.25693431" side_tool="true" weight="0.1293488" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -585,7 +585,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32402235" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5032649" side_tool="true" weight="0.407496" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49673507" visible="true" weight="0.58916664" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49673507" visible="true" weight="0.58916664" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49906716" weight="0.29190058" />
       <window_info anchor="bottom" id="File Transfer" order="13" sideWeight="0.49813432" weight="0.33666667" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="14" weight="0.3296" />
