@@ -1,0 +1,1114 @@
+,drug_name,ind_name,status,knn_approved,knn_terminated,knn_unknown,prob,label
+0,l-glutamine,Short Bowel Syndrome,Approved,0,0,3,0.5,1.0
+1,icosapent,Breastfeeding (mother),Approved,0,0,3,0.5,1.0
+2,icosapent,Hypertriglyceridemia,Approved,0,0,3,0.5,1.0
+3,cholecalciferol,"Osteoporosis, Postmenopausal",Approved,1,0,2,0.6666666666666666,1.0
+4,cholecalciferol,Hypoparathyroidism,Approved,2,0,1,0.8333333333333334,1.0
+5,cholecalciferol,Rickets,Approved,2,0,1,0.8333333333333334,1.0
+6,cholecalciferol,Hypocalcemia,Approved,2,0,1,0.8333333333333334,1.0
+7,cholecalciferol,Vitamin Deficiency,Approved,1,0,2,0.6666666666666666,1.0
+8,cholecalciferol,Osteomalacia,Approved,1,0,2,0.6666666666666666,1.0
+9,cholecalciferol,Vitamin D-dependent rickets,Approved,1,0,2,0.6666666666666666,1.0
+10,cholecalciferol,Osteoporosis,Approved,1,0,2,0.6666666666666666,1.0
+11,cholecalciferol,Hyperlipidemia,Withdrawn,0,0,3,0.5,0.0
+12,cholecalciferol,"Hyperparathyroidism, Primary",Withdrawn,0,0,3,0.5,0.0
+13,cholecalciferol,Hypercalcemia,Withdrawn,0,0,3,0.5,0.0
+14,cholecalciferol,Osteopenia,Withdrawn,0,0,3,0.5,0.0
+15,cholecalciferol,Adult Acute Myeloid Leukemia without Maturation,Terminated,0,0,3,0.5,0.0
+16,cholecalciferol,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,0,3,0.5,0.0
+17,cholecalciferol,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,0,3,0.5,0.0
+18,cholecalciferol,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,0,3,0.5,0.0
+19,cholecalciferol,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,0,3,0.5,0.0
+20,cholecalciferol,adult acute myelomonocytic leukemia (M4),Terminated,0,0,3,0.5,0.0
+21,cholecalciferol,adult erythroleukemia (M6a),Terminated,0,0,3,0.5,0.0
+22,cholecalciferol,adult pure erythroid leukemia (M6b),Terminated,0,0,3,0.5,0.0
+23,cholecalciferol,untreated adult acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+24,cholecalciferol,adult acute megakaryoblastic leukemia (M7),Terminated,0,0,3,0.5,0.0
+25,cholecalciferol,adult acute monoblastic leukemia (M5a),Terminated,0,0,3,0.5,0.0
+26,cholecalciferol,adult acute monocytic leukemia (M5b),Terminated,0,0,3,0.5,0.0
+27,cholecalciferol,adult acute myeloblastic leukemia with maturation (M2),Terminated,0,0,3,0.5,0.0
+28,cholecalciferol,Schizophrenia,Withdrawn,0,0,3,0.5,0.0
+29,cholecalciferol,Schizoaffective Disorder,Withdrawn,0,0,3,0.5,0.0
+30,bortezomib,Multiple Myeloma,Approved,0,1,2,0.3333333333333333,1.0
+31,bortezomib,"Malignant lymphoma, lymphocytic, intermediate differentiation, diffuse",Approved,0,0,3,0.5,1.0
+32,bortezomib,Non-small cell lung cancer metastatic,Terminated,0,0,3,0.5,0.0
+33,bortezomib,Non-small cell lung cancer recurrent,Terminated,0,0,3,0.5,0.0
+34,bortezomib,"unspecified adult solid tumor, protocol specific",Terminated,0,0,3,0.5,0.0
+35,bortezomib,adult grade III lymphomatoid granulomatosis,Terminated,0,0,3,0.5,0.0
+36,bortezomib,Ki-1+ Anaplastic Large Cell Lymphoma,Terminated,0,0,3,0.5,0.0
+37,bortezomib,Angioimmunoblastic Lymphadenopathy,Terminated,0,0,3,0.5,0.0
+38,bortezomib,Mucosa-Associated Lymphoid Tissue Lymphoma,Terminated,0,0,3,0.5,0.0
+39,bortezomib,Monocytoid B-cell lymphoma,Terminated,0,0,3,0.5,0.0
+40,bortezomib,recurrent adult Burkitt's lymphoma,Terminated,0,0,3,0.5,0.0
+41,bortezomib,recurrent adult diffuse large cell lymphoma,Terminated,0,0,3,0.5,0.0
+42,bortezomib,Cutaneous T-cell lymphoma recurrent,Terminated,0,0,3,0.5,0.0
+43,bortezomib,recurrent grade 1 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+44,bortezomib,recurrent grade 2 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+45,bortezomib,recurrent grade 3 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+46,bortezomib,Mantle cell lymphoma recurrent,Terminated,0,0,3,0.5,0.0
+47,bortezomib,Marginal zone lymphoma recurrent,Terminated,0,0,3,0.5,0.0
+48,bortezomib,Mycosis fungoides/Sezary syndrome recurrent,Terminated,0,0,3,0.5,0.0
+49,bortezomib,B-cell small lymphocytic lymphoma recurrent,Terminated,0,0,3,0.5,0.0
+50,bortezomib,stage III adult Burkitt's lymphoma,Terminated,0,0,3,0.5,0.0
+51,bortezomib,stage III adult diffuse large cell lymphoma,Terminated,0,0,3,0.5,0.0
+52,bortezomib,stage III adult diffuse mixed cell lymphoma,Terminated,0,0,3,0.5,0.0
+53,bortezomib,stage III adult diffuse small cleaved cell lymphoma,Terminated,0,0,3,0.5,0.0
+54,bortezomib,stage III adult Hodgkin's lymphoma,Terminated,0,0,3,0.5,0.0
+55,bortezomib,stage III adult immunoblastic large cell lymphoma,Terminated,0,0,3,0.5,0.0
+56,bortezomib,stage III adult lymphoblastic lymphoma,Terminated,0,0,3,0.5,0.0
+57,bortezomib,Adult T-cell lymphoma/leukaemia stage III,Terminated,0,0,3,0.5,0.0
+58,bortezomib,Cutaneous T-cell lymphoma stage III,Terminated,0,0,3,0.5,0.0
+59,bortezomib,stage III grade 1 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+60,bortezomib,stage III grade 2 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+61,bortezomib,stage III grade 3 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+62,bortezomib,Mantle cell lymphoma stage III,Terminated,0,0,3,0.5,0.0
+63,bortezomib,Marginal zone lymphoma stage III,Terminated,0,0,3,0.5,0.0
+64,bortezomib,Mycosis fungoides/Sezary syndrome stage III,Terminated,0,0,3,0.5,0.0
+65,bortezomib,B-cell small lymphocytic lymphoma stage III,Terminated,0,0,3,0.5,0.0
+66,bortezomib,stage IV adult Burkitt's lymphoma,Terminated,0,0,3,0.5,0.0
+67,bortezomib,stage IV adult diffuse large cell lymphoma,Terminated,0,0,3,0.5,0.0
+68,bortezomib,stage IV adult diffuse mixed cell lymphoma,Terminated,0,0,3,0.5,0.0
+69,bortezomib,stage IV adult diffuse small cleaved cell lymphoma,Terminated,0,0,3,0.5,0.0
+70,bortezomib,stage IV adult Hodgkin's lymphoma,Terminated,0,0,3,0.5,0.0
+71,bortezomib,stage IV adult immunoblastic large cell lymphoma,Terminated,0,0,3,0.5,0.0
+72,bortezomib,stage IV adult lymphoblastic lymphoma,Terminated,0,0,3,0.5,0.0
+73,bortezomib,Adult T-cell lymphoma/leukaemia stage IV,Terminated,0,0,3,0.5,0.0
+74,bortezomib,Cutaneous T-cell lymphoma stage IV,Terminated,0,0,3,0.5,0.0
+75,bortezomib,AIDS-related peripheral/systemic lymphoma,Terminated,0,0,3,0.5,0.0
+76,bortezomib,stage IV grade 1 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+77,bortezomib,stage IV grade 2 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+78,bortezomib,stage IV grade 3 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+79,bortezomib,Mantle cell lymphoma stage IV,Terminated,0,0,3,0.5,0.0
+80,bortezomib,Marginal zone lymphoma stage IV,Terminated,0,0,3,0.5,0.0
+81,bortezomib,Mycosis fungoides/Sezary syndrome stage IV,Terminated,0,0,3,0.5,0.0
+82,bortezomib,B-cell small lymphocytic lymphoma stage IV,Terminated,0,0,3,0.5,0.0
+83,bortezomib,"unspecified adult solid tumor, protocol specific",Terminated,0,0,3,0.5,0.0
+84,bortezomib,recurrent adult diffuse mixed cell lymphoma,Terminated,0,0,3,0.5,0.0
+85,bortezomib,recurrent adult diffuse small cleaved cell lymphoma,Terminated,0,0,3,0.5,0.0
+86,bortezomib,recurrent adult grade III lymphomatoid granulomatosis,Terminated,0,0,3,0.5,0.0
+87,bortezomib,recurrent adult Hodgkin's lymphoma,Terminated,0,0,3,0.5,0.0
+88,bortezomib,recurrent adult immunoblastic large cell lymphoma,Terminated,0,0,3,0.5,0.0
+89,bortezomib,recurrent adult lymphoblastic lymphoma,Terminated,0,0,3,0.5,0.0
+90,bortezomib,Adult T-cell lymphoma/leukaemia recurrent,Terminated,0,0,3,0.5,0.0
+91,bortezomib,Malignant neoplasm of stomach,Terminated,0,0,3,0.5,0.0
+92,bortezomib,Bronchioloalveolar Adenocarcinoma,Terminated,0,0,3,0.5,0.0
+93,bortezomib,Malignant neoplasm of lung,Withdrawn,0,0,3,0.5,0.0
+94,bortezomib,B-Cell Lymphomas,Terminated,0,0,3,0.5,0.0
+95,bortezomib,Lymphoproliferative Disorders,Terminated,0,0,3,0.5,0.0
+96,bortezomib,leukemia,Withdrawn,0,0,3,0.5,0.0
+97,bortezomib,Relapse multiple myeloma,Withdrawn,0,0,3,0.5,0.0
+98,bortezomib,"Lymphoma, Non-Hodgkin",Terminated,0,0,3,0.5,0.0
+99,bortezomib,Disorder of transplanted kidney,Terminated,0,0,3,0.5,0.0
+100,bortezomib,recurrent adult diffuse large cell lymphoma,Terminated,0,0,3,0.5,0.0
+101,bortezomib,recurrent grade 1 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+102,bortezomib,recurrent grade 2 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+103,bortezomib,recurrent grade 3 follicular lymphoma,Terminated,0,0,3,0.5,0.0
+104,bortezomib,Mantle cell lymphoma recurrent,Terminated,0,0,3,0.5,0.0
+105,bortezomib,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+106,trospium,Urge Incontinence,Approved,0,0,3,0.5,1.0
+107,trospium,Bladder muscle dysfunction - overactive,Approved,0,0,3,0.5,1.0
+108,trospium,Increased frequency of micturition,Approved,1,0,2,0.6666666666666666,1.0
+109,trospium,Urgency of micturition,Approved,1,0,2,0.6666666666666666,1.0
+110,pantoprazole,Erosive esophagitis,Approved,1,0,2,0.6666666666666666,1.0
+111,pantoprazole,Zollinger-Ellison syndrome,Approved,2,0,1,0.8333333333333334,1.0
+112,pantoprazole,Gastroesophageal reflux disease,Approved,2,0,1,0.8333333333333334,1.0
+113,pantoprazole,Multiple Endocrine Neoplasia,Approved,1,0,2,0.6666666666666666,1.0
+114,pantoprazole,Peptic Ulcer,Approved,3,0,0,1.0,1.0
+115,eletriptan,Migraine Disorders,Approved,3,0,0,1.0,1.0
+116,pregabalin,Diabetic peripheral neuropathy,Approved,0,0,3,0.5,1.0
+117,pregabalin,Fibromyalgia,Approved,0,0,3,0.5,1.0
+118,pregabalin,Postherpetic neuralgia,Approved,0,0,3,0.5,1.0
+119,pregabalin,Generalized Anxiety Disorder,Approved,0,0,3,0.5,1.0
+120,pregabalin,Epilepsy,Terminated,2,0,1,0.8333333333333334,0.0
+121,pregabalin,Herpes zoster disease,Terminated,0,0,3,0.5,0.0
+122,pregabalin,Spinal Cord Injuries,Terminated,0,0,3,0.5,0.0
+123,pregabalin,Pain,Terminated,0,0,3,0.5,0.0
+124,pregabalin,Orofacial Pain,Terminated,0,0,3,0.5,0.0
+125,pregabalin,Vulvodynia,Terminated,0,0,3,0.5,0.0
+126,pregabalin,Vulvar Vestibulitis,Terminated,0,0,3,0.5,0.0
+127,pregabalin,Chronic pain,Withdrawn,0,0,3,0.5,0.0
+128,pregabalin,Neuralgia,Terminated,0,0,3,0.5,0.0
+129,ranolazine,Angina Pectoris,Approved,0,0,3,0.5,1.0
+130,ranolazine,Acute Coronary Syndrome,Terminated,0,0,3,0.5,0.0
+131,ranolazine,Irritable bowel syndrome with diarrhea,Terminated,0,0,3,0.5,0.0
+132,ranolazine,Diarrhoea predominant irritable bowel syndrome,Terminated,0,0,3,0.5,0.0
+133,ziprasidone,Bipolar disorder in remission,Approved,0,0,3,0.5,1.0
+134,ziprasidone,Schizophrenia,Approved,3,0,0,1.0,1.0
+135,ziprasidone,Mixed bipolar I disorder,Approved,0,0,3,0.5,1.0
+136,ziprasidone,"Bipolar affective disorder, current episode manic",Approved,0,0,3,0.5,1.0
+137,ziprasidone,Schizoaffective Disorder,Terminated,0,0,3,0.5,0.0
+138,ziprasidone,Bipolar Disorder,Terminated,0,0,3,0.5,0.0
+139,olmesartan,Hypertensive disease,Approved,0,0,3,0.5,1.0
+140,argatroban,Heparin-induced thrombocytopenia with thrombosis,Approved,0,0,3,0.5,1.0
+141,travoprost,Ocular Hypertension,Approved,3,0,0,1.0,1.0
+142,travoprost,"Glaucoma, Open-Angle",Approved,3,0,0,1.0,1.0
+143,atomoxetine,Attention deficit hyperactivity disorder,Approved,1,0,2,0.6666666666666666,1.0
+144,atomoxetine,Methamphetamine dependence,Terminated,0,0,3,0.5,0.0
+145,atomoxetine,Methamphetamine abuse,Terminated,0,0,3,0.5,0.0
+146,atomoxetine,alcohol sensitivity,Terminated,0,0,3,0.5,0.0
+147,atomoxetine,Craving for alcohol,Terminated,0,0,3,0.5,0.0
+148,atomoxetine,Mood swings,Terminated,0,0,3,0.5,0.0
+149,atomoxetine,Nicotine Dependence,Suspended,0,0,3,0.5,0.0
+150,tenofovir,"Hepatitis B, Chronic",Approved,0,0,3,0.5,1.0
+151,tenofovir,HIV Infections,Approved,0,0,3,0.5,1.0
+152,tenofovir,Hepatitis B,Terminated,0,0,3,0.5,0.0
+153,tenofovir,HIV-1 infection,Terminated,0,0,3,0.5,0.0
+154,tenofovir,HIV-1 infection,Withdrawn,0,0,3,0.5,0.0
+155,ertapenem,Miscarriage with sepsis,Approved,0,0,3,0.5,1.0
+156,ertapenem,Acute bacterial peritonitis,Approved,0,0,3,0.5,1.0
+157,ertapenem,Diabetic foot infection,Approved,0,0,3,0.5,1.0
+158,ertapenem,Haemophilus influenzae pneumonia,Approved,1,0,2,0.6666666666666666,1.0
+159,ertapenem,Peptostreptococcus infection,Approved,0,0,3,0.5,1.0
+160,ertapenem,Abdominal Abscess,Approved,1,0,2,0.6666666666666666,1.0
+161,ertapenem,PYELONEPHRITIS E COLI,Approved,0,0,3,0.5,1.0
+162,ertapenem,Streptococcal pneumonia,Approved,0,0,3,0.5,1.0
+163,ertapenem,Intraabdominal Infections,Approved,1,0,2,0.6666666666666666,1.0
+164,ertapenem,Female genital tract infection,Approved,0,0,3,0.5,1.0
+165,ertapenem,Moraxella catarrhalis pneumonia,Approved,0,0,3,0.5,1.0
+166,ertapenem,"Pneumonia, Bacterial",Approved,0,1,2,0.3333333333333333,1.0
+167,ertapenem,Endometritis,Terminated,0,0,3,0.5,0.0
+168,gefitinib,Non-Small Cell Lung Carcinoma,Approved,0,0,3,0.5,1.0
+169,gefitinib,Epidermal growth factor receptor positive non-small cell lung cancer,Approved,0,0,3,0.5,1.0
+170,gefitinib,Squamous cell carcinoma of the hypopharynx stage III,Terminated,0,0,3,0.5,0.0
+171,gefitinib,Laryngeal squamous cell carcinoma stage III,Terminated,0,0,3,0.5,0.0
+172,gefitinib,stage III squamous cell carcinoma of the lip and oral cavity,Terminated,0,0,3,0.5,0.0
+173,gefitinib,Oropharyngeal squamous cell carcinoma stage III,Terminated,0,0,3,0.5,0.0
+174,gefitinib,Squamous cell carcinoma of the hypopharynx stage IV,Terminated,0,0,3,0.5,0.0
+175,gefitinib,Laryngeal squamous cell carcinoma stage IV,Terminated,0,0,3,0.5,0.0
+176,gefitinib,stage IV squamous cell carcinoma of the lip and oral cavity,Terminated,0,0,3,0.5,0.0
+177,gefitinib,stage IV squamous cell carcinoma of the oropharynx,Terminated,0,0,3,0.5,0.0
+178,gefitinib,Adenocarcinoma of colon,Terminated,0,1,2,0.3333333333333333,0.0
+179,gefitinib,Adenocarcinoma of rectum,Terminated,0,1,2,0.3333333333333333,0.0
+180,gefitinib,Mucinous adenocarcinoma of colon,Terminated,0,1,2,0.3333333333333333,0.0
+181,gefitinib,mucinous adenocarcinoma of rectum,Terminated,0,1,2,0.3333333333333333,0.0
+182,gefitinib,Colon cancer recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+183,gefitinib,Recurrent Rectal Cancer,Terminated,0,1,2,0.3333333333333333,0.0
+184,gefitinib,signet ring adenocarcinoma of the colon,Terminated,0,1,2,0.3333333333333333,0.0
+185,gefitinib,signet ring adenocarcinoma of the rectum,Terminated,0,1,2,0.3333333333333333,0.0
+186,gefitinib,Malignant tumor of colon,Terminated,0,1,2,0.3333333333333333,0.0
+187,gefitinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+188,gefitinib,Recurrent Head and Neck Carcinoma,Terminated,0,0,3,0.5,0.0
+189,gefitinib,Head and neck cancer metastatic,Terminated,0,0,3,0.5,0.0
+190,gefitinib,Glioblastoma,Terminated,0,0,3,0.5,0.0
+191,alfuzosin,Prostatic Hypertrophy,Approved,2,0,1,0.8333333333333334,1.0
+192,alfuzosin,Benign Prostatic Hyperplasia,Terminated,0,1,2,0.3333333333333333,0.0
+193,alfuzosin,Urinary Retention,Terminated,0,1,2,0.3333333333333333,0.0
+194,alfuzosin,Multiple Sclerosis,Terminated,0,0,3,0.5,0.0
+195,alfuzosin,Bladder dysfunction,Terminated,0,0,3,0.5,0.0
+196,nitisinone,"Tyrosinemia, Type I",Approved,0,0,3,0.5,1.0
+197,clobazam,Lennox-Gastaut syndrome,Approved,0,0,3,0.5,1.0
+198,treprostinil,Pulmonary arterial hypertension,Approved,1,0,2,0.6666666666666666,1.0
+199,treprostinil,Critical limb ischemia,Terminated,0,0,3,0.5,0.0
+200,treprostinil,Peripheral Vascular Diseases,Terminated,0,0,3,0.5,0.0
+201,treprostinil,Foot Ulcer,Terminated,0,0,3,0.5,0.0
+202,treprostinil,Peripheral Vascular Diseases,Terminated,0,0,3,0.5,0.0
+203,treprostinil,Hamman-Rich syndrome,Terminated,0,1,2,0.3333333333333333,0.0
+204,treprostinil,Pulmonary Hypertension,Terminated,1,1,1,0.5,0.0
+205,palonosetron,Chemotherapy-induced nausea and vomiting,Approved,3,0,0,1.0,1.0
+206,palonosetron,Nausea,Terminated,0,1,2,0.3333333333333333,0.0
+207,palonosetron,Vomiting,Terminated,0,1,2,0.3333333333333333,0.0
+208,phenylpropanolamine,Influenza-like symptoms,Approved,2,0,1,0.8333333333333334,1.0
+209,phenylpropanolamine,Allergic rhinitis (disorder),Approved,2,0,1,0.8333333333333334,1.0
+210,phenylpropanolamine,"Rhinitis, Vasomotor",Approved,2,0,1,0.8333333333333334,1.0
+211,phenylpropanolamine,Nasal congestion (finding),Approved,2,0,1,0.8333333333333334,1.0
+212,phenylpropanolamine,Coughing,Approved,1,0,2,0.6666666666666666,1.0
+213,phenylpropanolamine,Hay fever,Approved,2,0,1,0.8333333333333334,1.0
+214,phenylpropanolamine,Rhinorrhea,Approved,2,0,1,0.8333333333333334,1.0
+215,phenylpropanolamine,Common Cold,Approved,2,0,1,0.8333333333333334,1.0
+216,phenylpropanolamine,Sneezing,Approved,1,0,2,0.6666666666666666,1.0
+217,phenylpropanolamine,Allergic Conjunctivitis,Approved,2,0,1,0.8333333333333334,1.0
+218,phenylpropanolamine,Sinus headache,Approved,2,0,1,0.8333333333333334,1.0
+219,phenylpropanolamine,Rhinitis,Approved,2,0,1,0.8333333333333334,1.0
+220,sorafenib,Renal Cell Carcinoma,Approved,0,0,3,0.5,1.0
+221,sorafenib,Liver carcinoma,Approved,0,0,3,0.5,1.0
+222,sorafenib,Malignant epithelial neoplasm of thyroid,Approved,0,0,3,0.5,1.0
+223,sorafenib,Conventional (Clear Cell) Renal Cell Carcinoma,Terminated,0,0,3,0.5,0.0
+224,sorafenib,Anaplastic thyroid carcinoma,Terminated,0,0,3,0.5,0.0
+225,sorafenib,insular thyroid cancer,Terminated,0,0,3,0.5,0.0
+226,sorafenib,Recurrent Thyroid Carcinoma,Terminated,0,0,3,0.5,0.0
+227,sorafenib,stage III follicular thyroid cancer,Terminated,0,0,3,0.5,0.0
+228,sorafenib,stage III papillary thyroid cancer,Terminated,0,0,3,0.5,0.0
+229,sorafenib,stage IV follicular thyroid cancer,Terminated,0,0,3,0.5,0.0
+230,sorafenib,Metastatic papillary thyroid carcinoma,Terminated,0,0,3,0.5,0.0
+231,sorafenib,Anaplastic thyroid carcinoma,Terminated,0,0,3,0.5,0.0
+232,sorafenib,Recurrent Thyroid Carcinoma,Terminated,0,0,3,0.5,0.0
+233,sorafenib,Conventional (Clear Cell) Renal Cell Carcinoma,Terminated,0,0,3,0.5,0.0
+234,sorafenib,Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+235,sorafenib,"unspecified adult solid tumor, protocol specific",Terminated,0,0,3,0.5,0.0
+236,sorafenib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+237,sorafenib,Colorectal Neoplasms,Terminated,0,0,3,0.5,0.0
+238,sorafenib,Liver cell carcinoma non-resectable,Terminated,0,0,3,0.5,0.0
+239,sorafenib,Hepatoma recurrent,Terminated,0,0,3,0.5,0.0
+240,sorafenib,Neoplasms by Histologic Type,Terminated,0,0,3,0.5,0.0
+241,sorafenib,Carcinoma,Terminated,0,0,3,0.5,0.0
+242,sorafenib,Liver neoplasms,Terminated,0,0,3,0.5,0.0
+243,sorafenib,Adenocarcinoma,Terminated,0,0,3,0.5,0.0
+244,sorafenib,"Neoplasms, Glandular and Epithelial",Terminated,0,0,3,0.5,0.0
+245,sorafenib,Malignant neoplasm of lung,Withdrawn,0,0,3,0.5,0.0
+246,sorafenib,Medullary carcinoma of thyroid,Withdrawn,0,0,3,0.5,0.0
+247,sorafenib,Melanoma recurrent,Withdrawn,0,0,3,0.5,0.0
+248,sorafenib,malignant melanoma of skin stage III,Withdrawn,0,0,3,0.5,0.0
+249,eszopiclone,Sleeplessness,Approved,3,0,0,1.0,1.0
+250,miglustat,Gaucher Disease,Approved,0,0,3,0.5,1.0
+251,miglustat,"Niemann-Pick Disease, Type C",Approved,0,0,3,0.5,1.0
+252,entecavir,"Hepatitis B, Chronic",Approved,0,0,3,0.5,1.0
+253,levothyroxine,Myxedema,Approved,1,0,2,0.6666666666666666,1.0
+254,levothyroxine,Malignant neoplasm of thyroid,Approved,1,0,2,0.6666666666666666,1.0
+255,levothyroxine,Hyperlipidemia,Approved,0,0,3,0.5,1.0
+256,levothyroxine,Congenital Hypothyroidism,Approved,1,0,2,0.6666666666666666,1.0
+257,levothyroxine,Hypothyroidism,Approved,1,0,2,0.6666666666666666,1.0
+258,levothyroxine,Hashimoto Disease,Approved,0,0,3,0.5,1.0
+259,levothyroxine,Goiter,Approved,1,0,2,0.6666666666666666,1.0
+260,quinine,"Malaria, Falciparum",Approved,1,0,2,0.6666666666666666,1.0
+261,duloxetine,Generalized Anxiety Disorder,Approved,0,0,3,0.5,1.0
+262,duloxetine,Diabetic peripheral neuropathy,Approved,0,0,3,0.5,1.0
+263,duloxetine,MUSCULOSKELETAL PAIN CHRONIC,Approved,0,0,3,0.5,1.0
+264,duloxetine,Fibromyalgia,Approved,0,0,3,0.5,1.0
+265,duloxetine,Major Depressive Disorder,Approved,1,0,2,0.6666666666666666,1.0
+266,duloxetine,Female stress incontinence,Approved,0,0,3,0.5,1.0
+267,duloxetine,Traumatic Brain Injury,Terminated,0,0,3,0.5,0.0
+268,duloxetine,Depressive disorder,Terminated,2,0,1,0.8333333333333334,0.0
+269,lenalidomide,Multiple Myeloma,Approved,1,0,2,0.6666666666666666,1.0
+270,lenalidomide,"Malignant lymphoma, lymphocytic, intermediate differentiation, diffuse",Approved,0,1,2,0.3333333333333333,1.0
+271,lenalidomide,Reflex Sympathetic Dystrophy,Terminated,0,1,2,0.3333333333333333,0.0
+272,lenalidomide,Waldenstrom Macroglobulinemia,Terminated,0,1,2,0.3333333333333333,0.0
+273,lenalidomide,Advanced cancer,Terminated,0,1,2,0.3333333333333333,0.0
+274,lenalidomide,Pain,Terminated,0,1,2,0.3333333333333333,0.0
+275,lenalidomide,Adult T-Cell Lymphoma/Leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+276,lenalidomide,Angioimmunoblastic Lymphadenopathy,Terminated,0,1,2,0.3333333333333333,0.0
+277,lenalidomide,Ki-1+ Anaplastic Large Cell Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+278,lenalidomide,leukemia,Withdrawn,0,1,2,0.3333333333333333,0.0
+279,lenalidomide,Renal Cell Carcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+280,lenalidomide,"Lymphoma, Non-Hodgkin",Terminated,0,1,2,0.3333333333333333,0.0
+281,lenalidomide,Malignant tumor of colon,Terminated,0,1,2,0.3333333333333333,0.0
+282,lenalidomide,Chronic lymphocytic leukaemia stage 3,Withdrawn,0,0,3,0.5,0.0
+283,lenalidomide,Chronic lymphocytic leukaemia stage 4,Withdrawn,0,0,3,0.5,0.0
+284,lenalidomide,Bladder Neoplasm,Terminated,0,1,2,0.3333333333333333,0.0
+285,lenalidomide,leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+286,lenalidomide,adult nasal type extranodal NK/T-cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+287,lenalidomide,Ki-1+ Anaplastic Large Cell Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+288,lenalidomide,Angioimmunoblastic Lymphadenopathy,Terminated,0,1,2,0.3333333333333333,0.0
+289,lenalidomide,Cutaneous B-Cell Non-Hodgkin Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+290,lenalidomide,Mucosa-Associated Lymphoid Tissue Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+291,lenalidomide,Hepatosplenic T-cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+292,lenalidomide,Monocytoid B-cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+293,lenalidomide,Peripheral T-Cell Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+294,lenalidomide,Prolymphocytic Leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+295,lenalidomide,recurrent adult Burkitt's lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+296,lenalidomide,recurrent adult diffuse large cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+297,lenalidomide,recurrent adult diffuse mixed cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+298,lenalidomide,recurrent adult diffuse small cleaved cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+299,lenalidomide,recurrent grade 1 follicular lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+300,lenalidomide,recurrent grade 2 follicular lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+301,lenalidomide,recurrent grade 3 follicular lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+302,lenalidomide,Mantle cell lymphoma recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+303,lenalidomide,Marginal zone lymphoma recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+304,lenalidomide,Mycosis fungoides/Sezary syndrome recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+305,lenalidomide,B-cell small lymphocytic lymphoma recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+306,lenalidomide,Chronic lymphocytic leukaemia refractory,Terminated,0,1,2,0.3333333333333333,0.0
+307,lenalidomide,Hairy cell leukaemia recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+308,lenalidomide,Small Intestinal Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+309,lenalidomide,Splenic Marginal Zone B-Cell Lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+310,lenalidomide,T-Cell Large Granular Lymphocyte Leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+311,lenalidomide,Malignant lymphoma of testis,Terminated,0,1,2,0.3333333333333333,0.0
+312,lenalidomide,recurrent adult grade III lymphomatoid granulomatosis,Terminated,0,1,2,0.3333333333333333,0.0
+313,lenalidomide,recurrent adult immunoblastic large cell lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+314,lenalidomide,recurrent adult lymphoblastic lymphoma,Terminated,0,1,2,0.3333333333333333,0.0
+315,lenalidomide,Adult T-cell lymphoma/leukaemia recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+316,lenalidomide,Cutaneous T-cell lymphoma recurrent,Terminated,0,1,2,0.3333333333333333,0.0
+317,darifenacin,Bladder muscle dysfunction - overactive,Approved,2,0,1,0.8333333333333334,1.0
+318,darifenacin,Urge Incontinence,Approved,2,0,1,0.8333333333333334,1.0
+319,darifenacin,Urgency of micturition,Approved,3,0,0,1.0,1.0
+320,darifenacin,Increased frequency of micturition,Approved,3,0,0,1.0,1.0
+321,nitazoxanide,Giardiasis,Approved,0,0,3,0.5,1.0
+322,nitazoxanide,Cryptosporidiosis,Approved,0,0,3,0.5,1.0
+323,nitazoxanide,Clostridium difficile infection,Terminated,0,0,3,0.5,0.0
+324,nitazoxanide,Clostridium Infections,Terminated,0,0,3,0.5,0.0
+325,oxaliplatin,Metastasis from malignant tumor of colon,Approved,0,0,3,0.5,1.0
+326,oxaliplatin,Colorectal Neoplasms,Terminated,0,0,3,0.5,0.0
+327,oxaliplatin,"unspecified adult solid tumor, protocol specific",Terminated,0,2,1,0.16666666666666666,0.0
+328,oxaliplatin,Colorectal Neoplasms,Terminated,0,0,3,0.5,0.0
+329,oxaliplatin,Recurrent Rectal Cancer,Terminated,0,0,3,0.5,0.0
+330,oxaliplatin,signet ring adenocarcinoma of the rectum,Terminated,0,0,3,0.5,0.0
+331,oxaliplatin,Stage IIA Rectal Cancer,Terminated,0,0,3,0.5,0.0
+332,oxaliplatin,Stage IIB Rectal Cancer,Terminated,0,0,3,0.5,0.0
+333,oxaliplatin,Stage IIC Rectal Cancer,Terminated,0,0,3,0.5,0.0
+334,oxaliplatin,Stage IIIA Rectal Cancer,Terminated,0,0,3,0.5,0.0
+335,oxaliplatin,Stage IIIB Rectal Cancer,Terminated,0,0,3,0.5,0.0
+336,oxaliplatin,Stage IIIC Rectal Cancer,Terminated,0,0,3,0.5,0.0
+337,oxaliplatin,Stage IVA Rectal Cancer,Terminated,0,0,3,0.5,0.0
+338,oxaliplatin,Stage IVB Rectal Cancer,Terminated,0,0,3,0.5,0.0
+339,oxaliplatin,mucinous adenocarcinoma of rectum,Terminated,0,0,3,0.5,0.0
+340,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+341,oxaliplatin,Adenocarcinoma of colon,Terminated,0,0,3,0.5,0.0
+342,oxaliplatin,Adenocarcinoma of rectum,Terminated,0,0,3,0.5,0.0
+343,oxaliplatin,Colon cancer recurrent,Terminated,0,0,3,0.5,0.0
+344,oxaliplatin,Recurrent Rectal Cancer,Terminated,0,0,3,0.5,0.0
+345,oxaliplatin,Secondary malignant neoplasm of liver,Terminated,0,0,3,0.5,0.0
+346,oxaliplatin,Colon cancer recurrent,Terminated,0,0,3,0.5,0.0
+347,oxaliplatin,Recurrent Rectal Cancer,Terminated,0,0,3,0.5,0.0
+348,oxaliplatin,Malignant tumor of colon,Withdrawn,0,0,3,0.5,0.0
+349,oxaliplatin,"unspecified adult solid tumor, protocol specific",Terminated,0,2,1,0.16666666666666666,0.0
+350,oxaliplatin,Adenocarcinoma,Terminated,0,2,1,0.16666666666666666,0.0
+351,oxaliplatin,Colonic Neoplasms,Terminated,0,0,3,0.5,0.0
+352,oxaliplatin,Rectal Neoplasms,Terminated,0,0,3,0.5,0.0
+353,oxaliplatin,Appendiceal Neoplasms,Terminated,0,0,3,0.5,0.0
+354,oxaliplatin,Peritoneal Neoplasms,Terminated,0,0,3,0.5,0.0
+355,oxaliplatin,Endocrine Gland Neoplasms,Terminated,0,0,3,0.5,0.0
+356,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+357,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+358,oxaliplatin,Secondary malignant neoplasm of liver,Terminated,0,0,3,0.5,0.0
+359,oxaliplatin,Malignant neoplasm of stomach,Suspended,0,1,2,0.3333333333333333,0.0
+360,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+361,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+362,oxaliplatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+363,oxaliplatin,Cholangiocarcinoma,Withdrawn,0,1,2,0.3333333333333333,0.0
+364,oxaliplatin,Colorectal Neoplasms,Terminated,0,0,3,0.5,0.0
+365,oxaliplatin,Colorectal Neoplasms,Terminated,0,0,3,0.5,0.0
+366,oxaliplatin,Colorectal Carcinoma,Withdrawn,0,0,3,0.5,0.0
+367,oxaliplatin,Malignant tumor of colon,Withdrawn,0,0,3,0.5,0.0
+368,oxaliplatin,Colorectal cancer metastatic,Withdrawn,0,0,3,0.5,0.0
+369,oxaliplatin,Secondary malignant neoplasm of liver,Terminated,0,0,3,0.5,0.0
+370,oxaliplatin,Colon cancer recurrent,Terminated,0,0,3,0.5,0.0
+371,oxaliplatin,Recurrent Rectal Cancer,Terminated,0,0,3,0.5,0.0
+372,oxaliplatin,Stage IVA Colon Cancer,Terminated,0,0,3,0.5,0.0
+373,oxaliplatin,Stage IVA Rectal Cancer,Terminated,0,0,3,0.5,0.0
+374,oxaliplatin,Stage IVB Colon Cancer,Terminated,0,0,3,0.5,0.0
+375,oxaliplatin,Stage IVB Rectal Cancer,Terminated,0,0,3,0.5,0.0
+376,oxaliplatin,Nasopharyngeal carcinoma,Terminated,0,0,3,0.5,0.0
+377,oxaliplatin,Secondary malignant neoplasm of liver,Withdrawn,0,0,3,0.5,0.0
+378,oxaliplatin,Gastric carcinoma stage IV,Terminated,0,0,3,0.5,0.0
+379,oxaliplatin,Gallbladder Carcinoma,Suspended,0,0,3,0.5,0.0
+380,oxaliplatin,Stage IB Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+381,oxaliplatin,Stage IIA Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+382,oxaliplatin,Stage IIB Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+383,oxaliplatin,Stage IIIA Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+384,oxaliplatin,Stage IIIB Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+385,oxaliplatin,Stage IIIC Esophageal Adenocarcinoma,Terminated,0,1,2,0.3333333333333333,0.0
+386,lercanidipine,Hypertensive disease,Approved,2,0,1,0.8333333333333334,1.0
+387,erlotinib,Non-Small Cell Lung Carcinoma,Approved,0,0,3,0.5,1.0
+388,erlotinib,Adenocarcinoma of pancreas,Approved,0,0,3,0.5,1.0
+389,erlotinib,adult primary hepatocellular carcinoma,Terminated,0,0,3,0.5,0.0
+390,erlotinib,advanced adult primary liver cancer,Terminated,0,0,3,0.5,0.0
+391,erlotinib,localized unresectable adult primary liver cancer,Terminated,0,0,3,0.5,0.0
+392,erlotinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+393,erlotinib,Stage IA Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+394,erlotinib,Stage IB Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+395,erlotinib,Stage IIA Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+396,erlotinib,Stage IIB Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+397,erlotinib,Non-small cell lung cancer stage IIIA,Terminated,0,0,3,0.5,0.0
+398,erlotinib,Metastatic malignant neoplasm to brain,Terminated,0,0,3,0.5,0.0
+399,erlotinib,Non-small cell lung cancer recurrent,Terminated,0,0,3,0.5,0.0
+400,erlotinib,Non-small cell lung cancer metastatic,Terminated,0,0,3,0.5,0.0
+401,erlotinib,Malignant neoplasm of lung,Withdrawn,0,0,3,0.5,0.0
+402,erlotinib,adult brain tumor,Terminated,0,0,3,0.5,0.0
+403,erlotinib,Esophageal Neoplasms,Terminated,0,0,3,0.5,0.0
+404,erlotinib,Esophageal Diseases,Terminated,0,0,3,0.5,0.0
+405,erlotinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+406,erlotinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+407,erlotinib,Meningeal Carcinomatosis,Terminated,0,0,3,0.5,0.0
+408,erlotinib,Neuroendocrine Tumors,Terminated,0,0,3,0.5,0.0
+409,erlotinib,Adrenal Gland Neoplasms,Terminated,0,0,3,0.5,0.0
+410,erlotinib,Neuroblastoma,Terminated,0,0,3,0.5,0.0
+411,erlotinib,Multiple Endocrine Neoplasia,Terminated,0,0,3,0.5,0.0
+412,erlotinib,Psoriasis,Withdrawn,0,0,3,0.5,0.0
+413,erlotinib,Non-small cell lung cancer recurrent,Terminated,0,0,3,0.5,0.0
+414,erlotinib,Non-small cell lung cancer metastatic,Terminated,0,0,3,0.5,0.0
+415,erlotinib,Squamous cell carcinoma,Terminated,0,0,3,0.5,0.0
+416,erlotinib,Ependymoma,Terminated,0,0,3,0.5,0.0
+417,erlotinib,recurrent metastatic squamous neck cancer with occult primary,Withdrawn,0,0,3,0.5,0.0
+418,erlotinib,Recurrent Salivary Gland Cancer,Withdrawn,0,0,3,0.5,0.0
+419,erlotinib,Squamous cell carcinoma of the hypopharynx recurrent,Withdrawn,0,0,3,0.5,0.0
+420,erlotinib,Laryngeal squamous cell carcinoma recurrent,Withdrawn,0,0,3,0.5,0.0
+421,erlotinib,recurrent squamous cell carcinoma of the lip and oral cavity,Withdrawn,0,0,3,0.5,0.0
+422,erlotinib,Oropharyngeal squamous cell carcinoma recurrent,Withdrawn,0,0,3,0.5,0.0
+423,erlotinib,recurrent squamous cell carcinoma of the paranasal sinus and nasal cavity,Withdrawn,0,0,3,0.5,0.0
+424,erlotinib,Laryngeal verrucous carcinoma recurrent,Withdrawn,0,0,3,0.5,0.0
+425,erlotinib,Verrucous carcinoma of the oral cavity recurrent,Withdrawn,0,0,3,0.5,0.0
+426,erlotinib,squamous cell carcinoma of salivary gland,Withdrawn,0,0,3,0.5,0.0
+427,erlotinib,Non-small cell lung cancer recurrent,Suspended,0,0,3,0.5,0.0
+428,erlotinib,Non-small cell lung cancer metastatic,Suspended,0,0,3,0.5,0.0
+429,erlotinib,Non-small cell lung cancer recurrent,Withdrawn,0,0,3,0.5,0.0
+430,erlotinib,Non-small cell lung cancer metastatic,Withdrawn,0,0,3,0.5,0.0
+431,erlotinib,HIV Infections,Terminated,0,0,3,0.5,0.0
+432,bosentan,Pulmonary arterial hypertension,Approved,0,0,3,0.5,1.0
+433,bosentan,Pulmonary Hypertension,Approved,0,0,3,0.5,1.0
+434,bosentan,Scleroderma,Approved,0,0,3,0.5,1.0
+435,bosentan,Persistent Fetal Circulation Syndrome,Terminated,0,0,3,0.5,0.0
+436,tigecycline,Complicated appendicitis,Approved,0,0,3,0.5,1.0
+437,tigecycline,Haemophilus influenzae pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+438,tigecycline,Abdominal Abscess,Approved,0,0,3,0.5,1.0
+439,tigecycline,Intraabdominal Infections,Approved,1,0,2,0.6666666666666666,1.0
+440,tigecycline,Legionella pneumophila pneumonia,Approved,0,0,3,0.5,1.0
+441,tigecycline,Dialysis Catheter Infection,Terminated,0,0,3,0.5,0.0
+442,voriconazole,Fusariosis,Approved,1,0,2,0.6666666666666666,1.0
+443,voriconazole,Systemic candidiasis,Approved,1,0,2,0.6666666666666666,1.0
+444,voriconazole,Candidiasis of the esophagus,Approved,1,0,2,0.6666666666666666,1.0
+445,voriconazole,Invasive Pulmonary Aspergillosis,Approved,1,0,2,0.6666666666666666,1.0
+446,voriconazole,Candidemia,Approved,1,0,2,0.6666666666666666,1.0
+447,voriconazole,Invasive aspergillosis,Terminated,0,0,3,0.5,0.0
+448,voriconazole,Candidiasis,Terminated,0,0,3,0.5,0.0
+449,voriconazole,Aspergillosis,Withdrawn,1,0,2,0.6666666666666666,0.0
+450,voriconazole,Neuroaspergillosis,Withdrawn,0,0,3,0.5,0.0
+451,thiopental,Epilepsy,Approved,3,0,0,1.0,1.0
+452,thiopental,Pseudotumor Cerebri,Approved,0,0,3,0.5,1.0
+453,linezolid,Streptococcus pyogenes infection,Approved,0,0,3,0.5,1.0
+454,linezolid,Staphylococcus aureus infection,Approved,0,0,3,0.5,1.0
+455,linezolid,Staphylococcal Pneumonia,Approved,0,0,3,0.5,1.0
+456,linezolid,Bacteremia,Terminated,0,0,3,0.5,0.0
+457,linezolid,Gram-Positive Bacterial Infections,Terminated,0,0,3,0.5,0.0
+458,linezolid,"Skin Diseases, Infectious",Terminated,0,0,3,0.5,0.0
+459,imatinib,"Leukemia, Myeloid, Accelerated Phase",Approved,0,0,3,0.5,1.0
+460,imatinib,"Mastocytosis, Systemic",Approved,0,0,3,0.5,1.0
+461,imatinib,"Leukemia, Myeloid, Chronic-Phase",Approved,0,0,3,0.5,1.0
+462,imatinib,Blast Phase,Approved,0,0,3,0.5,1.0
+463,imatinib,Philadelphia chromosome positive chronic myelogenous leukemia,Approved,0,0,3,0.5,1.0
+464,imatinib,Chronic eosinophilic leukemia,Approved,0,0,3,0.5,1.0
+465,imatinib,Philadelphia chromosome-positive acute lymphoblastic leukemia,Approved,0,0,3,0.5,1.0
+466,imatinib,Dermatofibrosarcoma Protuberans,Approved,0,0,3,0.5,1.0
+467,imatinib,Idiopathic Hypereosinophilic Syndrome,Approved,0,0,3,0.5,1.0
+468,imatinib,Gastrointestinal Stromal Tumors,Approved,0,0,3,0.5,1.0
+469,imatinib,leukemia,Terminated,0,0,3,0.5,0.0
+470,imatinib,leukemia,Terminated,0,0,3,0.5,0.0
+471,imatinib,chronic myelogenous leukemia in relapse,Terminated,0,0,3,0.5,0.0
+472,imatinib,Chronic myeloproliferative disorder,Terminated,0,0,3,0.5,0.0
+473,imatinib,leukemia,Terminated,0,0,3,0.5,0.0
+474,imatinib,Choroidal retinal neovascularization,Withdrawn,0,0,3,0.5,0.0
+475,imatinib,Choroidal Neovascularization,Withdrawn,0,0,3,0.5,0.0
+476,imatinib,Metastatic melanoma,Terminated,0,0,3,0.5,0.0
+477,imatinib,leukemia,Terminated,0,0,3,0.5,0.0
+478,imatinib,Malignant Peripheral Nerve Sheath Tumor,Terminated,0,0,3,0.5,0.0
+479,imatinib,Pulmonary Hypertension,Terminated,0,0,3,0.5,0.0
+480,imatinib,Solid tumour,Terminated,0,1,2,0.3333333333333333,0.0
+481,imatinib,leukemia,Terminated,0,0,3,0.5,0.0
+482,imatinib,recurrent adult acute lymphoblastic leukemia,Terminated,0,0,3,0.5,0.0
+483,imatinib,Scleroderma,Terminated,0,0,3,0.5,0.0
+484,imatinib,Pulmonary Hypertension,Withdrawn,0,0,3,0.5,0.0
+485,clofarabine,Acute lymphocytic leukemia,Approved,1,0,2,0.6666666666666666,1.0
+486,clofarabine,leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+487,clofarabine,Multiple Myeloma,Terminated,0,1,2,0.3333333333333333,0.0
+488,clofarabine,leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+489,clofarabine,leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+490,clofarabine,Hodgkin Disease,Terminated,0,1,2,0.3333333333333333,0.0
+491,clofarabine,Multiple Myeloma,Terminated,0,1,2,0.3333333333333333,0.0
+492,clofarabine,adult acute myeloid leukemia in remission,Terminated,0,2,1,0.16666666666666666,0.0
+493,clofarabine,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,2,1,0.16666666666666666,0.0
+494,clofarabine,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+495,clofarabine,adult acute myeloid leukemia with t(15;17)(q22;q12),Terminated,0,2,1,0.16666666666666666,0.0
+496,clofarabine,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+497,clofarabine,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,2,1,0.16666666666666666,0.0
+498,clofarabine,recurrent adult acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+499,clofarabine,"Leukemia, Myelocytic, Acute",Withdrawn,1,1,1,0.5,0.0
+500,clofarabine,"Neoplasm, Residual",Terminated,0,1,2,0.3333333333333333,0.0
+501,clofarabine,"Histiocytosis, Langerhans-Cell",Withdrawn,0,0,3,0.5,0.0
+502,clofarabine,"Leukemia, Myelocytic, Acute",Terminated,1,1,1,0.5,0.0
+503,docosanol,Herpes Labialis,Approved,0,0,3,0.5,1.0
+504,pemetrexed,Malignant Pleural Mesothelioma,Approved,0,0,3,0.5,1.0
+505,pemetrexed,Non-Small Cell Lung Carcinoma,Approved,1,0,2,0.6666666666666666,1.0
+506,pemetrexed,Malignant neoplasm of lung,Terminated,0,2,1,0.16666666666666666,0.0
+507,pemetrexed,Lung Neoplasms,Terminated,0,0,3,0.5,0.0
+508,pemetrexed,Malignant neoplasm of lung,Terminated,0,2,1,0.16666666666666666,0.0
+509,pemetrexed,Esophageal Neoplasms,Terminated,0,0,3,0.5,0.0
+510,pemetrexed,Malignant neoplasm of lung,Terminated,0,2,1,0.16666666666666666,0.0
+511,pemetrexed,Malignant neoplasm of lung,Terminated,0,2,1,0.16666666666666666,0.0
+512,pemetrexed,Malignant neoplasm of lung,Terminated,0,2,1,0.16666666666666666,0.0
+513,pemetrexed,Primary central nervous system lymphoma,Withdrawn,0,0,3,0.5,0.0
+514,pemetrexed,Mesothelioma malignant advanced,Withdrawn,0,0,3,0.5,0.0
+515,pemetrexed,"Epithelioid mesothelioma, malignant",Withdrawn,0,0,3,0.5,0.0
+516,pemetrexed,Mesothelioma malignant recurrent,Withdrawn,0,0,3,0.5,0.0
+517,pemetrexed,Sarcomatoid Mesothelioma,Withdrawn,0,0,3,0.5,0.0
+518,pemetrexed,Colorectal cancer metastatic,Terminated,0,1,2,0.3333333333333333,0.0
+519,pemetrexed,Small cell carcinoma of lung,Terminated,0,0,3,0.5,0.0
+520,pemetrexed,Non-small cell lung cancer stage III,Withdrawn,0,1,2,0.3333333333333333,0.0
+521,pemetrexed,Non-small cell lung cancer recurrent,Withdrawn,0,0,3,0.5,0.0
+522,pemetrexed,Non-small cell lung cancer metastatic,Withdrawn,0,1,2,0.3333333333333333,0.0
+523,acamprosate,"Alcoholic Intoxication, Chronic",Approved,1,0,2,0.6666666666666666,1.0
+524,aprepitant,Chemotherapy-induced nausea and vomiting,Approved,3,0,0,1.0,1.0
+525,aprepitant,Nausea,Suspended,0,1,2,0.3333333333333333,0.0
+526,aprepitant,Vomiting,Suspended,0,1,2,0.3333333333333333,0.0
+527,galantamine,Alzheimer's Disease,Approved,1,0,2,0.6666666666666666,1.0
+528,galantamine,Traumatic Brain Injury,Terminated,0,0,3,0.5,0.0
+529,eplerenone,Hypertensive disease,Approved,3,0,0,1.0,1.0
+530,eplerenone,Ascites,Withdrawn,1,0,2,0.6666666666666666,0.0
+531,ibandronate,"Osteoporosis, Postmenopausal",Approved,0,0,3,0.5,1.0
+532,ibandronate,Hypercalcemia,Approved,0,0,3,0.5,1.0
+533,apomorphine,Parkinson Disease,Approved,1,0,2,0.6666666666666666,1.0
+534,nateglinide,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+535,esomeprazole,Erosive esophagitis,Approved,2,0,1,0.8333333333333334,1.0
+536,esomeprazole,Zollinger-Ellison syndrome,Approved,3,0,0,1.0,1.0
+537,esomeprazole,Peptic Esophagitis,Approved,2,0,1,0.8333333333333334,1.0
+538,esomeprazole,Gastroesophageal reflux disease,Approved,3,0,0,1.0,1.0
+539,esomeprazole,Peptic Ulcer,Approved,2,0,1,0.8333333333333334,1.0
+540,esomeprazole,Nausea,Terminated,0,1,2,0.3333333333333333,0.0
+541,esomeprazole,Laryngeal Diseases,Withdrawn,0,1,2,0.3333333333333333,0.0
+542,esomeprazole,Cystic Fibrosis,Terminated,0,1,2,0.3333333333333333,0.0
+543,epinastine,Itching of eye,Approved,1,0,2,0.6666666666666666,1.0
+544,epinastine,Allergic Conjunctivitis,Approved,3,0,0,1.0,1.0
+545,oxcarbazepine,Epilepsy characterized by intractable complex partial seizures,Approved,3,0,0,1.0,1.0
+546,oxcarbazepine,"Epilepsies, Partial",Approved,2,0,1,0.8333333333333334,1.0
+547,oxcarbazepine,Simple Partial Seizures,Approved,2,0,1,0.8333333333333334,1.0
+548,meloxicam,Rheumatoid Arthritis,Approved,1,0,2,0.6666666666666666,1.0
+549,meloxicam,Degenerative polyarthritis,Approved,0,0,3,0.5,1.0
+550,tadalafil,Pulmonary Hypertension,Approved,0,0,3,0.5,1.0
+551,tadalafil,Erectile dysfunction,Approved,1,0,2,0.6666666666666666,1.0
+552,tadalafil,Prostatic Hypertrophy,Approved,1,0,2,0.6666666666666666,1.0
+553,tadalafil,Priapism,Terminated,0,0,3,0.5,0.0
+554,tadalafil,Multiple Myeloma,Terminated,0,0,3,0.5,0.0
+555,mifepristone,Unspecified Abortion,Approved,0,0,3,0.5,1.0
+556,mifepristone,"Affective Disorders, Psychotic",Terminated,0,0,3,0.5,0.0
+557,mifepristone,Pituitary-dependent Cushing's disease,Withdrawn,0,0,3,0.5,0.0
+558,vardenafil,Erectile dysfunction,Approved,1,0,2,0.6666666666666666,1.0
+559,vardenafil,Cystic Fibrosis,Suspended,0,0,3,0.5,0.0
+560,conivaptan,Hyponatremia,Approved,0,0,3,0.5,1.0
+561,guaifenesin,Headache Disorders,Approved,2,0,1,0.8333333333333334,1.0
+562,guaifenesin,Fever,Approved,2,0,1,0.8333333333333334,1.0
+563,guaifenesin,Rhinitis,Approved,3,0,0,1.0,1.0
+564,guaifenesin,Common Cold,Approved,3,0,0,1.0,1.0
+565,guaifenesin,Influenza-like symptoms,Approved,2,0,1,0.8333333333333334,1.0
+566,guaifenesin,Allergic rhinitis (disorder),Approved,3,0,0,1.0,1.0
+567,guaifenesin,Nasal congestion (finding),Approved,3,0,0,1.0,1.0
+568,guaifenesin,Rhinorrhea,Approved,3,0,0,1.0,1.0
+569,guaifenesin,Sinus headache,Approved,0,0,3,0.5,1.0
+570,guaifenesin,Coughing,Approved,3,0,0,1.0,1.0
+571,emtricitabine,HIV Infections,Approved,3,0,0,1.0,1.0
+572,emtricitabine,HIV-1 infection,Withdrawn,0,1,2,0.3333333333333333,0.0
+573,bimatoprost,"Glaucoma, Open-Angle",Approved,3,0,0,1.0,1.0
+574,bimatoprost,Ocular Hypertension,Approved,3,0,0,1.0,1.0
+575,bimatoprost,Hypertrichosis of eyelid,Approved,0,0,3,0.5,1.0
+576,tinidazole,Acute amebiasis,Approved,1,0,2,0.6666666666666666,1.0
+577,tinidazole,Trichomonas Infections,Approved,1,0,2,0.6666666666666666,1.0
+578,tinidazole,Bacterial Vaginosis,Approved,1,0,2,0.6666666666666666,1.0
+579,tinidazole,"Liver Abscess, Amebic",Approved,1,0,2,0.6666666666666666,1.0
+580,tinidazole,Giardiasis,Approved,1,0,2,0.6666666666666666,1.0
+581,almotriptan,Migraine Disorders,Approved,3,0,0,1.0,1.0
+582,tipranavir,HIV Infections,Approved,3,0,0,1.0,1.0
+583,bromfenac,Pain,Approved,1,0,2,0.6666666666666666,1.0
+584,desloratadine,Chronic idiopathic urticaria,Approved,0,0,3,0.5,1.0
+585,desloratadine,"Rhinitis, Vasomotor",Approved,2,0,1,0.8333333333333334,1.0
+586,desloratadine,Hay fever,Approved,2,0,1,0.8333333333333334,1.0
+587,desloratadine,Sneezing,Approved,2,0,1,0.8333333333333334,1.0
+588,desloratadine,Allergic Conjunctivitis,Approved,3,0,0,1.0,1.0
+589,desloratadine,Common Cold,Approved,2,0,1,0.8333333333333334,1.0
+590,desloratadine,Nasal congestion (finding),Approved,2,0,1,0.8333333333333334,1.0
+591,desloratadine,Rhinorrhea,Approved,3,0,0,1.0,1.0
+592,desloratadine,Allergic rhinitis (disorder),Approved,3,0,0,1.0,1.0
+593,desloratadine,Allergic urticaria,Approved,0,0,3,0.5,1.0
+594,alosetron,Irritable bowel syndrome with diarrhea,Approved,0,0,3,0.5,1.0
+595,alosetron,Diarrhoea predominant irritable bowel syndrome,Approved,0,0,3,0.5,1.0
+596,ezetimibe,"Hyperlipidemia, Familial Combined",Approved,2,0,1,0.8333333333333334,1.0
+597,ezetimibe,Familial hypercholesterolemia - homozygous,Approved,0,0,3,0.5,1.0
+598,ezetimibe,Hypercholesterolemia,Approved,2,0,1,0.8333333333333334,1.0
+599,ezetimibe,Familial hypercholesterolemia - heterozygous,Approved,2,0,1,0.8333333333333334,1.0
+600,ezetimibe,Hyperlipidemia,Approved,2,0,1,0.8333333333333334,1.0
+601,ezetimibe,Sitosterolemia,Approved,0,0,3,0.5,1.0
+602,ezetimibe,"Lipid Metabolism, Inborn Errors",Terminated,0,0,3,0.5,0.0
+603,ezetimibe,Dyslipidemias,Terminated,0,0,3,0.5,0.0
+604,ezetimibe,Diabetes Mellitus,Terminated,0,0,3,0.5,0.0
+605,ezetimibe,Atherosclerosis,Terminated,0,0,3,0.5,0.0
+606,ezetimibe,Non-alcoholic Fatty Liver Disease,Terminated,0,0,3,0.5,0.0
+607,ramelteon,Initial insomnia,Approved,1,0,2,0.6666666666666666,1.0
+608,formoterol,Intrinsic asthma,Approved,0,0,3,0.5,1.0
+609,formoterol,Pulmonary Emphysema,Approved,2,0,1,0.8333333333333334,1.0
+610,formoterol,Allergic asthma,Approved,0,0,3,0.5,1.0
+611,formoterol,Chronic Obstructive Airway Disease,Terminated,0,0,3,0.5,0.0
+612,rivastigmine,Alzheimer's Disease,Approved,1,0,2,0.6666666666666666,1.0
+613,rivastigmine,Dementia associated with Parkinson's Disease,Approved,0,0,3,0.5,1.0
+614,frovatriptan,Migraine Disorders,Approved,3,0,0,1.0,1.0
+615,balsalazide,Ulcerative Colitis,Approved,2,0,1,0.8333333333333334,1.0
+616,gatifloxacin,Acute exacerbation of chronic bronchitis,Approved,3,0,0,1.0,1.0
+617,gatifloxacin,Moraxella catarrhalis pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+618,gatifloxacin,Bacterial conjunctivitis,Approved,2,0,1,0.8333333333333334,1.0
+619,gatifloxacin,Legionella pneumophila pneumonia,Approved,1,0,2,0.6666666666666666,1.0
+620,gatifloxacin,Escherichia coli urinary tract infection,Approved,1,0,2,0.6666666666666666,1.0
+621,gatifloxacin,Streptococcal pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+622,gatifloxacin,Chlamydial pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+623,gatifloxacin,Acute gonococcal urethritis,Approved,1,0,2,0.6666666666666666,1.0
+624,gatifloxacin,Haemophilus influenzae pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+625,gatifloxacin,Staphylococcal Pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+626,gatifloxacin,Gonorrhea of rectum,Approved,1,0,2,0.6666666666666666,1.0
+627,gatifloxacin,PYELONEPHRITIS E COLI,Approved,1,0,2,0.6666666666666666,1.0
+628,gatifloxacin,Staphylococcus aureus infection,Approved,2,0,1,0.8333333333333334,1.0
+629,gatifloxacin,Acute gonococcal cervicitis,Approved,1,0,2,0.6666666666666666,1.0
+630,gatifloxacin,"Pneumonia, Bacterial",Approved,2,0,1,0.8333333333333334,1.0
+631,gatifloxacin,Mycoplasma pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+632,gatifloxacin,Klebsiella cystitis,Approved,1,0,2,0.6666666666666666,1.0
+633,gatifloxacin,Haemophilus parainfluenzae pneumonia,Approved,1,0,2,0.6666666666666666,1.0
+634,gatifloxacin,Proteus urinary tract infection,Approved,1,0,2,0.6666666666666666,1.0
+635,lubiprostone,Chronic idiopathic constipation,Approved,0,0,3,0.5,1.0
+636,lubiprostone,Irritable bowel syndrome characterized by constipation,Approved,0,0,3,0.5,1.0
+637,melatonin,Sleep Initiation and Maintenance Disorders,Approved,0,0,3,0.5,1.0
+638,melatonin,Depressive disorder,Terminated,0,0,3,0.5,0.0
+639,melatonin,"ENCEPHALOPATHY, HYPOXIC-ISCHEMIC, NEWBORN",Withdrawn,0,0,3,0.5,0.0
+640,cefditoren,Streptococcal tonsillitis,Approved,0,0,3,0.5,1.0
+641,cefditoren,Streptococcus pyogenes infection,Approved,2,0,1,0.8333333333333334,1.0
+642,cefditoren,"Pneumonia, Bacterial",Approved,2,0,1,0.8333333333333334,1.0
+643,cefditoren,Acute exacerbation of chronic bronchitis,Approved,0,0,3,0.5,1.0
+644,cefditoren,Streptococcal pneumonia,Approved,0,0,3,0.5,1.0
+645,cefditoren,Haemophilus parainfluenzae pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+646,cefditoren,Staphylococcus aureus infection,Approved,1,0,2,0.6666666666666666,1.0
+647,cefditoren,Haemophilus influenzae pneumonia,Approved,3,0,0,1.0,1.0
+648,cefditoren,Moraxella catarrhalis pneumonia,Approved,0,0,3,0.5,1.0
+649,atazanavir,HIV Infections,Approved,3,0,0,1.0,1.0
+650,vigabatrin,Epilepsy characterized by intractable complex partial seizures,Approved,2,0,1,0.8333333333333334,1.0
+651,vigabatrin,West Syndrome,Approved,0,0,3,0.5,1.0
+652,vigabatrin,Cocaine Dependence,Terminated,0,0,3,0.5,0.0
+653,vigabatrin,"Alcoholic Intoxication, Chronic",Terminated,0,0,3,0.5,0.0
+654,vigabatrin,Cocaine Dependence,Terminated,0,0,3,0.5,0.0
+655,iloprost,Pulmonary arterial hypertension,Approved,1,0,2,0.6666666666666666,1.0
+656,iloprost,Systemic Scleroderma,Terminated,0,0,3,0.5,0.0
+657,iloprost,Chronic left ventricular failure,Withdrawn,0,0,3,0.5,0.0
+658,iloprost,Pulmonary Hypertension,Withdrawn,1,0,2,0.6666666666666666,0.0
+659,rosuvastatin,Familial hypercholesterolemia - heterozygous,Approved,3,0,0,1.0,1.0
+660,rosuvastatin,Cerebrovascular accident,Approved,2,0,1,0.8333333333333334,1.0
+661,rosuvastatin,"Hyperlipidemia, Familial Combined",Approved,3,0,0,1.0,1.0
+662,rosuvastatin,Familial hypercholesterolemia - homozygous,Approved,2,0,1,0.8333333333333334,1.0
+663,rosuvastatin,Arteriosclerosis,Approved,3,0,0,1.0,1.0
+664,rosuvastatin,Hypercholesterolemia,Approved,3,0,0,1.0,1.0
+665,rosuvastatin,Hypertriglyceridemia,Approved,2,0,1,0.8333333333333334,1.0
+666,rosuvastatin,Hyperlipoproteinemia Type III,Approved,2,0,1,0.8333333333333334,1.0
+667,rosuvastatin,Malignant tumor of colon,Terminated,0,0,3,0.5,0.0
+668,rosuvastatin,Precancerous Conditions,Terminated,0,0,3,0.5,0.0
+669,rosuvastatin,Influenza due to Influenza A virus subtype H1N1,Terminated,0,0,3,0.5,0.0
+670,dutasteride,Prostatic Hypertrophy,Approved,3,0,0,1.0,1.0
+671,dutasteride,Benign Prostatic Hyperplasia,Terminated,0,2,1,0.16666666666666666,0.0
+672,dutasteride,Adenocarcinoma of prostate,Withdrawn,0,0,3,0.5,0.0
+673,proguanil,"Malaria, Falciparum",Approved,0,0,3,0.5,1.0
+674,sertaconazole,Tinea Pedis,Approved,2,0,1,0.8333333333333334,1.0
+675,gemifloxacin,Pneumonia due to Klebsiella pneumoniae,Approved,0,0,3,0.5,1.0
+676,gemifloxacin,Acute bacterial bronchitis,Approved,0,0,3,0.5,1.0
+677,gemifloxacin,Mycoplasma pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+678,gemifloxacin,"Pneumonia, Bacterial",Approved,0,0,3,0.5,1.0
+679,gemifloxacin,Moraxella catarrhalis pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+680,gemifloxacin,Haemophilus influenzae pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+681,gemifloxacin,Chlamydial pneumonia,Approved,2,0,1,0.8333333333333334,1.0
+682,gemifloxacin,Acute exacerbation of chronic bronchitis,Approved,0,0,3,0.5,1.0
+683,gemifloxacin,Streptococcal pneumonia,Approved,0,0,3,0.5,1.0
+684,escitalopram,Major Depressive Disorder,Approved,1,0,2,0.6666666666666666,1.0
+685,escitalopram,Generalized Anxiety Disorder,Approved,1,0,2,0.6666666666666666,1.0
+686,zopiclone,Sleeplessness,Approved,3,0,0,1.0,1.0
+687,aripiprazole,Bipolar disorder in remission,Approved,1,0,2,0.6666666666666666,1.0
+688,aripiprazole,Autistic Disorder,Approved,1,0,2,0.6666666666666666,1.0
+689,aripiprazole,Mixed bipolar I disorder,Approved,1,0,2,0.6666666666666666,1.0
+690,aripiprazole,Schizophrenia,Approved,3,0,0,1.0,1.0
+691,aripiprazole,"Bipolar affective disorder, current episode manic",Approved,1,0,2,0.6666666666666666,1.0
+692,aripiprazole,Schizoaffective Disorder,Terminated,0,1,2,0.3333333333333333,0.0
+693,aripiprazole,Bipolar I disorder,Terminated,0,1,2,0.3333333333333333,0.0
+694,aripiprazole,Bipolar Disorder,Terminated,0,0,3,0.5,0.0
+695,aripiprazole,"Depressive episode, unspecified",Terminated,0,0,3,0.5,0.0
+696,mitiglinide,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+697,dasatinib,Philadelphia chromosome positive chronic myelogenous leukemia,Approved,0,0,3,0.5,1.0
+698,dasatinib,Philadelphia chromosome-positive acute lymphoblastic leukemia,Approved,0,0,3,0.5,1.0
+699,dasatinib,Blast Phase,Approved,0,0,3,0.5,1.0
+700,dasatinib,"Leukemia, Myeloid, Chronic-Phase",Approved,0,0,3,0.5,1.0
+701,dasatinib,"Leukemia, Myeloid, Accelerated Phase",Approved,0,0,3,0.5,1.0
+702,dasatinib,leukemia,Terminated,0,0,3,0.5,0.0
+703,dasatinib,Multiple Myeloma,Terminated,0,0,3,0.5,0.0
+704,dasatinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+705,dasatinib,Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+706,dasatinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+707,dasatinib,Glioblastoma,Terminated,0,0,3,0.5,0.0
+708,dasatinib,CNS disorder,Terminated,0,0,3,0.5,0.0
+709,dasatinib,Brain Diseases,Terminated,0,0,3,0.5,0.0
+710,dasatinib,Glioblastoma,Withdrawn,0,0,3,0.5,0.0
+711,dasatinib,CNS disorder,Withdrawn,0,0,3,0.5,0.0
+712,dasatinib,Brain Diseases,Withdrawn,0,0,3,0.5,0.0
+713,lisdexamfetamine,Attention deficit hyperactivity disorder,Approved,1,0,2,0.6666666666666666,1.0
+714,lisdexamfetamine,Binge eating disorder,Approved,0,0,3,0.5,1.0
+715,retapamulin,Impetigo,Approved,0,0,3,0.5,1.0
+716,retapamulin,Superficial bacterial infection of skin,Approved,0,0,3,0.5,1.0
+717,sitagliptin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,2,0,1,0.8333333333333334,1.0
+718,sitagliptin,Renal Insufficiency,Terminated,0,0,3,0.5,0.0
+719,sitagliptin,Cystic Fibrosis,Terminated,0,0,3,0.5,0.0
+720,decitabine,"Leukemia, Myelocytic, Acute",Approved,1,1,1,0.5,1.0
+721,decitabine,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,2,1,0.16666666666666666,0.0
+722,decitabine,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+723,decitabine,adult acute myeloid leukemia with t(15;17)(q22;q12),Terminated,0,2,1,0.16666666666666666,0.0
+724,decitabine,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+725,decitabine,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,2,1,0.16666666666666666,0.0
+726,decitabine,"Leukemia, Myeloid, Chronic, Atypical, BCR-ABL Negative",Terminated,0,0,3,0.5,0.0
+727,decitabine,de novo myelodysplastic syndromes,Terminated,0,1,2,0.3333333333333333,0.0
+728,decitabine,"Myelodysplastic/myeloproliferative neoplasm, unclassifiable",Terminated,0,1,2,0.3333333333333333,0.0
+729,decitabine,previously treated myelodysplastic syndromes,Terminated,0,1,2,0.3333333333333333,0.0
+730,decitabine,recurrent adult acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+731,decitabine,secondary acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+732,decitabine,secondary myelodysplastic syndromes,Terminated,0,1,2,0.3333333333333333,0.0
+733,decitabine,untreated adult acute myeloid leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+734,decitabine,"unspecified adult solid tumor, protocol specific",Terminated,0,2,1,0.16666666666666666,0.0
+735,decitabine,Acute Myeloid Leukemia Arising from Previous Myelodysplastic Syndrome,Terminated,0,2,1,0.16666666666666666,0.0
+736,decitabine,adult acute megakaryoblastic leukemia (M7),Terminated,0,1,2,0.3333333333333333,0.0
+737,decitabine,adult acute minimally differentiated myeloid leukemia (M0),Terminated,0,1,2,0.3333333333333333,0.0
+738,decitabine,adult acute monoblastic leukemia (M5a),Terminated,0,1,2,0.3333333333333333,0.0
+739,decitabine,adult acute monocytic leukemia (M5b),Terminated,0,1,2,0.3333333333333333,0.0
+740,decitabine,adult acute myeloblastic leukemia with maturation (M2),Terminated,0,1,2,0.3333333333333333,0.0
+741,decitabine,Adult Acute Myeloid Leukemia without Maturation,Terminated,0,1,2,0.3333333333333333,0.0
+742,decitabine,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,2,1,0.16666666666666666,0.0
+743,decitabine,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+744,decitabine,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,2,1,0.16666666666666666,0.0
+745,decitabine,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,2,1,0.16666666666666666,0.0
+746,decitabine,adult acute myelomonocytic leukemia (M4),Terminated,0,1,2,0.3333333333333333,0.0
+747,decitabine,adult erythroleukemia (M6a),Terminated,0,1,2,0.3333333333333333,0.0
+748,decitabine,adult pure erythroid leukemia (M6b),Terminated,0,1,2,0.3333333333333333,0.0
+749,decitabine,secondary acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+750,decitabine,untreated adult acute myeloid leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+751,posaconazole,Aspergillosis,Approved,1,0,2,0.6666666666666666,1.0
+752,posaconazole,Fusariosis,Approved,1,0,2,0.6666666666666666,1.0
+753,posaconazole,Chromoblastomycosis,Approved,0,0,3,0.5,1.0
+754,posaconazole,Mycetoma,Approved,0,0,3,0.5,1.0
+755,posaconazole,Coccidioidomycosis,Approved,0,0,3,0.5,1.0
+756,posaconazole,Candidiasis,Approved,0,0,3,0.5,1.0
+757,darunavir,HIV Infections,Approved,3,0,0,1.0,1.0
+758,telbivudine,"Hepatitis B, Chronic",Approved,1,0,2,0.6666666666666666,1.0
+759,paliperidone,Schizoaffective Disorder,Approved,0,1,2,0.3333333333333333,1.0
+760,paliperidone,Schizophrenia,Approved,2,0,1,0.8333333333333334,1.0
+761,paliperidone,Psychotic Disorders,Approved,0,0,3,0.5,1.0
+762,sunitinib,Gastrointestinal Stromal Tumors,Approved,0,0,3,0.5,1.0
+763,sunitinib,Renal Cell Carcinoma,Approved,0,0,3,0.5,1.0
+764,sunitinib,Acute Undifferentiated Leukemia,Terminated,0,0,3,0.5,0.0
+765,sunitinib,adult acute lymphoblastic leukemia in remission,Terminated,0,0,3,0.5,0.0
+766,sunitinib,adult acute myeloid leukemia in remission,Terminated,0,0,3,0.5,0.0
+767,sunitinib,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,0,3,0.5,0.0
+768,sunitinib,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,0,3,0.5,0.0
+769,sunitinib,adult acute myeloid leukemia with t(15;17)(q22;q12),Terminated,0,0,3,0.5,0.0
+770,sunitinib,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,0,3,0.5,0.0
+771,sunitinib,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,0,3,0.5,0.0
+772,sunitinib,"Leukemia, Myeloid, Chronic, Atypical, BCR-ABL Negative",Terminated,0,0,3,0.5,0.0
+773,sunitinib,"Leukemia, Myelomonocytic, Chronic",Terminated,0,0,3,0.5,0.0
+774,sunitinib,"Leukemia, Mast-Cell",Terminated,0,0,3,0.5,0.0
+775,sunitinib,meningeal chronic myelogenous leukemia,Terminated,0,0,3,0.5,0.0
+776,sunitinib,Primary Myelofibrosis,Terminated,0,0,3,0.5,0.0
+777,sunitinib,"progressive hairy cell leukemia, initial treatment",Terminated,0,0,3,0.5,0.0
+778,sunitinib,Prolymphocytic Leukemia,Terminated,0,0,3,0.5,0.0
+779,sunitinib,recurrent adult acute lymphoblastic leukemia,Terminated,0,0,3,0.5,0.0
+780,sunitinib,recurrent adult acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+781,sunitinib,Chronic lymphocytic leukaemia refractory,Terminated,0,0,3,0.5,0.0
+782,sunitinib,Hairy cell leukaemia recurrent,Terminated,0,0,3,0.5,0.0
+783,sunitinib,chronic myelogenous leukemia in relapse,Terminated,0,0,3,0.5,0.0
+784,sunitinib,secondary acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+785,sunitinib,Chronic lymphocytic leukaemia stage 1,Terminated,0,0,3,0.5,0.0
+786,sunitinib,Chronic lymphocytic leukaemia stage 2,Terminated,0,0,3,0.5,0.0
+787,sunitinib,Chronic lymphocytic leukaemia stage 3,Terminated,0,0,3,0.5,0.0
+788,sunitinib,Chronic lymphocytic leukaemia stage 4,Terminated,0,0,3,0.5,0.0
+789,sunitinib,T-Cell Large Granular Lymphocyte Leukemia,Terminated,0,0,3,0.5,0.0
+790,sunitinib,untreated adult acute lymphoblastic leukemia,Terminated,0,0,3,0.5,0.0
+791,sunitinib,untreated adult acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+792,sunitinib,untreated hairy cell leukemia,Terminated,0,0,3,0.5,0.0
+793,sunitinib,Non-Small Cell Lung Carcinoma,Terminated,0,0,3,0.5,0.0
+794,sunitinib,Pancreatic Endocrine Carcinoma,Terminated,0,0,3,0.5,0.0
+795,sunitinib,Pancreatic carcinoma,Terminated,0,0,3,0.5,0.0
+796,sunitinib,Recurrent disease,Terminated,0,0,3,0.5,0.0
+797,sunitinib,Kaposi's sarcoma classical type,Withdrawn,0,0,3,0.5,0.0
+798,sunitinib,Adenocarcinoma of prostate,Terminated,0,0,3,0.5,0.0
+799,sunitinib,Prostate cancer recurrent,Terminated,0,0,3,0.5,0.0
+800,sunitinib,metastatic squamous neck cancer with occult primary squamous cell carcinoma,Terminated,0,0,3,0.5,0.0
+801,sunitinib,recurrent metastatic squamous neck cancer with occult primary,Terminated,0,0,3,0.5,0.0
+802,sunitinib,Recurrent Salivary Gland Cancer,Terminated,0,0,3,0.5,0.0
+803,sunitinib,Squamous cell carcinoma of the hypopharynx recurrent,Terminated,0,0,3,0.5,0.0
+804,sunitinib,Laryngeal squamous cell carcinoma recurrent,Terminated,0,0,3,0.5,0.0
+805,sunitinib,recurrent squamous cell carcinoma of the lip and oral cavity,Terminated,0,0,3,0.5,0.0
+806,sunitinib,Nasopharyngeal squamous cell carcinoma recurrent,Terminated,0,0,3,0.5,0.0
+807,sunitinib,Oropharyngeal squamous cell carcinoma recurrent,Terminated,0,0,3,0.5,0.0
+808,sunitinib,recurrent squamous cell carcinoma of the paranasal sinus and nasal cavity,Terminated,0,0,3,0.5,0.0
+809,sunitinib,Laryngeal verrucous carcinoma recurrent,Terminated,0,0,3,0.5,0.0
+810,sunitinib,Verrucous carcinoma of the oral cavity recurrent,Terminated,0,0,3,0.5,0.0
+811,sunitinib,squamous cell carcinoma of salivary gland,Terminated,0,0,3,0.5,0.0
+812,sunitinib,Salivary gland cancer stage III,Terminated,0,0,3,0.5,0.0
+813,sunitinib,Squamous cell carcinoma of the hypopharynx stage III,Terminated,0,0,3,0.5,0.0
+814,sunitinib,Laryngeal squamous cell carcinoma stage III,Terminated,0,0,3,0.5,0.0
+815,sunitinib,stage III squamous cell carcinoma of the lip and oral cavity,Terminated,0,0,3,0.5,0.0
+816,sunitinib,Nasopharyngeal squamous cell carcinoma stage III,Terminated,0,0,3,0.5,0.0
+817,sunitinib,Oropharyngeal squamous cell carcinoma stage III,Terminated,0,0,3,0.5,0.0
+818,sunitinib,stage III squamous cell carcinoma of the paranasal sinus and nasal cavity,Terminated,0,0,3,0.5,0.0
+819,sunitinib,Laryngeal verrucous carcinoma stage III,Terminated,0,0,3,0.5,0.0
+820,sunitinib,Verrucous carcinoma of the oral cavity stage III,Terminated,0,0,3,0.5,0.0
+821,sunitinib,Salivary gland cancer stage IV,Terminated,0,0,3,0.5,0.0
+822,sunitinib,Squamous cell carcinoma of the hypopharynx stage IV,Terminated,0,0,3,0.5,0.0
+823,sunitinib,Laryngeal squamous cell carcinoma stage IV,Terminated,0,0,3,0.5,0.0
+824,sunitinib,stage IV squamous cell carcinoma of the lip and oral cavity,Terminated,0,0,3,0.5,0.0
+825,sunitinib,Nasopharyngeal squamous cell carcinoma stage IV,Terminated,0,0,3,0.5,0.0
+826,sunitinib,stage IV squamous cell carcinoma of the oropharynx,Terminated,0,0,3,0.5,0.0
+827,sunitinib,stage IV squamous cell carcinoma of the paranasal sinus and nasal cavity,Terminated,0,0,3,0.5,0.0
+828,sunitinib,Laryngeal verrucous carcinoma stage IV,Terminated,0,0,3,0.5,0.0
+829,sunitinib,Verrucous carcinoma of the oral cavity stage IV,Terminated,0,0,3,0.5,0.0
+830,sunitinib,untreated metastatic squamous neck cancer with occult primary,Terminated,0,0,3,0.5,0.0
+831,sunitinib,cognitive/functional effects,Terminated,0,0,3,0.5,0.0
+832,sunitinib,"unspecified adult solid tumor, protocol specific",Terminated,0,0,3,0.5,0.0
+833,sunitinib,Malignant neoplasm of lung,Terminated,0,0,3,0.5,0.0
+834,sunitinib,Neuroendocrine Tumors,Terminated,0,0,3,0.5,0.0
+835,sunitinib,advanced disease,Terminated,0,0,3,0.5,0.0
+836,sunitinib,Plexiform Neurofibroma,Suspended,0,0,3,0.5,0.0
+837,arformoterol,Chronic Obstructive Airway Disease,Approved,0,0,3,0.5,1.0
+838,arformoterol,"Bronchitis, Chronic",Approved,0,0,3,0.5,1.0
+839,arformoterol,Pulmonary Emphysema,Approved,0,0,3,0.5,1.0
+840,nelarabine,Precursor T-Cell Lymphoblastic Leukemia-Lymphoma,Approved,0,0,3,0.5,1.0
+841,nelarabine,Precursor T-cell lymphoblastic lymphoma,Approved,0,0,3,0.5,1.0
+842,lumiracoxib,Degenerative polyarthritis,Approved,1,0,2,0.6666666666666666,1.0
+843,lumiracoxib,"Kidney Failure, Chronic",Terminated,0,0,3,0.5,0.0
+844,fosamprenavir,HIV Infections,Approved,3,0,0,1.0,1.0
+845,rasagiline,Parkinson Disease,Approved,3,0,0,1.0,1.0
+846,rasagiline,Progressive supranuclear palsy,Terminated,0,0,3,0.5,0.0
+847,neostigmine,Myasthenia Gravis,Approved,0,0,3,0.5,1.0
+848,neostigmine,Urinary Retention,Approved,0,0,3,0.5,1.0
+849,tiotropium,"Bronchitis, Chronic",Approved,0,0,3,0.5,1.0
+850,tiotropium,Pulmonary Emphysema,Approved,0,0,3,0.5,1.0
+851,tiotropium,Asthma,Approved,0,0,3,0.5,1.0
+852,tiotropium,Chronic Obstructive Airway Disease,Withdrawn,0,0,3,0.5,0.0
+853,pranlukast,Allergic rhinitis (disorder),Approved,0,0,3,0.5,1.0
+854,pranlukast,Asthma,Approved,3,0,0,1.0,1.0
+855,phenazopyridine,Dysuria,Approved,1,0,2,0.6666666666666666,1.0
+856,solifenacin,Bladder muscle dysfunction - overactive,Approved,0,0,3,0.5,1.0
+857,solifenacin,Urgency of micturition,Approved,1,0,2,0.6666666666666666,1.0
+858,solifenacin,Increased frequency of micturition,Approved,1,0,2,0.6666666666666666,1.0
+859,solifenacin,Urge Incontinence,Approved,0,0,3,0.5,1.0
+860,lopinavir,HIV Infections,Approved,0,0,3,0.5,1.0
+861,lopinavir,Human immunodeficiency virus I infection,Terminated,0,0,3,0.5,0.0
+862,deferasirox,Chronic iron overload,Approved,1,0,2,0.6666666666666666,1.0
+863,deferasirox,beta Thalassemia,Approved,0,0,3,0.5,1.0
+864,deferasirox,Iron Overload,Withdrawn,0,0,3,0.5,0.0
+865,deferasirox,Iron Metabolism Disorders,Withdrawn,0,0,3,0.5,0.0
+866,roflumilast,Severe chronic obstructive pulmonary disease,Approved,0,0,3,0.5,1.0
+867,vorinostat,"Lymphoma, T-Cell, Cutaneous",Approved,0,0,3,0.5,1.0
+868,vorinostat,Multiple Myeloma,Terminated,0,0,3,0.5,0.0
+869,vorinostat,adult acute megakaryoblastic leukemia (M7),Terminated,0,0,3,0.5,0.0
+870,vorinostat,adult acute minimally differentiated myeloid leukemia (M0),Terminated,0,0,3,0.5,0.0
+871,vorinostat,adult acute monoblastic leukemia (M5a),Terminated,0,0,3,0.5,0.0
+872,vorinostat,adult acute monocytic leukemia (M5b),Terminated,0,0,3,0.5,0.0
+873,vorinostat,adult acute myeloblastic leukemia with maturation (M2),Terminated,0,0,3,0.5,0.0
+874,vorinostat,Adult Acute Myeloid Leukemia without Maturation,Terminated,0,0,3,0.5,0.0
+875,vorinostat,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,0,3,0.5,0.0
+876,vorinostat,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,0,3,0.5,0.0
+877,vorinostat,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,0,3,0.5,0.0
+878,vorinostat,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,0,3,0.5,0.0
+879,vorinostat,adult acute myelomonocytic leukemia (M4),Terminated,0,0,3,0.5,0.0
+880,vorinostat,adult erythroleukemia (M6a),Terminated,0,0,3,0.5,0.0
+881,vorinostat,adult pure erythroid leukemia (M6b),Terminated,0,0,3,0.5,0.0
+882,vorinostat,untreated adult acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+883,vorinostat,Multiple Myeloma,Terminated,0,0,3,0.5,0.0
+884,vorinostat,ovarian neoplasm,Terminated,0,1,2,0.3333333333333333,0.0
+885,vorinostat,Neoplasm Metastasis,Terminated,0,0,3,0.5,0.0
+886,vorinostat,adult anaplastic astrocytoma,Terminated,0,0,3,0.5,0.0
+887,vorinostat,adult anaplastic oligodendroglioma,Terminated,0,0,3,0.5,0.0
+888,vorinostat,adult giant cell glioblastoma,Terminated,0,0,3,0.5,0.0
+889,vorinostat,adult glioblastoma,Terminated,0,0,3,0.5,0.0
+890,vorinostat,adult gliosarcoma,Terminated,0,0,3,0.5,0.0
+891,vorinostat,Adult Mixed Glioma,Terminated,0,0,3,0.5,0.0
+892,vorinostat,"Malignant lymphoma, lymphocytic, intermediate differentiation, diffuse",Terminated,0,0,3,0.5,0.0
+893,vorinostat,Multiple Myeloma,Withdrawn,0,0,3,0.5,0.0
+894,vorinostat,Multiple Myeloma,Withdrawn,0,0,3,0.5,0.0
+895,ixabepilone,Breast Carcinoma,Approved,2,0,1,0.8333333333333334,1.0
+896,ixabepilone,Carcinoma breast stage IV,Approved,1,0,2,0.6666666666666666,1.0
+897,dronedarone,Paroxysmal atrial fibrillation,Approved,1,0,2,0.6666666666666666,1.0
+898,nebivolol,Hypertensive disease,Approved,2,0,1,0.8333333333333334,1.0
+899,homoharringtonine,"Myeloid Leukemia, Chronic",Approved,0,0,3,0.5,1.0
+900,homoharringtonine,leukemia,Withdrawn,0,0,3,0.5,0.0
+901,homoharringtonine,Acute Myeloid Leukemia Arising from Previous Myelodysplastic Syndrome,Terminated,0,0,3,0.5,0.0
+902,homoharringtonine,adult acute megakaryoblastic leukemia (M7),Terminated,0,0,3,0.5,0.0
+903,homoharringtonine,adult acute minimally differentiated myeloid leukemia (M0),Terminated,0,0,3,0.5,0.0
+904,homoharringtonine,adult acute monoblastic leukemia (M5a),Terminated,0,0,3,0.5,0.0
+905,homoharringtonine,adult acute monocytic leukemia (M5b),Terminated,0,0,3,0.5,0.0
+906,homoharringtonine,adult acute myeloblastic leukemia with maturation (M2),Terminated,0,0,3,0.5,0.0
+907,homoharringtonine,Adult Acute Myeloid Leukemia without Maturation,Terminated,0,0,3,0.5,0.0
+908,homoharringtonine,adult acute myeloid leukemia with 11q23 (MLL) abnormalities,Terminated,0,0,3,0.5,0.0
+909,homoharringtonine,adult acute myeloid leukemia with inv(16)(p13;q22),Terminated,0,0,3,0.5,0.0
+910,homoharringtonine,adult acute myeloid leukemia with t(16;16)(p13;q22),Terminated,0,0,3,0.5,0.0
+911,homoharringtonine,adult acute myeloid leukemia with t(8;21)(q22;q22),Terminated,0,0,3,0.5,0.0
+912,homoharringtonine,adult acute myelomonocytic leukemia (M4),Terminated,0,0,3,0.5,0.0
+913,homoharringtonine,adult erythroleukemia (M6a),Terminated,0,0,3,0.5,0.0
+914,homoharringtonine,adult pure erythroid leukemia (M6b),Terminated,0,0,3,0.5,0.0
+915,homoharringtonine,secondary acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+916,homoharringtonine,untreated adult acute myeloid leukemia,Terminated,0,0,3,0.5,0.0
+917,nilotinib,"Leukemia, Myeloid, Accelerated Phase",Approved,0,0,3,0.5,1.0
+918,nilotinib,Philadelphia chromosome positive chronic myelogenous leukemia,Approved,0,0,3,0.5,1.0
+919,nilotinib,"Leukemia, Myeloid, Chronic-Phase",Approved,0,0,3,0.5,1.0
+920,vildagliptin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+921,bepotastine,Allergic Conjunctivitis,Approved,0,0,3,0.5,1.0
+922,milnacipran,Fibromyalgia,Approved,0,0,3,0.5,1.0
+923,milnacipran,Primary fibromyalgia syndrome,Terminated,0,0,3,0.5,0.0
+924,milnacipran,"Fibromyalgia, Primary",Terminated,0,0,3,0.5,0.0
+925,milnacipran,Irritable Bowel Syndrome,Terminated,0,0,3,0.5,0.0
+926,clevidipine,Hypertensive disease,Approved,2,0,1,0.8333333333333334,1.0
+927,ospemifene,Dyspareunia,Approved,0,0,3,0.5,1.0
+928,tamibarotene,Acute Promyelocytic Leukemia,Approved,0,0,3,0.5,1.0
+929,iloperidone,Schizophrenia,Approved,3,0,0,1.0,1.0
+930,lofexidine,Opioid withdrawal,Approved,1,0,2,0.6666666666666666,1.0
+931,rotigotine,Restless Legs Syndrome,Approved,1,0,2,0.6666666666666666,1.0
+932,rotigotine,Parkinson Disease,Approved,2,0,1,0.8333333333333334,1.0
+933,vandetanib,Malignant epithelial neoplasm of thyroid,Approved,0,0,3,0.5,1.0
+934,abiraterone,Malignant neoplasm of prostate,Approved,0,0,3,0.5,1.0
+935,rimonabant,Obesity,Approved,3,0,0,1.0,1.0
+936,rimonabant,Microalbuminuria,Terminated,0,0,3,0.5,0.0
+937,rimonabant,Dyslipidemias,Terminated,0,0,3,0.5,0.0
+938,rufinamide,Lennox-Gastaut syndrome,Approved,2,0,1,0.8333333333333334,1.0
+939,alogliptin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+940,tapentadol,Pain,Approved,2,0,1,0.8333333333333334,1.0
+941,silodosin,Prostatic Hypertrophy,Approved,2,0,1,0.8333333333333334,1.0
+942,prasugrel,Acute Coronary Syndrome,Approved,2,0,1,0.8333333333333334,1.0
+943,prasugrel,ST segment elevation myocardial infarction,Terminated,0,0,3,0.5,0.0
+944,eltrombopag,Chronic idiopathic thrombocytopenic purpura,Approved,0,0,3,0.5,1.0
+945,tolvaptan,Inappropriate ADH Syndrome,Approved,0,0,3,0.5,1.0
+946,tolvaptan,Hyponatremia,Approved,0,0,3,0.5,1.0
+947,tolvaptan,"Polycystic Kidney, Autosomal Dominant",Approved,0,0,3,0.5,1.0
+948,asenapine,Schizophrenia,Approved,2,1,0,0.6666666666666666,1.0
+949,asenapine,Mixed bipolar I disorder,Approved,0,0,3,0.5,1.0
+950,asenapine,"Bipolar affective disorder, current episode manic",Approved,0,0,3,0.5,1.0
+951,asenapine,Stuttering,Suspended,0,0,3,0.5,0.0
+952,avanafil,Erectile dysfunction,Approved,1,0,2,0.6666666666666666,1.0
+953,droxidopa,Parkinson Disease,Approved,2,0,1,0.8333333333333334,1.0
+954,droxidopa,"orthostatic; hypotension, neurogenic",Terminated,0,1,2,0.3333333333333333,0.0
+955,droxidopa,Chronic Fatigue Syndrome,Terminated,0,1,2,0.3333333333333333,0.0
+956,droxidopa,"Gait Disorders, Neurologic",Withdrawn,0,1,2,0.3333333333333333,0.0
+957,droxidopa,Pure Autonomic Failure,Terminated,0,1,2,0.3333333333333333,0.0
+958,droxidopa,dopamine beta hydroxylase deficiency,Terminated,0,1,2,0.3333333333333333,0.0
+959,udenafil,Erectile dysfunction,Approved,1,0,2,0.6666666666666666,1.0
+960,udenafil,"Heart Failure, Systolic",Terminated,0,0,3,0.5,0.0
+961,sitaxentan,Pulmonary arterial hypertension,Approved,0,0,3,0.5,1.0
+962,alvimopan,Postoperative ileus,Approved,0,0,3,0.5,1.0
+963,saxagliptin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+964,pazopanib,Renal Cell Carcinoma,Approved,0,0,3,0.5,1.0
+965,pazopanib,Sarcoma,Approved,0,0,3,0.5,1.0
+966,agomelatine,Major Depressive Disorder,Approved,1,0,2,0.6666666666666666,1.0
+967,apixaban,Arterial embolus and thrombosis,Approved,0,0,3,0.5,1.0
+968,bosutinib,"Leukemia, Myeloid, Accelerated Phase",Approved,0,0,3,0.5,1.0
+969,bosutinib,Blast Phase,Approved,0,0,3,0.5,1.0
+970,dalfampridine,Multiple Sclerosis,Approved,0,0,3,0.5,1.0
+971,vilazodone,Major Depressive Disorder,Approved,1,0,2,0.6666666666666666,1.0
+972,desvenlafaxine,Major Depressive Disorder,Approved,2,0,1,0.8333333333333334,1.0
+973,dexmethylphenidate,Attention deficit hyperactivity disorder,Approved,1,0,2,0.6666666666666666,1.0
+974,fesoterodine,Increased frequency of micturition,Approved,2,0,1,0.8333333333333334,1.0
+975,fesoterodine,Bladder muscle dysfunction - overactive,Approved,1,0,2,0.6666666666666666,1.0
+976,fesoterodine,Urge Incontinence,Approved,1,0,2,0.6666666666666666,1.0
+977,fesoterodine,Urgency of micturition,Approved,2,0,1,0.8333333333333334,1.0
+978,lumefantrine,"Malaria, Falciparum",Approved,0,0,3,0.5,1.0
+979,fosaprepitant,Chemotherapy-induced nausea and vomiting,Approved,0,0,3,0.5,1.0
+980,fosaprepitant,Nausea,Suspended,0,0,3,0.5,0.0
+981,fosaprepitant,Vomiting,Suspended,0,0,3,0.5,0.0
+982,alcaftadine,Allergic Conjunctivitis,Approved,3,0,0,1.0,1.0
+983,besifloxacin,Bacterial conjunctivitis,Approved,3,0,0,1.0,1.0
+984,methylnaltrexone,Drug-induced constipation,Approved,0,0,3,0.5,1.0
+985,methylnaltrexone,Gastroparesis,Terminated,0,0,3,0.5,0.0
+986,plerixafor,Multiple Myeloma,Approved,1,0,2,0.6666666666666666,1.0
+987,polidocanol,Varicosity,Approved,0,0,3,0.5,1.0
+988,pralatrexate,Peripheral T-Cell Lymphoma,Approved,0,1,2,0.3333333333333333,1.0
+989,lurasidone,Schizophrenia,Approved,2,0,1,0.8333333333333334,1.0
+990,lurasidone,"Depression, Bipolar",Approved,0,0,3,0.5,1.0
+991,ticagrelor,Acute Coronary Syndrome,Approved,1,0,2,0.6666666666666666,1.0
+992,ticagrelor,Peripheral Vascular Diseases,Approved,0,0,3,0.5,1.0
+993,ticagrelor,ST segment elevation myocardial infarction,Terminated,0,0,3,0.5,0.0
+994,tafluprost,Ocular Hypertension,Approved,3,0,0,1.0,1.0
+995,tafluprost,"Glaucoma, Open-Angle",Approved,3,0,0,1.0,1.0
+996,ivacaftor,Pulmonary Cystic Fibrosis,Approved,0,0,3,0.5,1.0
+997,deferiprone,beta Thalassemia,Approved,0,0,3,0.5,1.0
+998,deferiprone,Iron Overload,Approved,0,0,3,0.5,1.0
+999,vismodegib,Basal cell carcinoma,Approved,0,0,3,0.5,1.0
+1000,pitavastatin,"Hyperlipidemia, Familial Combined",Approved,3,0,0,1.0,1.0
+1001,pitavastatin,Hypercholesterolemia,Approved,3,0,0,1.0,1.0
+1002,rilpivirine,HIV Infections,Approved,3,0,0,1.0,1.0
+1003,fingolimod,"Multiple Sclerosis, Relapsing-Remitting",Approved,0,0,3,0.5,1.0
+1004,boceprevir,"Hepatitis C, Chronic",Approved,0,0,3,0.5,1.0
+1005,ruxolitinib,Myeloproliferative disease,Approved,0,0,3,0.5,1.0
+1006,ruxolitinib,Myelofibrosis,Approved,0,0,3,0.5,1.0
+1007,linagliptin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+1008,linagliptin,Vascular inflammations,Terminated,0,0,3,0.5,0.0
+1009,carfilzomib,Multiple Myeloma,Approved,0,1,2,0.3333333333333333,1.0
+1010,mirabegron,Bladder muscle dysfunction - overactive,Approved,2,0,1,0.8333333333333334,1.0
+1011,regorafenib,Metastasis from malignant tumor of colon,Approved,0,0,3,0.5,1.0
+1012,regorafenib,Gastrointestinal Stromal Tumors,Approved,0,0,3,0.5,1.0
+1013,aclidinium,Chronic Obstructive Airway Disease,Approved,0,0,3,0.5,1.0
+1014,enzalutamide,Malignant neoplasm of prostate,Approved,0,0,3,0.5,1.0
+1015,ponatinib,"Myeloid Leukemia, Chronic",Approved,0,0,3,0.5,1.0
+1016,ponatinib,Philadelphia chromosome-positive acute lymphoblastic leukemia,Approved,0,0,3,0.5,1.0
+1017,ponatinib,Thyroid Neoplasm,Terminated,0,0,3,0.5,0.0
+1018,bedaquiline,"Tuberculosis, Pulmonary",Approved,3,0,0,1.0,1.0
+1019,bedaquiline,"Tuberculosis, Drug-Resistant",Approved,0,0,3,0.5,1.0
+1020,canagliflozin,"Diabetes Mellitus, Non-Insulin-Dependent",Approved,3,0,0,1.0,1.0
+1021,pomalidomide,Multiple Myeloma,Approved,1,0,2,0.6666666666666666,1.0
+1022,trametinib,"Malignant melanoma, metastatic",Approved,0,0,3,0.5,1.0
+1023,trametinib,recurrent adult acute myeloid leukemia,Suspended,0,0,3,0.5,0.0
+1024,trametinib,untreated adult acute myeloid leukemia,Suspended,0,0,3,0.5,0.0
+1025,trametinib,malignant neoplasm of large intestine stage IIIc,Suspended,0,0,3,0.5,0.0
+1026,trametinib,Melanoma recurrent,Suspended,0,0,3,0.5,0.0
+1027,trametinib,Stage IIIC Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1028,trametinib,Colorectal cancer recurrent,Suspended,0,0,3,0.5,0.0
+1029,trametinib,Pancreatic carcinoma stage III,Suspended,0,0,3,0.5,0.0
+1030,trametinib,Stage IIIA Colorectal Cancer,Suspended,0,0,3,0.5,0.0
+1031,trametinib,Stage IIIB Colorectal Cancer,Suspended,0,0,3,0.5,0.0
+1032,trametinib,Stage IIIC Colorectal Cancer,Suspended,0,0,3,0.5,0.0
+1033,trametinib,Stage IV Pancreatic Cancer,Suspended,0,0,3,0.5,0.0
+1034,trametinib,Stage IVA Colorectal Cancer,Suspended,0,0,3,0.5,0.0
+1035,trametinib,Stage IVB Colorectal Cancer,Suspended,0,0,3,0.5,0.0
+1036,trametinib,hepatic complications,Suspended,0,0,3,0.5,0.0
+1037,trametinib,Papillary serous cystadenocarcinoma,Suspended,0,0,3,0.5,0.0
+1038,trametinib,Ovarian Serous Adenocarcinoma,Suspended,0,0,3,0.5,0.0
+1039,trametinib,Primary Peritoneal Serous Adenocarcinoma,Suspended,0,0,3,0.5,0.0
+1040,trametinib,Recurrent Primary Peritoneal Carcinoma,Suspended,0,0,3,0.5,0.0
+1041,trametinib,Poorly Differentiated Thyroid Carcinoma,Suspended,0,0,3,0.5,0.0
+1042,trametinib,Stage IVA Thyroid Gland Follicular Carcinoma,Suspended,0,0,3,0.5,0.0
+1043,trametinib,Stage IVA Thyroid Gland Papillary Carcinoma,Suspended,0,0,3,0.5,0.0
+1044,trametinib,Stage IVB Thyroid Gland Follicular Carcinoma,Suspended,0,0,3,0.5,0.0
+1045,trametinib,Stage IVB Thyroid Gland Papillary Carcinoma,Suspended,0,0,3,0.5,0.0
+1046,trametinib,Stage IVC Thyroid Gland Follicular Carcinoma,Suspended,0,0,3,0.5,0.0
+1047,trametinib,Stage IVC Thyroid Gland Papillary Carcinoma,Suspended,0,0,3,0.5,0.0
+1048,trametinib,Melanoma recurrent,Suspended,0,0,3,0.5,0.0
+1049,trametinib,Stage IIIA Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1050,trametinib,Stage IIIB Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1051,trametinib,Stage IIIC Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1052,dabrafenib,"Malignant melanoma, metastatic",Approved,0,0,3,0.5,1.0
+1053,dabrafenib,malignant neoplasm of large intestine stage IIIc,Suspended,0,0,3,0.5,0.0
+1054,dabrafenib,Melanoma recurrent,Suspended,0,0,3,0.5,0.0
+1055,dabrafenib,Stage IIIC Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1056,dabrafenib,Melanoma recurrent,Suspended,0,0,3,0.5,0.0
+1057,dabrafenib,Stage IIIA Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1058,dabrafenib,Stage IIIB Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1059,dabrafenib,Stage IIIC Skin Melanoma,Suspended,0,0,3,0.5,0.0
+1060,afatinib,Epidermal growth factor receptor positive non-small cell lung cancer,Approved,0,0,3,0.5,1.0
+1061,levomilnacipran,Major Depressive Disorder,Approved,0,0,3,0.5,1.0
+1062,aliskiren,Hypertensive disease,Approved,3,0,0,1.0,1.0
+1063,memantine,Schizophrenia,Terminated,0,1,2,0.3333333333333333,0.0
+1064,memantine,Chronic schizophrenia,Terminated,0,0,3,0.5,0.0
+1065,memantine,Glioblastoma,Terminated,0,0,3,0.5,0.0
+1066,memantine,Asperger Syndrome,Terminated,0,0,3,0.5,0.0
+1067,fulvestrant,Malignant epithelial neoplasm of female breast,Terminated,1,0,2,0.6666666666666666,0.0
+1068,azacitidine,leukemia,Terminated,0,3,0,0.0,0.0
+1069,azacitidine,Chronic myeloproliferative disorder,Terminated,0,1,2,0.3333333333333333,0.0
+1070,azacitidine,Myelofibrosis due to another disorder,Terminated,0,1,2,0.3333333333333333,0.0
+1071,azacitidine,Multiple Myeloma,Terminated,0,1,2,0.3333333333333333,0.0
+1072,azacitidine,leukemia,Terminated,0,3,0,0.0,0.0
+1073,azacitidine,leukemia,Terminated,0,3,0,0.0,0.0
+1074,azacitidine,"Leukemia, Myelocytic, Acute",Withdrawn,1,1,1,0.5,0.0
+1075,azacitidine,adult acute basophilic leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+1076,azacitidine,adult acute eosinophilic leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+1077,azacitidine,adult acute myeloid leukemia in remission,Terminated,0,2,1,0.16666666666666666,0.0
+1078,azacitidine,Adult Acute Myeloid Leukemia with inv(16)(p13.1q22); CBFB-MYH11,Terminated,0,0,3,0.5,0.0
+1079,azacitidine,Adult Acute Myeloid Leukemia with t(8;21)(q22;q22); RUNX1-RUNX1T1,Terminated,0,0,3,0.5,0.0
+1080,azacitidine,untreated adult acute myeloid leukemia,Terminated,0,1,2,0.3333333333333333,0.0
+1081,azacitidine,Adult Erythroleukemia,Terminated,0,0,3,0.5,0.0
+1082,azacitidine,Adult Pure Erythroid Leukemia,Terminated,0,0,3,0.5,0.0
+1083,azacitidine,Alkylating Agent-Related Acute Myeloid Leukemia,Terminated,0,0,3,0.5,0.0
+1084,azacitidine,recurrent adult acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+1085,azacitidine,secondary acute myeloid leukemia,Terminated,0,2,1,0.16666666666666666,0.0
+1086,azacitidine,leukemia,Terminated,0,3,0,0.0,0.0
+1087,azacitidine,"Leukemia, Myelocytic, Acute",Terminated,1,1,1,0.5,0.0
+1088,azacitidine,"Leukemia, Myelomonocytic, Chronic",Terminated,0,0,3,0.5,0.0
+1089,azacitidine,"Leukemia, Myelocytic, Acute",Terminated,1,1,1,0.5,0.0
+1090,azacitidine,Multiple Myeloma,Terminated,0,1,2,0.3333333333333333,0.0
+1091,azacitidine,MYELODYSPLASTIC SYNDROME,Terminated,0,0,3,0.5,0.0
+1092,valganciclovir,Cytomegalovirus Infections,Terminated,0,1,2,0.3333333333333333,0.0
+1093,zonisamide,Epilepsy,Terminated,3,0,0,1.0,0.0
+1094,zonisamide,Epilepsy,Terminated,3,0,0,1.0,0.0
+1095,zonisamide,"Alcoholic Intoxication, Chronic",Terminated,0,0,3,0.5,0.0
+1096,zonisamide,alcohol use disorder,Terminated,0,0,3,0.5,0.0
+1097,zonisamide,Bipolar Disorder,Terminated,0,0,3,0.5,0.0
+1098,lapatinib,Neoplasm Metastasis,Terminated,0,0,3,0.5,0.0
+1099,lapatinib,melanoma,Terminated,0,0,3,0.5,0.0
+1100,lapatinib,HER-2 positive breast cancer,Withdrawn,0,0,3,0.5,0.0
+1101,lapatinib,Bladder cancer stage III,Terminated,0,0,3,0.5,0.0
+1102,lapatinib,Adenocarcinoma Of Esophagus,Terminated,0,0,3,0.5,0.0
+1103,lapatinib,Adenocarcinoma of the gastroesophageal junction,Terminated,0,0,3,0.5,0.0
+1104,lapatinib,Endocrine Breast Diseases,Terminated,0,0,3,0.5,0.0
+1105,lapatinib,Neoplasm Metastasis,Terminated,0,0,3,0.5,0.0
+1106,lapatinib,Breast cancer recurrent,Terminated,0,0,3,0.5,0.0
+1107,varenicline,Drug Dependence,Withdrawn,0,0,3,0.5,0.0
+1108,varenicline,Nicotine Dependence,Terminated,1,0,2,0.6666666666666666,0.0
+1109,ezogabine,Epilepsy,Terminated,0,0,3,0.5,0.0
+1110,ezogabine,Epilepsy,Terminated,0,0,3,0.5,0.0
+1111,ezogabine,Epilepsy,Terminated,0,0,3,0.5,0.0
+1112,rivaroxaban,Heparin-induced thrombocytopenia,Terminated,0,0,3,0.5,0.0
