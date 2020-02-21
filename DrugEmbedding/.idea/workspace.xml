@@ -94,9 +94,9 @@
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="6" />
           <entry key="project.open.time.7" value="15" />
-          <entry key="project.open.time.8" value="18" />
+          <entry key="project.open.time.8" value="19" />
           <entry key="project.open.time.9" value="10" />
-          <entry key="project.opened" value="80" />
+          <entry key="project.opened" value="81" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -173,8 +173,8 @@
               <caret line="26" column="16" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1581098462270" expanded="true" signature="8700:9451" ph="..." />
-                <marker date="1581098462270" expanded="true" signature="22959:23216" ph="..." />
+                <marker date="1582318363006" expanded="true" signature="8700:9451" ph="..." />
+                <marker date="1582318363006" expanded="true" signature="22959:23216" ph="..." />
               </folding>
             </state>
           </provider>
@@ -315,7 +315,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="400" />
+    <option name="x" value="1060" />
     <option name="y" value="23" />
     <option name="width" value="2049" />
     <option name="height" value="1292" />
@@ -328,6 +328,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -335,11 +336,15 @@
               <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
               <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="DrugEmbedding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DrugEmbedding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -569,9 +574,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="400" y="23" width="2049" height="1292" extended-state="0" />
+    <frame x="1060" y="23" width="2049" height="1292" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7430657" visible="true" weight="0.16342801" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7430657" visible="true" weight="0.16492277" />
       <window_info id="Structure" order="1" sideWeight="0.50101215" side_tool="true" weight="0.12765957" />
       <window_info id="Favorites" order="2" sideWeight="0.25693431" side_tool="true" weight="0.1293488" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -585,7 +590,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32402235" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5032649" side_tool="true" weight="0.407496" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49673507" visible="true" weight="0.58916664" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49673507" visible="true" weight="0.58" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49906716" weight="0.29190058" />
       <window_info anchor="bottom" id="File Transfer" order="13" sideWeight="0.49813432" weight="0.33666667" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="14" weight="0.3296" />
@@ -789,13 +794,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/VampPrior.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="27" lean-forward="true" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/VampPrior.py" />
     <entry file="file://$USER_HOME$/anaconda3/envs/py37/lib/python3.6/posixpath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="257">
@@ -848,6 +847,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/atc_drug_distance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="735">
+          <caret line="53" column="49" lean-forward="true" selection-start-line="53" selection-start-column="49" selection-end-line="53" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run_pipeline.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
@@ -861,8 +867,6 @@
           <caret line="26" column="16" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1581098462270" expanded="true" signature="8700:9451" ph="..." />
-            <marker date="1581098462270" expanded="true" signature="22959:23216" ph="..." />
           </folding>
         </state>
       </provider>
@@ -902,13 +906,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1875">
           <caret line="128" column="9" selection-start-line="128" selection-start-column="9" selection-end-line="128" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/atc_drug_distance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="53" column="49" lean-forward="true" selection-start-line="53" selection-start-column="49" selection-end-line="53" selection-end-column="49" />
         </state>
       </provider>
     </entry>
