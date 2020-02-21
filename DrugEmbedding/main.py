@@ -82,10 +82,10 @@ def save_and_load_flags():
 
     # save model configurations
     if FLAGS.new_training:
-        #if os.path.isdir(experiment_dir):
-        #    raise ValueError('Experiment directory already exist. Please change experiment name.')
-        #else:
-        #    os.makedirs(experiment_dir)
+        if os.path.isdir(experiment_dir):
+            raise ValueError('Experiment directory already exist. Please change experiment name.')
+        else:
+            os.makedirs(experiment_dir)
 
         # define model configuration
         configs = {
@@ -481,7 +481,7 @@ def main(args):
 
     # create train, valid, test data
     splits_proportion = [0.9, 0.05, 0.05]
-    #create_raw_files(configs, splits_proportion)
+    create_raw_files(configs, splits_proportion)
 
     # start pipeline
     pipeline(configs)
