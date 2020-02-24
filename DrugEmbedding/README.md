@@ -11,6 +11,9 @@
 # Shell script:
 * run_pipeline.sh: define hyperparameters
 
+# Experiments:
+* kdd_010: checkpoint of the best performing model
+
 # Data:
 * fda_drugs: SMILES strings and the ATC hierarchy table
 * repoDB: repoDB dataset
