@@ -1,5 +1,6 @@
-# drugEmbedding
-Hierarchical Embedding for Drugs.
+# Hierarchical Drug Embedding
+This is the repository for the KDD submission of "Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space"
+
 
 # Applications of drug embedding
 * for building a drug hierarchy
