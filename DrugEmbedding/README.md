@@ -14,4 +14,3 @@
 # Data:
 * fda_drugs: SMILES strings and the ATC hierarchy table
 * repoDB: repoDB dataset
-* 
