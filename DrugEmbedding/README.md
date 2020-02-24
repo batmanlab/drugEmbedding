@@ -10,3 +10,8 @@
 
 # Shell script:
 * run_pipeline.sh: define hyperparameters
+
+# Data:
+* fda_drugs: SMILES strings and the ATC hierarchy table
+* repoDB: repoDB dataset
+* 
