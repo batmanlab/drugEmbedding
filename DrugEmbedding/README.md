@@ -7,3 +7,6 @@
 * evae.py: classic VAE functions
 * metrics.py: dendrogram purity score
 * utils.py: utility functions
+
+# Shell script:
+* run_pipeline.sh: define hyperparameters
