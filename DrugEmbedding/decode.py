@@ -240,10 +240,10 @@ def smiles2mean(configs, smiles_x, model):
     for i in tokens:
         input_sequence.append(w2i[i])
     input_sequence.append(w2i['<eos>'])
-    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence) - 1)
+    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence) - 1) #TODO: modified -1 after KDD submission
     input_sequence = np.asarray(input_sequence)
     input_sequence = torch.from_numpy(input_sequence).unsqueeze(0)
-    sequence_length = torch.tensor([len(smiles_x) + 1])
+    sequence_length = torch.tensor([len(smiles_x)])
 
     # run through encoder
     hidden = model.encoder(input_sequence, sequence_length)
@@ -290,4 +290,17 @@ def latent2smiles(configs, model, z, nsamples, sampling_mode):
     smiles_lst = idx2smiles(configs, samples_idx)
     return z, samples_idx, smiles_lst
 
-
+"""
+# test
+import json
+smiles_x = 'CCN(CC)CCCC(C)Nc1ccnc2cc(Cl)ccc12'
+exp_dir = './experiments/KDD/kdd_010'
+checkpoint = 'checkpoint_epoch110.model'
+config_path = os.path.join(exp_dir, 'configs.json')
+checkpoint_path = os.path.join(exp_dir, checkpoint)
+with open(config_path, 'r') as fp:
+    configs = json.load(fp)
+fp.close()
+model = None
+_, _ = smiles2mean(configs, smiles_x, model)
+"""
