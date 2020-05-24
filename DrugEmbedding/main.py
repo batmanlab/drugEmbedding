@@ -8,7 +8,6 @@ import numpy as np
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
 
-import os
 import time
 import json
 import random
@@ -39,7 +38,7 @@ flags.DEFINE_string('atc_sim_file', 'drugs_sp_all.csv', 'ATC drug-drug path dist
 flags.DEFINE_string('checkpoint_dir', './experiments/SMILES', 'Directory where model is stored')
 flags.DEFINE_string('experiment_name', 'debug', 'Experiment name')
 flags.DEFINE_string('task', 'vae + atc', 'Task(s) included in this experiment')
-flags.DEFINE_integer('limit', 500, 'Training sample size limit')
+flags.DEFINE_integer('limit', 5000, 'Training sample size limit')
 flags.DEFINE_integer('batch_size', 128, 'Mini batch size')
 flags.DEFINE_integer('epochs', 100, 'Number of epochs')
 flags.DEFINE_integer('max_sequence_length', 120, 'Maximum length of input sequence')
@@ -52,13 +51,13 @@ flags.DEFINE_integer('num_centroids', 0, 'Number of centroids used in VampPrior'
 flags.DEFINE_boolean('bidirectional', False, 'Encoder RNN bidirectional indicator')
 flags.DEFINE_integer('num_layers', 1, 'RNN number of layers')
 flags.DEFINE_integer('hidden_size', 512, 'Dimension of RNN output')
-flags.DEFINE_integer('latent_size', 4, 'Dimension of latent space Z')
+flags.DEFINE_integer('latent_size', 16, 'Dimension of latent space Z')
 flags.DEFINE_float('word_dropout_rate', 0.2, 'Decoder input drop out rate')
 flags.DEFINE_string('anneal_function', 'logistic', 'KL annealing function type')
 flags.DEFINE_float('k', 0.51, '1st parameter in KL logistic annealing function')
 flags.DEFINE_float('x0', 29, '2nd parameter in KL logistic annealing function')
 flags.DEFINE_float('C', 1, 'Constant value if KL annealing function is a constant')
-flags.DEFINE_integer('num_workers', 4, 'Number of workers in DataLoader')
+flags.DEFINE_integer('num_workers', 16, 'Number of workers in DataLoader')
 flags.DEFINE_integer('logging_steps', 1, 'Log per steps/mini-batch')
 flags.DEFINE_integer('save_per_epochs', 1, 'Save intermediate checkpoints every few training epochs')
 flags.DEFINE_boolean('new_training', True, 'New training or restart from a pre-trained checkpoint')
@@ -488,3 +487,4 @@ def main(args):
 
 if __name__=='__main__':
     app.run(main)
+    pass

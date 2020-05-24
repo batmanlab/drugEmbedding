@@ -2,7 +2,7 @@
 
 set -x
 
-EXPERIMENT="exp_task_014"
+EXPERIMENT="new_model"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -43,8 +43,8 @@ python main.py \
   --save_per_epochs=5 \
   --new_training=False \
   --new_annealing=False \
-  --checkpoint="checkpoint_epoch055.model" \
-  --trained_epochs=55 \
+  --checkpoint="checkpoint_epoch000.model" \
+  --trained_epochs=00 \
   --alpha=0.0 \
   --beta=0.015625 \
   --gamma=0.0 \
