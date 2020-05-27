@@ -1,5 +1,5 @@
 # Hierarchical Drug Embedding
-This is the repository for the KDD submission of "Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space"
+This is the repository for the manuscript of "Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space"
 
 
 ### To train a new model (shell script):
