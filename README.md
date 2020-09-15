@@ -21,7 +21,7 @@ By
 
 set -x
 
-EXPERIMENT="new_model"
+EXPERIMENT="my_model"
 DATA_DIR="./data/fda_drugs"
 DATA_FILE="smiles_set_clean.smi"
 FDA_FILE="all_drugs.smi"
@@ -38,7 +38,7 @@ python main.py \
   --checkpoint_dir="./experiments/EXP_TASK" \
   --experiment_name="${EXPERIMENT}" \
   --task="vae + atc" \
-  --limit=5000 \
+  --limit=0 \
   --batch_size=128 \
   --epochs=200 \
   --max_sequence_length=120 \
