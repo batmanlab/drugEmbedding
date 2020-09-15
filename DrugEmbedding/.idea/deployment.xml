@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="yuke@pghbio.bridges.psc.edu:2222">
+  <component name="PublishConfigData" autoUpload="Always" serverName="yuke@localhost:9996">
     <serverData>
-      <paths name="yuke@pghbio.bridges.psc.edu:2222">
+      <paths name="yuke@localhost:9996">
         <serverdata>
           <mappings>
-            <mapping deploy="/DrugEmbedding" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/pylon5/ac5616p/yuke/PythonProject/DrugEmbedding" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

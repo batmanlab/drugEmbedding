@@ -41,8 +41,8 @@ python main.py \
   --num_workers=4 \
   --logging_steps=1 \
   --save_per_epochs=5 \
-  --new_training=False \
-  --new_annealing=False \
+  --new_training=True \
+  --new_annealing=True \
   --checkpoint="checkpoint_epoch000.model" \
   --trained_epochs=00 \
   --alpha=0.0 \
