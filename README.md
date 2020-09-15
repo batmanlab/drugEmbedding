@@ -1,4 +1,4 @@
-# Hierarchical Drug Embedding
+# Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space
 This is the repository for the manuscript of "Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space"
 
 
