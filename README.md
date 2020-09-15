@@ -1,5 +1,5 @@
 # Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space
-![TOC](https://user-images.githubusercontent.com/8482358/93241156-f8192d80-f752-11ea-89c3-ee0df1aae4de.png)
+![TOC](https://user-images.githubusercontent.com/8482358/93241156-f8192d80-f752-11ea-89c3-ee0df1aae4de.png | width=40)
 This is the repository for the manuscript of "Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space"
 
 
