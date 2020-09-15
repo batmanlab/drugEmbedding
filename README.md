@@ -1,8 +1,19 @@
 # Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space
 ![KDD_schematic_diagram_v5](https://user-images.githubusercontent.com/8482358/93242235-7cb87b80-f754-11ea-931d-03f92a940935.png)
-This is the repository for the manuscript:
+This is the repository for the manuscript: \
 [Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space](https://arxiv.org/abs/2006.00986)
 
+## Absrtact
+Learning accurate drug representations is essential for tasks such as computational drug repositioning and prediction of drug side-effects. A drug hierarchy is a valuable source that encodes human knowledge of drug relations in a tree-like structure where drugs that act on the same organs, treat the same disease, or bind to the same biological target are grouped together. However, its utility in learning drug representations has not yet been explored, and currently described drug representations cannot place novel molecules in a drug hierarchy. 
+
+Here, we develop a semi-supervised drug embedding that incorporates two sources of information: (1) underlying chemical grammar that is inferred from \ky{chemical} structures of drugs and  drug-like molecules (unsupervised), and (2) hierarchical relations that are encoded in an expert-crafted hierarchy of approved drugs (supervised). We use the Variational Auto-Encoder (VAE) framework to encode the chemical structures of molecules and use the knowledge-based drug-drug similarity to induce the clustering of drugs in hyperbolic space. The hyperbolic space is amenable for encoding hierarchical \ky{relations}. Both quantitative and qualitative results support that the learned drug embedding can accurately reproduce the chemical structure and induce the hierarchical relations among drugs. Furthermore, our approach can infer the pharmacological properties of novel molecules by retrieving similar drugs from the embedding space. We demonstrate that the learned drug embedding can be used to find new uses for existing drugs and to discover side-effects. We show that it significantly outperforms baselines in both tasks.
+
+By
+* Ke Yu
+* Shyam Visweswaran
+* Kayhan Batmanghelich
+
+[bibtex file](https://scholar.googleusercontent.com/scholar.bib?q=info:tyqBMVTFl5oJ:scholar.google.com/&output=citation&scisdr=CgUsNWI0ENCWyJb9tYs:AAGBfm0AAAAAX2D4rYummCkfLIdEsq14Qmr9wdlMOz0g&scisig=AAGBfm0AAAAAX2D4rXyucM1Zhnu16LPJwcTKzgja3Yju&scisf=4&ct=citation&cd=-1&hl=en&scfhb=1)
 
 ### To train a new model (shell script):
 <pre><code>
@@ -60,3 +71,5 @@ python main.py \
   --nneg=11 \
   --fda_prop=0.2 >> ${LOG_DIR}/${EXPERIMENT}.log 2>&1
 </code></pre>
+
+
