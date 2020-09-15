@@ -157,30 +157,3 @@ def dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl):
         return purity / p_cnt
     else:
         return 0
-
-
-"""
-exp_dir = './experiments/SMILES/exp_012'
-checkpoint = 'checkpoint_epoch070.model'
-config_path = os.path.join(exp_dir, 'configs.json')
-checkpoint_path = os.path.join(exp_dir, checkpoint)
-
-with open(config_path, 'r') as fp:
-    configs = json.load(fp)
-fp.close()
-
-# temp
-configs['gamma'] = 5.0
-
-model = load_model(configs)
-
-# load configs, dataset and model
-configs = load_configs(experiment_dir, exp_name)
-dataset = load_dataset(experiment_dir, exp_name, 'smiles_test.smi')
-model = load_model(configs, dataset, checkpoint)
-drug_lst, mean_lst = fda_drug_rep(configs, dataset, model, all_drugs=False)
-del dataset
-dp = dendrogram_purity_score(configs, drug_lst, mean_lst, atc_lvl)
-print(dp)
-"""
-
