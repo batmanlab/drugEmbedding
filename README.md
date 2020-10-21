@@ -90,4 +90,4 @@ python main.py \
 * /DrugEmbedding/data/tox21L: Tox21 dataset
 
 # Notebooks:
-Experiments sample code
+Sample code used for experiments in the paper
