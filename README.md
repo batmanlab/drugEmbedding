@@ -88,3 +88,6 @@ python main.py \
 * /DrugEmbedding/data/sider/deepchem: SIDER dataset
 * /DrugEmbedding/data/pdbbind: PDBbind dataset
 * /DrugEmbedding/data/tox21L: Tox21 dataset
+
+# Notebooks:
+Experiments sample code
