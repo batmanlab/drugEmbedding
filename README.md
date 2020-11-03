@@ -13,7 +13,7 @@ By
 * Shyam Visweswaran
 * Kayhan Batmanghelich
 
-[bibtex file](https://scholar.googleusercontent.com/scholar.bib?q=info:tyqBMVTFl5oJ:scholar.google.com/&output=citation&scisdr=CgUsNWI0ENCWyJb9tYs:AAGBfm0AAAAAX2D4rYummCkfLIdEsq14Qmr9wdlMOz0g&scisig=AAGBfm0AAAAAX2D4rXyucM1Zhnu16LPJwcTKzgja3Yju&scisf=4&ct=citation&cd=-1&hl=en&scfhb=1)
+[bibtex file](https://pubs.acs.org/action/showCitFormats?doi=10.1021%2Facs.jcim.0c00681&href=/doi/10.1021%2Facs.jcim.0c00681)
 
 ### To train a new model (shell script):
 <pre><code>
