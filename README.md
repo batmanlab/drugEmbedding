@@ -1,7 +1,7 @@
 # Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space
 ![KDD_schematic_diagram_v5](https://user-images.githubusercontent.com/8482358/93242235-7cb87b80-f754-11ea-931d-03f92a940935.png)
-This is the repository for the manuscript: \
-[Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space](https://arxiv.org/abs/2006.00986)
+This is the repository for the paper: \
+[Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space](https://pubs.acs.org/doi/10.1021/acs.jcim.0c00681)
 
 ## Absrtact
 Learning accurate drug representations is essential for tasks such as computational drug repositioning and prediction of drug side-effects. A drug hierarchy is a valuable source that encodes human knowledge of drug relations in a tree-like structure where drugs that act on the same organs, treat the same disease, or bind to the same biological target are grouped together. However, its utility in learning drug representations has not yet been explored, and currently described drug representations cannot place novel molecules in a drug hierarchy. 
