@@ -28,6 +28,15 @@ By
   eprint = {https://doi.org/10.1021/acs.jcim.0c00681} \
 }
 
+    @misc{lia_corrales_2015_15991,
+        author       = {Lia Corrales},
+        title        = {{dust: Calculate the intensity of dust scattering halos in the X-ray}},
+        month        = mar,
+        year         = 2015,
+        doi          = {10.5281/zenodo.15991},
+        version      = {1.0},
+        publisher    = {Zenodo},
+        url          = {https://doi.org/10.5281/zenodo.15991}
 
 ### To train a new model (shell script):
 <pre><code>
