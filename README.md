@@ -14,29 +14,19 @@ By
 * Kayhan Batmanghelich
 
 ### [Bibtex](https://pubs.acs.org/action/showCitFormats?doi=10.1021%2Facs.jcim.0c00681&href=/doi/10.1021%2Facs.jcim.0c00681)
-@article{doi:10.1021/acs.jcim.0c00681, \
-  author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan}, \
-  title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space}, \
-  journal = {Journal of Chemical Information and Modeling}, \
-  volume = {0}, \
-  number = {0}, \
-  pages = {null}, \
-  year = {0}, \
-  doi = {10.1021/acs.jcim.0c00681}, \
-  note ={PMID: 33140969}, \
-  URL = {https://doi.org/10.1021/acs.jcim.0c00681}, \
-  eprint = {https://doi.org/10.1021/acs.jcim.0c00681} \
-}
-
-    @misc{lia_corrales_2015_15991,
-        author       = {Lia Corrales},
-        title        = {{dust: Calculate the intensity of dust scattering halos in the X-ray}},
-        month        = mar,
-        year         = 2015,
-        doi          = {10.5281/zenodo.15991},
-        version      = {1.0},
-        publisher    = {Zenodo},
-        url          = {https://doi.org/10.5281/zenodo.15991}
+    @article{doi:10.1021/acs.jcim.0c00681, \
+      author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan}, \
+      title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space}, \
+      journal = {Journal of Chemical Information and Modeling}, \
+      volume = {0}, \
+      number = {0}, \
+      pages = {null}, \
+      year = {0}, \
+      doi = {10.1021/acs.jcim.0c00681}, \
+      note ={PMID: 33140969}, \
+      URL = {https://doi.org/10.1021/acs.jcim.0c00681}, \
+      eprint = {https://doi.org/10.1021/acs.jcim.0c00681} \
+    }
 
 ### To train a new model (shell script):
 <pre><code>
