@@ -15,22 +15,18 @@ By
 
 [bibtex file](https://pubs.acs.org/action/showCitFormats?doi=10.1021%2Facs.jcim.0c00681&href=/doi/10.1021%2Facs.jcim.0c00681)
 ### Bibtex
-@article{doi:10.1021/acs.jcim.0c00681,
-author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan},
-title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space},
-journal = {Journal of Chemical Information and Modeling},
-volume = {0},
-number = {0},
-pages = {null},
-year = {0},
-doi = {10.1021/acs.jcim.0c00681},
-    note ={PMID: 33140969},
-URL = { 
-        https://doi.org/10.1021/acs.jcim.0c00681
-},
-eprint = { 
-        https://doi.org/10.1021/acs.jcim.0c00681
-}
+@article{doi:10.1021/acs.jcim.0c00681, \\
+author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan}, \\
+title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space}, \\
+journal = {Journal of Chemical Information and Modeling}, \\
+volume = {0}, \\
+number = {0}, \\
+pages = {null}, \\
+year = {0}, \\
+doi = {10.1021/acs.jcim.0c00681}, \\
+note ={PMID: 33140969}, \\
+URL = {https://doi.org/10.1021/acs.jcim.0c00681}, \\
+eprint = {https://doi.org/10.1021/acs.jcim.0c00681} \\
 }
 
 
