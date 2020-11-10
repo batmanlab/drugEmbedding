@@ -17,7 +17,7 @@ By
     @article{doi:10.1021/acs.jcim.0c00681,
       author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan},
       title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space},
-      journal = {Journal of Chemical Information and Modeling}, \
+      journal = {Journal of Chemical Information and Modeling},
       volume = {0},
       number = {0},
       pages = {null},
