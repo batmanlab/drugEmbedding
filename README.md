@@ -13,8 +13,7 @@ By
 * Shyam Visweswaran
 * Kayhan Batmanghelich
 
-[bibtex file](https://pubs.acs.org/action/showCitFormats?doi=10.1021%2Facs.jcim.0c00681&href=/doi/10.1021%2Facs.jcim.0c00681)
-### Bibtex
+### [Bibtex](https://pubs.acs.org/action/showCitFormats?doi=10.1021%2Facs.jcim.0c00681&href=/doi/10.1021%2Facs.jcim.0c00681)
 @article{doi:10.1021/acs.jcim.0c00681, \
   author = {Yu, Ke and Visweswaran, Shyam and Batmanghelich, Kayhan}, \
   title = {Semi-supervised Hierarchical Drug Embedding in Hyperbolic Space}, \
