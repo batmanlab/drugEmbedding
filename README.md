@@ -1,6 +1,6 @@
 # Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space
 ![KDD_schematic_diagram_v5](https://user-images.githubusercontent.com/8482358/93242235-7cb87b80-f754-11ea-931d-03f92a940935.png)
-This is the repository for the paper: \
+This is the repository for the paper published in JCIM: \
 [Semi-supervised Hierarchicical Drug Embedding in Hyperbolic Space](https://pubs.acs.org/doi/10.1021/acs.jcim.0c00681)
 
 ## Absrtact
