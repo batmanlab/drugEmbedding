@@ -23,14 +23,9 @@ By
     pages = {5647-5657},
     year = {2020},
     doi = {10.1021/acs.jcim.0c00681},
-        note ={PMID: 33140969},
-    URL = { 
-            https://doi.org/10.1021/acs.jcim.0c00681
-
-    },
-    eprint = { 
-            https://doi.org/10.1021/acs.jcim.0c00681
-    }
+    note = {PMID: 33140969},
+    URL = {https://doi.org/10.1021/acs.jcim.0c00681},
+    eprint = {https://doi.org/10.1021/acs.jcim.0c00681}
     }
 
 ### To train a new model (shell script):
