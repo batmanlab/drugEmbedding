@@ -1,8 +1,8 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from lorentz import *
+from DrugEmbedding.lorentz import *
 import torch.nn.utils.rnn as rnn_utils
-from utils import to_cuda_var
+from DrugEmbedding.utils import to_cuda_var
 
 # reproducibility
 #torch.manual_seed(216)

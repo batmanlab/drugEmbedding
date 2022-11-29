@@ -1,7 +1,7 @@
 import torch.distributions as dis
-from drugdata import *
-from evae import *
-from hvae import *
+from DrugEmbedding.drugdata import *
+from DrugEmbedding.evae import *
+from DrugEmbedding.hvae import *
 
 
 def load_model(configs):

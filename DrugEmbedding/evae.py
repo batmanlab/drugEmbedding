@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.nn.utils.rnn as rnn_utils
 from torch.distributions import MultivariateNormal
 import numpy as np
-from utils import to_cuda_var, pairwise_dist
+from DrugEmbedding.utils import to_cuda_var, pairwise_dist
 
 # reproducibility
 #torch.manual_seed(216)
