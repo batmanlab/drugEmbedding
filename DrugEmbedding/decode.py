@@ -1,3 +1,4 @@
+import torch
 import torch.distributions as dis
 from DrugEmbedding.drugdata import *
 from DrugEmbedding.evae import *
@@ -59,7 +60,12 @@ def load_model(configs):
 
     torch.no_grad()
     checkpoint_path = os.path.join(configs['checkpoint_dir'] + '/' + configs['experiment_name'], configs['checkpoint'])
-    model.load_state_dict(torch.load(checkpoint_path))
+
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
+    model.load_state_dict(torch.load(checkpoint_path, map_location=device))
     if torch.cuda.is_available():
         model = model.cuda()
 
