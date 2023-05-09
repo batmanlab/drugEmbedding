@@ -247,10 +247,10 @@ def smiles2mean(configs, smiles_x, model):
     for i in tokens:
         input_sequence.append(w2i[i])
     input_sequence.append(w2i['<eos>'])
-    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence) - 1)
+    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence))
     input_sequence = np.asarray(input_sequence)
     input_sequence = torch.from_numpy(input_sequence).unsqueeze(0)
-    sequence_length = torch.tensor([len(smiles_x)+1])
+    sequence_length = torch.tensor([len(tokens)+2])
 
     # run through encoder
     hidden = model.encoder(input_sequence, sequence_length)
