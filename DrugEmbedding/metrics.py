@@ -3,10 +3,10 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
 #from numba import jit
 
-from utils import *
-from evae import *
-from hvae import *
-from drugdata import *
+from DrugEmbedding.utils import *
+from DrugEmbedding.evae import *
+from DrugEmbedding.hvae import *
+from DrugEmbedding.drugdata import *
 import itertools
 from tqdm import tqdm
 

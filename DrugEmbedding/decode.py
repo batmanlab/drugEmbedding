@@ -1,7 +1,8 @@
+import torch
 import torch.distributions as dis
-from drugdata import *
-from evae import *
-from hvae import *
+from DrugEmbedding.drugdata import *
+from DrugEmbedding.evae import *
+from DrugEmbedding.hvae import *
 
 
 def load_model(configs):
@@ -59,7 +60,12 @@ def load_model(configs):
 
     torch.no_grad()
     checkpoint_path = os.path.join(configs['checkpoint_dir'] + '/' + configs['experiment_name'], configs['checkpoint'])
-    model.load_state_dict(torch.load(checkpoint_path))
+
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
+    model.load_state_dict(torch.load(checkpoint_path, map_location=device))
     if torch.cuda.is_available():
         model = model.cuda()
 
@@ -241,10 +247,10 @@ def smiles2mean(configs, smiles_x, model):
     for i in tokens:
         input_sequence.append(w2i[i])
     input_sequence.append(w2i['<eos>'])
-    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence) - 1)
+    input_sequence = input_sequence + [0] * (configs['max_sequence_length'] - len(input_sequence))
     input_sequence = np.asarray(input_sequence)
     input_sequence = torch.from_numpy(input_sequence).unsqueeze(0)
-    sequence_length = torch.tensor([len(smiles_x)+1])
+    sequence_length = torch.tensor([len(tokens)+2])
 
     # run through encoder
     hidden = model.encoder(input_sequence, sequence_length)
