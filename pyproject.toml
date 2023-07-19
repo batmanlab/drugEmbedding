@@ -4,9 +4,7 @@ description = "Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space"
 license = "Apache 2.0"
 repository = "https://github.com/batmanlab/drugEmbedding"
 authors = ["batmanlab"]
-packages = [
-    {include = "DrugEmbedding"}
-]
+packages = [{include = "DrugEmbedding"}]
 version = "0.0.1"
 
 [tool.poe.tasks]
@@ -49,4 +47,3 @@ hypothesis = "6.37.2" # Pinned due to problems in 6.39.
 testbook = "^0.4.2"
 testcontainers = "^3.4.2"
 pytest-timestamper = "^0.0.9"
-
