@@ -18,7 +18,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.dependencies]
 python = "~3.9"
 torch = "~1.10.0"
-tensorboardX = "~2.5.1"
+tensorboardX = "~2.6.1"
 
 [tool.poetry.group.dev.dependencies]
 grpcio-tools = "^1.42"
