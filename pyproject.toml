@@ -2,16 +2,10 @@
 name = "drugEmbedding"
 description = "Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space"
 license = "Apache 2.0"
-repository = "https://github.com/dillon-zephyrai/drugEmbedding"
+repository = "https://github.com/batmanlab/drugEmbedding"
 authors = ["batmanlab"]
-packages = [
-    {include = "DrugEmbedding"}
-]
+packages = [{include = "DrugEmbedding"}]
 version = "0.0.1"
-
-[tool.poe.tasks]
-lint = "pylint drugEmbedding"
-coverage = { "shell" = "coverage xml && coverage report -m" }
 
 [build-system]
 requires = ["poetry-core>=1.0.4"]
@@ -19,34 +13,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = "~3.9"
-torch = "~1.10.0"
-tensorboardX = "~2.5.1"
-
-[tool.poetry.dev-dependencies]
-grpcio-tools = "^1.42"
-mypy-protobuf = "^3.1.0"
-types-protobuf = "^3.18.0"
-filelock = "^3.3.0"
-lifelines = "^0.27.1"
-omnipath = "^1.0"
-poethepoet = "^0.13"
-pylint = "^2.10"
-sqlacodegen = "^2.3"
-SQLAlchemy = ">=1.4,<1.4.23"  # https://github.com/python-poetry/poetry/issues/4402
-typing-extensions = "^3.10"
-types-filelock = "^3.2.1"
-types-retry = "^0.1"
-types-requests = "^2.25"
-
-#[tool.poetry.group.test.dependencies]
-coverage = "^6.3"
-moto = {extras = ["s3"], version = "^3.1.1"}
-pytest = "^6.2"
-pytest-asyncio = "^0.17"
-pytest-cov = "^2.12"
-pytest-xdist = "^2.4.0"
-hypothesis = "6.37.2" # Pinned due to problems in 6.39.
-testbook = "^0.4.2"
-testcontainers = "^3.4.2"
-pytest-timestamper = "^0.0.9"
-
+torch = ">1"
+tensorboardX = ">2"
+pandas = ">1"
+scipy = ">1"
+tqdm = ">4"
+absl-py = ">1"
