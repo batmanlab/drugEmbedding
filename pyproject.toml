@@ -2,7 +2,7 @@
 name = "drugEmbedding"
 description = "Semi-Supervised Hierarchical Drug Embedding in Hyperbolic Space"
 license = "Apache 2.0"
-repository = "https://github.com/dillon-zephyrai/drugEmbedding"
+repository = "https://github.com/batmanlab/drugEmbedding"
 authors = ["batmanlab"]
 packages = [
     {include = "DrugEmbedding"}
