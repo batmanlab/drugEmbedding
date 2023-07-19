@@ -20,7 +20,7 @@ python = "~3.9"
 torch = "~1.10.0"
 tensorboardX = "~2.5.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 grpcio-tools = "^1.42"
 mypy-protobuf = "^3.1.0"
 types-protobuf = "^3.18.0"
@@ -36,7 +36,7 @@ types-filelock = "^3.2.1"
 types-retry = "^0.1"
 types-requests = "^2.25"
 
-#[tool.poetry.group.test.dependencies]
+[tool.poetry.group.test.dependencies]
 coverage = "^6.3"
 moto = {extras = ["s3"], version = "^3.1.1"}
 pytest = "^6.2"
